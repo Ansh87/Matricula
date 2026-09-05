@@ -91,7 +91,7 @@ export function About({ onGo }) {
       <div className="card pad stack">
         <h3>How Scoring Works</h3>
         <p className="note" style={{ margin: 0 }}>
-          Every score here is rule-based and transparent — built only from official College Scorecard data (admission
+          Every score here is rule-based and transparent - built only from official College Scorecard data (admission
           rate, test ranges, net price, graduation rate, earnings) and what you enter in your Profile. Nothing is
           guessed to fill a gap: when real data for a factor isn't available, that factor is left out of the score
           rather than invented.
@@ -130,7 +130,7 @@ export function About({ onGo }) {
           <p className="note" style={{ margin: 0 }}>
             Overall Fit weights the six sub-scores as: Academic 25%, Major/Program 25%, Financial 15%, Career/ROI 15%,
             Outcome 10%, Extracurricular 10%. If a sub-score can't be computed for a college (say, it doesn't publish
-            earnings data), that weight is dropped and the rest are re-normalized proportionally — a college isn't
+            earnings data), that weight is dropped and the rest are re-normalized proportionally - a college isn't
             penalized in its Overall Fit just for publishing less data. Within Academic Fit specifically, the test-score
             component is capped at ±22 points and every other nudge (GPA, rigor, class rank, research, etc.) is
             individually capped, so no single input can swing the score on its own.
@@ -141,13 +141,13 @@ export function About({ onGo }) {
           <div style={{ fontWeight: 600, marginBottom: 4 }}>Difference between fit and admission likelihood</div>
           <p className="note" style={{ margin: 0 }}>
             <strong>Fit</strong> (Overall Fit and its sub-scores) measures how well a college matches your own
-            academics, budget, major, and career goals — it says nothing about whether you'd get in. <strong>Admission
+            academics, budget, major, and career goals - it says nothing about whether you'd get in. <strong>Admission
             likelihood</strong> is a separate calculation: it starts from the college's own published admission rate,
             then adjusts it based on how your academic strength and extracurricular strength compare to typical
             admits, and reports the result as a labeled range (Far Reach, Reach, Target, Likely, Safety, or Financial
-            Safety) — never a precise percentage. Hard limits apply regardless of how strong a profile is: any college
+            Safety) - never a precise percentage. Hard limits apply regardless of how strong a profile is: any college
             admitting under 10% of applicants is always at least a Reach. A college can be a strong Fit and still be a
-            Reach for admission, or a modest Fit and a Safety — they're intentionally independent numbers.
+            Reach for admission, or a modest Fit and a Safety - they're intentionally independent numbers.
           </p>
         </div>
 
@@ -156,12 +156,12 @@ export function About({ onGo }) {
           <p className="note" style={{ margin: 0 }}>
             When a college doesn't publish a field a score depends on, that specific sub-score is shown as unavailable
             rather than guessed, and Overall Fit re-normalizes around whatever real data does exist. Major/Program Fit
-            is treated the same way: if program data can't be verified for a college, it gets a neutral-low score —
+            is treated the same way: if program data can't be verified for a college, it gets a neutral-low score -
             it is never scored as if a match were confirmed. For admission likelihood, a college with no published
             admission rate is labeled "Insufficient Data" instead of receiving a guessed category, and a would-be
             "Safety" or "Likely" call is automatically downgraded to "Target" whenever the college's overall data
             completeness is low or your academic standing relative to it can't be judged. Culture Fit only appears
-            for the small set of colleges with verified Common Data Set selection factors on file — for every other
+            for the small set of colleges with verified Common Data Set selection factors on file - for every other
             college it's simply not shown, not estimated.
           </p>
         </div>
@@ -171,16 +171,16 @@ export function About({ onGo }) {
           <p className="note" style={{ margin: 0 }}>
             The "undergraduate programs" list on the Courses &amp; Programs page comes from a live call to the U.S.
             Department of Education College Scorecard API, which reports each college's official CIP (Classification
-            of Instructional Programs) codes — the standardized federal taxonomy every college reports annually to
+            of Instructional Programs) codes - the standardized federal taxonomy every college reports annually to
             IPEDS, used here so majors can be compared consistently across colleges. It is not scraped from the
             college's own website. A college's own site typically organizes the same real majors by its own
-            department names or internal numbering (e.g. MIT's "Course" system) — a different, school-specific
+            department names or internal numbering (e.g. MIT's "Course" system) - a different, school-specific
             scheme built for browsing its site, not for cross-college comparison. This app then groups the official
             CIP titles into broad categories (Engineering, Computing &amp; Data, etc.) using simple keyword matching
             on the title, purely to make the list easier to scan. The underlying majors are the same real, official
             data either way; the labels and groupings you see can differ because the two systems serve different
             purposes. If something looks off, the college's own admissions or department site is always the final
-            word — this list is a starting point for research, not a replacement for it.
+            word - this list is a starting point for research, not a replacement for it.
           </p>
         </div>
 
@@ -188,7 +188,7 @@ export function About({ onGo }) {
           <div style={{ fontWeight: 600, marginBottom: 4 }}>Limitations and disclaimer</div>
           <p className="note" style={{ margin: 0 }}>
             This is a planning aid, not an admissions guarantee. Every score is an estimate built from official and
-            public data plus your own entries — actual admissions decisions are holistic, unpredictable, and consider
+            public data plus your own entries - actual admissions decisions are holistic, unpredictable, and consider
             far more than any calculator can capture; even applicants who score well here are sometimes denied at
             highly selective schools, and applicants who score modestly are sometimes admitted. Official data can lag
             or be incomplete, so always confirm current program availability, costs, and deadlines directly on each
@@ -206,18 +206,18 @@ export function About({ onGo }) {
       <div className="card pad stack">
         <h3>How Rankings Are Built</h3>
         <p className="note" style={{ margin: 0 }}>
-          <strong>Top STEM / Finance / Business lists</strong> (Explore) are editorial rankings — a hand-curated
+          <strong>Top STEM / Finance / Business lists</strong> (Explore) are editorial rankings - a hand-curated
           ordering of undergraduate program reputation and outcomes in that field, clearly labeled as editorial and
           not an official government ranking. Each entry is enriched with live official College Scorecard data
           (admission rate, SAT range, net price, earnings) and, when you have a Profile, your own Overall Fit score.
         </p>
         <p className="note" style={{ margin: 0 }}>
-          <strong>Best Fit</strong> (Matches) ranks the full matching college pool purely by score — your Overall Fit,
-          or a blended scenario score if a major/career scenario is active — and shows the top results. Because it
+          <strong>Best Fit</strong> (Matches) ranks the full matching college pool purely by score - your Overall Fit,
+          or a blended scenario score if a major/career scenario is active - and shows the top results. Because it
           follows the score directly, it tends to be reach-heavy.
         </p>
         <p className="note" style={{ margin: 0 }}>
-          <strong>Balanced List</strong> (Matches) doesn't just take the top scores — it fills a realistic
+          <strong>Balanced List</strong> (Matches) doesn't just take the top scores - it fills a realistic
           Reach/Target/Safety mix (plus financial-safety and in-state-public slots where possible) for your chosen
           list size. If your matches can't fill a category, it says so honestly rather than relabeling a school's
           real category to make the numbers look complete.

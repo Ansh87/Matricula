@@ -1,4 +1,4 @@
-// Majors.jsx — majors that fit the student, with why, careers, grad-school
+// Majors.jsx - majors that fit the student, with why, careers, grad-school
 // signal, and outlook.
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { api } from "../lib/api.js";
@@ -142,8 +142,8 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
       const pool = r.candidatePoolScanned ?? found;
       setSearchSuccessMsg(
         isCombo
-          ? `Scored ${pool} candidate college${pool === 1 ? "" : "s"} — found ${found} offering both fields.`
-          : `Scored ${pool} candidate college${pool === 1 ? "" : "s"} — found ${found} with a verified match.`
+          ? `Scored ${pool} candidate college${pool === 1 ? "" : "s"} - found ${found} offering both fields.`
+          : `Scored ${pool} candidate college${pool === 1 ? "" : "s"} - found ${found} with a verified match.`
       );
     } catch (err) {
       // An API failure is NOT the same as "no colleges matched".
@@ -184,7 +184,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
       <div>
         <div className="eyebrow">Majors for you</div>
         <h1>Majors that fit your profile</h1>
-        <p className="lead">Ranked from your interests, strengths, and career goals — each with where it leads and
+        <p className="lead">Ranked from your interests, strengths, and career goals - each with where it leads and
           whether it typically needs graduate school. Based on official BLS career data.</p>
       </div>
 
@@ -278,7 +278,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
             <input type="checkbox" checked={deepSearch} disabled={searchingMajor}
               onChange={(e) => setDeepSearch(e.target.checked)} style={{ marginTop: 2 }} />
             <span className="note" style={{ fontSize: 12 }}>
-              <strong>Deep search (advanced)</strong> — candidate pool searched, up to 2,000 colleges instead of 500.
+              <strong>Deep search (advanced)</strong> - candidate pool searched, up to 2,000 colleges instead of 500.
               <span style={{ display: "block", color: "var(--muted)", fontSize: 11, marginTop: 2 }}>
                 Deep search may take longer. Results still need official verification. Standard search (up to 500
                 candidates) is enough for most searches.
@@ -300,7 +300,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
         {majorSearchError && !searchingMajor && (
           <div className="disclaimer" style={{ borderLeftColor: "var(--reach)", marginTop: 10 }}>
             <strong>Could not check official program data right now:</strong> {majorSearchError}
-            <div className="note" style={{ marginTop: 4 }}>This is an API/connection problem — not a statement that no colleges match.</div>
+            <div className="note" style={{ marginTop: 4 }}>This is an API/connection problem - not a statement that no colleges match.</div>
             <button className="link" style={{ marginTop: 4 }} onClick={runSearch}>Try again</button>
           </div>
         )}
@@ -349,7 +349,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
                   <div className="disclaimer" style={{ borderLeftColor: "var(--amber)", marginBottom: 8 }}>
                     These colleges offer both fields at bachelor's level according to official College Scorecard
                     program data. That is <strong>not</strong> the same as permission to declare a formal double
-                    major — confirm double-major and dual-degree rules with each college's catalog or advising office.
+                    major - confirm double-major and dual-degree rules with each college's catalog or advising office.
                   </div>
                 )}
               </>
@@ -357,7 +357,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
             {majorColleges.length > 0 && (
               <div className="stack" style={{ gap: 8 }}>
                 <div className="note" style={{ fontSize: 11 }}>
-                  "Selectivity rank" is this list's colleges ordered by admission rate (most selective = #1) from College Scorecard —
+                  "Selectivity rank" is this list's colleges ordered by admission rate (most selective = #1) from College Scorecard -
                   not a US News-style prestige ranking. Colleges with no admission-rate data on file are shown unranked.
                 </div>
                 <div className="note" style={{ fontWeight: 600 }}>
@@ -530,7 +530,7 @@ function ConfirmedDoubleMajorPrograms({ verifications, onOpen, onRefresh, studen
             <div className="note">Status: {v.double_major_allowed_status}</div>
           </div>
           <div className="note" style={{ marginTop: 6 }}>
-            Verification: {v.verification_status} · Source: {v.source_url ? <a href={v.source_url} target="_blank" rel="noreferrer">{v.source_label || v.source_url}</a> : "—"} · Last checked: {v.last_checked || "—"}
+            Verification: {v.verification_status} · Source: {v.source_url ? <a href={v.source_url} target="_blank" rel="noreferrer">{v.source_label || v.source_url}</a> : "-"} · Last checked: {v.last_checked || "-"}
           </div>
           {v.restrictions && <div className="note" style={{ marginTop: 4 }}>Restrictions: {v.restrictions}</div>}
           <div className="row" style={{ gap: 10, marginTop: 8 }}>
@@ -603,7 +603,7 @@ function MajorCollegeCard({ c, profile, studentId, searchMeta, onOpen, onToggleS
       });
       setComboSaveMsg(isConfirmed
         ? "Saved to Decision Plan as a confirmed double major."
-        : "Saved to Decision Plan as a double-major consideration. Programs exist — double-major rules not verified.");
+        : "Saved to Decision Plan as a double-major consideration. Programs exist - double-major rules not verified.");
     } catch (e) {
       setComboSaveMsg(`Could not save: ${e.message}`);
     } finally { setComboSaving(false); }
@@ -666,7 +666,7 @@ function MajorCollegeCard({ c, profile, studentId, searchMeta, onOpen, onToggleS
               <strong>Official source confirms this pairing.</strong><br />
               Primary official program: {verification.primary_official_program_name} · Second official program: {verification.secondary_official_program_name}<br />
               Policy: {verification.official_policy_name} · Verification: {verification.verification_status}<br />
-              Source: {verification.source_url ? <a href={verification.source_url} target="_blank" rel="noreferrer">{verification.source_label || verification.source_url}</a> : "—"} · Last checked: {verification.last_checked || "—"}
+              Source: {verification.source_url ? <a href={verification.source_url} target="_blank" rel="noreferrer">{verification.source_label || verification.source_url}</a> : "-"} · Last checked: {verification.last_checked || "-"}
             </div>
           ) : (
             <div className="note" style={{ marginTop: 6, fontWeight: 600, color: "var(--amber)" }}>
@@ -711,7 +711,7 @@ function MajorCollegeCard({ c, profile, studentId, searchMeta, onOpen, onToggleS
       {scored && (
         <div className="row wrap" style={{ gap: 6, marginTop: 8 }}>
           <span className="pill" style={{ background: "var(--amber-b)" }}>
-            Estimated fit based on your profile: {scored.overall ?? "—"}
+            Estimated fit based on your profile: {scored.overall ?? "-"}
           </span>
           {scored.coarseCategory && <span className="pill">{scored.coarseCategory}</span>}
         </div>

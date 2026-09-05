@@ -1,4 +1,4 @@
-// Advisor.jsx — explains the student's own results using only available data.
+// Advisor.jsx - explains the student's own results using only available data.
 import React, { useState } from "react";
 import { api } from "../lib/api.js";
 import { SourceBadge } from "./ui.jsx";
@@ -29,7 +29,7 @@ function linkify(text) {
 
 export function Advisor({ profile, recs, onRunMatches, onViewCoursePlan }) {
   const [msgs, setMsgs] = useState([
-    { role: "advisor", text: "Ask me about your list — Reach/Target/Safety split, estimated net costs from College Scorecard, or BLS career outcomes for your major. I only use data that’s actually available for your colleges." },
+    { role: "advisor", text: "Ask me about your list - Reach/Target/Safety split, estimated net costs from College Scorecard, or BLS career outcomes for your major. I only use data that’s actually available for your colleges." },
   ]);
   const [q, setQ] = useState("");
   const [busy, setBusy] = useState(false);
@@ -47,7 +47,7 @@ export function Advisor({ profile, recs, onRunMatches, onViewCoursePlan }) {
     } catch (err) {
       // Surface the real reason instead of a generic failure.
       const why = err?.status === 413
-        ? "The request was too large for the server. This is a bug — please report it."
+        ? "The request was too large for the server. This is a bug - please report it."
         : err?.message || "unknown error";
       setMsgs((m) => [...m, { role: "advisor", text: `I couldn’t reach the advisor service: ${why}` }]);
     } finally { setBusy(false); }
@@ -58,7 +58,7 @@ export function Advisor({ profile, recs, onRunMatches, onViewCoursePlan }) {
       <div>
         <div className="eyebrow">Advisor</div>
         <h1>Talk through your list</h1>
-        <p className="lead">A planning aid — not your school counselor or a college’s admissions office.</p>
+        <p className="lead">A planning aid - not your school counselor or a college’s admissions office.</p>
       </div>
 
       <TrackRecommendations profile={profile} onRunMatches={onRunMatches} onViewCoursePlan={onViewCoursePlan} />

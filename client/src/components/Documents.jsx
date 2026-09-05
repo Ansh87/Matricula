@@ -1,4 +1,4 @@
-// Documents.jsx — upload transcripts, resume, portfolio. Extracts text locally;
+// Documents.jsx - upload transcripts, resume, portfolio. Extracts text locally;
 // optional AI auto-fill only if a Gemini key is configured on the server.
 import React, { useState, useEffect, useRef } from "react";
 import { api } from "../lib/api.js";
@@ -27,7 +27,7 @@ export function Documents({ studentId, onApplyParsed, embedded }) {
       setDocs(r.documents || []); setParsingEnabled(!!r.parsingEnabled);
     }).catch(() => {});
   };
-  // Note: the effect callback must NOT return the promise — React would treat a
+  // Note: the effect callback must NOT return the promise - React would treat a
   // returned value as a cleanup function and try to call it. We call load()
   // inside a block that returns undefined.
   useEffect(() => { load(); }, [studentId]);
@@ -40,7 +40,7 @@ export function Documents({ studentId, onApplyParsed, embedded }) {
       const r = await api.uploadDocument(studentId, kind, file);
       if (!r.document.hasText && r.document.reason) { setMsg({ ok: false, text: r.document.reason }); return; }
       const totalChars = r.document.textLength ?? r.document.textExcerpt?.length ?? 0;
-      setMsg({ ok: true, text: `Uploaded "${r.document.filename}" and read its full text (${totalChars.toLocaleString()} characters). All of it is used for auto-fill — the preview below only shows the first 4,000.` });
+      setMsg({ ok: true, text: `Uploaded "${r.document.filename}" and read its full text (${totalChars.toLocaleString()} characters). All of it is used for auto-fill - the preview below only shows the first 4,000.` });
       await load();
     } catch (err) {
       setMsg("Upload failed: " + err.message);
@@ -59,7 +59,7 @@ export function Documents({ studentId, onApplyParsed, embedded }) {
       if (!d.ok) {
         setMsg({ ok: false, text: d.reason || "Couldn't reach that URL." });
       } else if (d.thin) {
-        // Reached the site, but it's a JS-rendered shell — say so honestly.
+        // Reached the site, but it's a JS-rendered shell - say so honestly.
         setMsg({ ok: false, text: d.reason });
       } else if (d.hasText) {
         setMsg({ ok: true, text: "Added portfolio link and read its content." });
@@ -168,7 +168,7 @@ export function Documents({ studentId, onApplyParsed, embedded }) {
           <div>
             <strong>Build my profile from these documents</strong>
             <div className="note">{parsingEnabled
-              ? "Reads all your documents together and fills your profile — you review before applying."
+              ? "Reads all your documents together and fills your profile - you review before applying."
               : "Needs a free Gemini key on the server. Click to see setup details, or enter fields manually."}</div>
           </div>
           <button className="btn amber" onClick={buildProfile} disabled={busy}>Build profile →</button>
@@ -198,7 +198,7 @@ export function Documents({ studentId, onApplyParsed, embedded }) {
       {/* privacy notice about optional AI parsing */}
       <div className="disclaimer">
         <strong>How document reading works.</strong> Your files are stored on your own computer and the text is
-        read locally — nothing is sent anywhere by default.{" "}
+        read locally - nothing is sent anywhere by default.{" "}
         {parsingEnabled
           ? "AI auto-fill is ENABLED: when you build your profile or auto-fill, the extracted text is sent to Google Gemini to pull out fields. On Google's free tier, Google may use inputs to improve their models."
           : "AI auto-fill is OFF (no Gemini key set), so you'll confirm fields yourself. To enable optional auto-fill later, add a free GEMINI_API_KEY on the server."}
@@ -219,7 +219,7 @@ export function Documents({ studentId, onApplyParsed, embedded }) {
                   </div>
                   <div className="note" style={{ marginTop: 4 }}>
                     {d.text_excerpt
-                      ? `Text read locally ✓ — ${(d.full_text_length ?? d.text_excerpt.length).toLocaleString()} characters captured and used for auto-fill`
+                      ? `Text read locally ✓ - ${(d.full_text_length ?? d.text_excerpt.length).toLocaleString()} characters captured and used for auto-fill`
                       : "No text extracted (scanned image or unsupported)"}
                   </div>
                 </div>
@@ -254,7 +254,7 @@ export function Documents({ studentId, onApplyParsed, embedded }) {
                   <summary className="note" style={{ cursor: "pointer" }}>
                     View extracted text
                     {d.full_text_length > d.text_excerpt.length
-                      ? ` (preview of first ${d.text_excerpt.length.toLocaleString()} of ${d.full_text_length.toLocaleString()} characters — all of it is used for auto-fill)`
+                      ? ` (preview of first ${d.text_excerpt.length.toLocaleString()} of ${d.full_text_length.toLocaleString()} characters - all of it is used for auto-fill)`
                       : ""}
                   </summary>
                   <pre style={{ whiteSpace: "pre-wrap", fontSize: 12, color: "var(--muted)", marginTop: 8, maxHeight: 200, overflow: "auto" }}>{d.text_excerpt}</pre>

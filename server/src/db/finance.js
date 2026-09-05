@@ -1,9 +1,9 @@
-// finance.js — editorial strength ratings for undergraduate FINANCE programs
+// finance.js - editorial strength ratings for undergraduate FINANCE programs
 // (finance, quantitative finance, business economics with a finance focus, and
 // the feeder programs Wall Street / quant firms recruit from most heavily).
 //
 // These are EDITORIAL rankings reflecting widely-recognized program reputation,
-// placement into finance careers, and recruiting presence — NOT an official
+// placement into finance careers, and recruiting presence - NOT an official
 // government ranking. Live cost/outcome data still comes from College Scorecard
 // and is shown alongside. Nothing here is invented outcome data.
 //
@@ -24,7 +24,7 @@
 //     was showing the other school's live data). Real Boston College id is
 //     164924; real Boston University id is 164988.
 // Kansas and UConn ids below have not been independently re-verified (they
-// fall outside the app's Top 30 view) — flagged here rather than silently
+// fall outside the app's Top 30 view) - flagged here rather than silently
 // trusted.
 
 const F = (id, name, score, tier, specialties) => ({ id, name, score, tier, specialties });

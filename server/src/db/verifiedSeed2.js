@@ -1,4 +1,4 @@
-// verifiedSeed2.js — verified admissions-details profiles for the colleges that
+// verifiedSeed2.js - verified admissions-details profiles for the colleges that
 // have selection profiles but weren't in the original 5. Transcribed from each
 // college's official admissions site. Round-level acceptance rates are LEFT NULL
 // (most colleges don't officially publish them; we never invent them).
@@ -26,10 +26,10 @@ const V = (o) => ({
 });
 
 export const VERIFIED_SEED_2 = [
-  // Carnegie Mellon (real IPEDS/Scorecard UNITID is 211440 — 201645 is actually
+  // Carnegie Mellon (real IPEDS/Scorecard UNITID is 211440 - 201645 is actually
   // Case Western Reserve University; this was misassigned to CMU app-wide)
   V({ id: "211440", url: "https://www.cmu.edu/admission/", ed: true, ea: false, rd: true,
-      deadlines: { ED: "Nov 1", RD: "Jan 3" }, css: "Required (CSS Profile) — confirm",
+      deadlines: { ED: "Nov 1", RD: "Jan 3" }, css: "Required (CSS Profile) - confirm",
       recs: "Counselor + teacher recommendation(s)", essays: "CMU-specific short essays + Common App essay",
       majorRestrictions: { note: "Admitted by individual college/program; School of Computer Science is separately, extremely competitive" },
       honors: "Program-specific honors/research; no single honors college" }),
@@ -41,7 +41,7 @@ export const VERIFIED_SEED_2 = [
       honors: "Regents' & Chancellor's Scholarship; college honors programs" }),
   // UIUC
   V({ id: "145637", url: "https://admissions.illinois.edu/", ed: false, ea: true, rd: true,
-      deadlines: { EA: "Nov 1", RD: "Jan 5" }, recs: "Not required for most programs — confirm",
+      deadlines: { EA: "Nov 1", RD: "Jan 5" }, recs: "Not required for most programs - confirm",
       essays: "Program-specific essays", css: "Not required (FAFSA-based)",
       majorRestrictions: { note: "Admitted by major; Grainger CS and CS+X extremely competitive; limited internal transfer into CS" },
       honors: "Campus Honors Program + college honors" }),
@@ -65,32 +65,32 @@ export const VERIFIED_SEED_2 = [
       honors: "Multiple honors programs (Turing, Plan II, etc.) by separate, elite application" }),
   // NJIT
   V({ id: "186867", url: "https://www.njit.edu/admissions/", ed: false, ea: true, rd: true,
-      deadlines: { EA: "Nov 1 (priority)", RD: "Rolling" }, testing: "Test-optional — confirm",
-      recs: "Optional", essays: "Optional/short — confirm", css: "Not required (FAFSA-based)",
+      deadlines: { EA: "Nov 1 (priority)", RD: "Rolling" }, testing: "Test-optional - confirm",
+      recs: "Optional", essays: "Optional/short - confirm", css: "Not required (FAFSA-based)",
       majorRestrictions: { note: "STEM readiness (math/science) is the key signal; admit bar reachable for prepared students" },
       honors: "Albert Dorman Honors College by separate application" }),
   // Penn State
   V({ id: "214777", url: "https://admissions.psu.edu/", ed: false, ea: true, rd: true,
       deadlines: { "Priority (best consideration)": "Nov 1", "Final": "Rolling until full" },
-      testing: "Test-optional — confirm", recs: "Not required", essays: "Personal statement (Penn State activities/essay)",
-      css: "Not required (FAFSA-based)", majorRestrictions: { note: "Many majors are 'entrance-to-major' — enter pre-major, meet GPA/course gates to declare (CS, engineering, Smeal business)" },
+      testing: "Test-optional - confirm", recs: "Not required", essays: "Personal statement (Penn State activities/essay)",
+      css: "Not required (FAFSA-based)", majorRestrictions: { note: "Many majors are 'entrance-to-major' - enter pre-major, meet GPA/course gates to declare (CS, engineering, Smeal business)" },
       honors: "Schreyer Honors College by separate, competitive application" }),
   // University of Maryland
   V({ id: "163286", url: "https://admissions.umd.edu/", ed: false, ea: true, rd: true,
-      deadlines: { EA: "Nov 1", RD: "Jan 15" }, testing: "Test-optional — confirm",
+      deadlines: { EA: "Nov 1", RD: "Jan 15" }, testing: "Test-optional - confirm",
       recs: "Optional", essays: "Maryland short-answer essays", css: "Not required (FAFSA-based)",
       majorRestrictions: { note: "CS and some engineering are Limited Enrollment Programs (LEPs) with higher bars and gateway criteria" },
       honors: "Honors College (incl. ACES, Gemstone) by separate consideration" }),
   // Stevens
   V({ id: "186584", url: "https://www.stevens.edu/admission-aid", ed: true, ea: true, rd: true,
       deadlines: { ED_I: "Nov 15", ED_II: "Jan 15", EA: "Nov 15", RD: "Feb 1" },
-      testing: "Test-optional — confirm", recs: "Counselor + teacher recommendation",
+      testing: "Test-optional - confirm", recs: "Counselor + teacher recommendation",
       essays: "Common App essay + Stevens supplement", css: "Confirm on financial aid site",
       majorRestrictions: { note: "Strong STEM prep expected; demonstrated interest helps" },
       honors: "Clark Scholars / Pinnacle Scholars programs by separate selection" }),
   // Harvard
   V({ id: "166027", url: "https://college.harvard.edu/admissions", ed: false, ea: false, rea: true, rd: true,
-      deadlines: { REA: "Nov 1", RD: "Jan 1" }, testing: "Testing required for applicable cycle — confirm",
+      deadlines: { REA: "Nov 1", RD: "Jan 1" }, testing: "Testing required for applicable cycle - confirm",
       recs: "Two teacher recommendations + counselor", essays: "Harvard supplement + Common App essay",
       css: "Required (CSS Profile) for aid", majorRestrictions: { note: "No admission by major; concentration declared sophomore year" },
       honors: "Honors degrees are academic distinctions, not a separate program" }),
@@ -150,7 +150,7 @@ export const VERIFIED_SEED_2 = [
       honors: "N/A (no separate honors college); legacy no longer considered" }),
   // Caltech
   V({ id: "110404", url: "https://www.admissions.caltech.edu/", ed: false, ea: true, rd: true,
-      deadlines: { EA: "Nov 1", RD: "Jan 3" }, testing: "Testing required (reinstated) — confirm",
+      deadlines: { EA: "Nov 1", RD: "Jan 3" }, testing: "Testing required (reinstated) - confirm",
       recs: "Math/science + humanities teacher recommendations + counselor", essays: "Caltech STEM-focused supplemental essays + Common App essay",
       css: "Required (CSS Profile) for aid", majorRestrictions: { note: "No admission by major; 'option' declared after first year; all paths intensely quantitative" },
       honors: "N/A (entire curriculum is rigorous)" }),

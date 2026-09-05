@@ -1,15 +1,15 @@
-// programDiscovery.js — the "Programs" backend. Three layers, all conservative:
+// programDiscovery.js - the "Programs" backend. Three layers, all conservative:
 //
 //  Layer 1: seed from the College Scorecard / CIP data we already fetch for
 //           major verification (scorecard.js:getPrograms). Broad field-of-study
-//           evidence only — NOT a claim that a school-specific program page
+//           evidence only - NOT a claim that a school-specific program page
 //           was checked. Labeled "College Scorecard / CIP inferred".
 //
 //  Layer 2: the family pastes an official URL (program page, admissions page,
 //           department page, special-program page, Common Data Set, net price
 //           calculator). We fetch that ONE page/document and heuristically
 //           extract structured fields. We never invent a fact that wasn't
-//           found on the page — a field we can't confidently locate is left
+//           found on the page - a field we can't confidently locate is left
 //           null and the record is flagged "Needs manual verification".
 //
 //  Layer 3: bounded, same-domain crawl from a college's official site, used
@@ -21,7 +21,7 @@
 // Nothing here ever fabricates a program name, deadline, or eligibility rule.
 // Extraction quality is reported via confidence_level, and verification_status
 // defaults to "Needs manual verification" until a human (the family) confirms
-// it — see routes/programs.js for the explicit "mark verified" actions.
+// it - see routes/programs.js for the explicit "mark verified" actions.
 import * as cheerio from "cheerio";
 import crypto from "node:crypto";
 import { db, cacheGet, cacheSet } from "../db/database.js";
@@ -33,7 +33,7 @@ const CRAWL_MAX_PAGES = 40;
 const CRAWL_MAX_DEPTH = 2;
 const CRAWL_DELAY_MS = 300; // be polite between requests to the same host
 
-// Classification vocabulary. Order matters — first match wins, so more
+// Classification vocabulary. Order matters - first match wins, so more
 // specific terms are listed before generic ones (e.g. "cybersecurity" before
 // "engineering", "data science" before "science").
 const PROGRAM_TYPE_KEYWORDS = [
@@ -79,7 +79,7 @@ function isPdfUrl(url) { return /\.pdf(\?|#|$)/i.test(url); }
 function hostOf(url) { try { return new URL(url).hostname.toLowerCase(); } catch { return null; } }
 
 // Same registrable domain or subdomain of it (e.g. business.rutgers.edu is
-// "same official domain" as rutgers.edu). Deliberately simple — this app never
+// "same official domain" as rutgers.edu). Deliberately simple - this app never
 // crawls off a family-provided/known official domain.
 function isSameOfficialDomain(url, officialDomain) {
   const h = hostOf(url);
@@ -129,7 +129,7 @@ async function isAllowedByRobots(url) {
           else if (key === "disallow" && applies && val) rules.push(val);
         }
       }
-    } catch { /* robots.txt unreachable — proceed conservatively (no extra rules) */ }
+    } catch { /* robots.txt unreachable - proceed conservatively (no extra rules) */ }
     robotsCache.set(h, rules);
   }
   const path = (() => { try { return new URL(url).pathname; } catch { return "/"; } })();
@@ -226,7 +226,7 @@ export function findDoubleMajorKeywordEvidence(text) {
 
 // Core heuristic extractor shared by Layer 2 (manual URL) and Layer 3 (crawl).
 // Returns a structured record PLUS a confidence_level derived from how many
-// target fields were actually found on the page — never invented.
+// target fields were actually found on the page - never invented.
 export function extractProgramFromHtml(html, url) {
   const $ = cheerio.load(html);
   $("script,style,nav,footer,noscript").remove();
@@ -263,7 +263,7 @@ export function extractProgramFromHtml(html, url) {
     doubleMajorKeywordHits,
     sourceUrl: url,
     // First ~3000 chars of visible body text, used only to check for a strong
-    // program keyword when deciding whether a crawled page is worth saving —
+    // program keyword when deciding whether a crawled page is worth saving -
     // never stored, never shown to the family.
     bodyExcerpt: bodyText.replace(/\s+/g, " ").slice(0, 3000),
   };
@@ -275,8 +275,8 @@ export function extractProgramFromHtml(html, url) {
 // happily "discovers" navigation furniture (an "Apply" button, a footer
 // "State and System Resources" link, a careers page) as if it were a real
 // program. Two checks, both conservative (reject only, never invent):
-//   1. isJunkTitle — an exact-match blocklist of common site furniture titles.
-//   2. hasStrongProgramSignal / fieldsFound — require either a decent amount
+//   1. isJunkTitle - an exact-match blocklist of common site furniture titles.
+//   2. hasStrongProgramSignal / fieldsFound - require either a decent amount
 //      of extracted structured info, OR a specific program-shaped phrase in
 //      the title/url/body (e.g. "Honors Program", "Major in Computer Science").
 //      A page that matches neither is almost never an actual program page.
@@ -337,7 +337,7 @@ function findExistingProgram(studentId, collegeId, programName) {
 }
 
 // ---------------------------------------------------------------------------
-// Layer 1 — seed discovered_programs from existing College Scorecard/CIP data.
+// Layer 1 - seed discovered_programs from existing College Scorecard/CIP data.
 // ---------------------------------------------------------------------------
 const insertProgram = db.prepare(`
   INSERT INTO discovered_programs (
@@ -355,11 +355,11 @@ const insertProgram = db.prepare(`
   )
 `);
 
-// Default "what to do next" text derived purely from verification status —
+// Default "what to do next" text derived purely from verification status -
 // never a claim about the program itself, just a process nudge.
 function defaultActionNeeded(verificationStatus) {
   if (verificationStatus === "Official source verified" || verificationStatus === "User verified") {
-    return "Ready to include in Decision Plan strategy — recheck before the application deadline.";
+    return "Ready to include in Decision Plan strategy - recheck before the application deadline.";
   }
   if (verificationStatus === "College Scorecard / CIP inferred") {
     return "Find and check the official program page for exact details.";
@@ -409,7 +409,7 @@ export async function seedProgramsFromScorecard(studentId, collegeId) {
       confidence_level: "medium",
       verification_status: "College Scorecard / CIP inferred",
       last_checked: ts,
-      notes: "Inferred from College Scorecard / CIP field-of-study data. This confirms a broad field of study is offered at the institution level — it does NOT confirm a specific program page, honors track, or special-program variant. Needs manual verification against the official program page for anything beyond the major itself.",
+      notes: "Inferred from College Scorecard / CIP field-of-study data. This confirms a broad field of study is offered at the institution level - it does NOT confirm a specific program page, honors track, or special-program variant. Needs manual verification against the official program page for anything beyond the major itself.",
       action_needed: defaultActionNeeded("College Scorecard / CIP inferred"),
       created_at: ts,
       updated_at: ts,
@@ -420,7 +420,7 @@ export async function seedProgramsFromScorecard(studentId, collegeId) {
 }
 
 // ---------------------------------------------------------------------------
-// Layer 2 — manual official URL ingestion.
+// Layer 2 - manual official URL ingestion.
 // ---------------------------------------------------------------------------
 const insertSource = db.prepare(`
   INSERT INTO program_sources (source_id, student_id, college_id, college_name, url, source_type,
@@ -440,7 +440,7 @@ export async function addOfficialUrl(studentId, { collegeId, collegeName, url, s
     insertSource.run({
       source_id: sourceId, student_id: studentId, college_id: collegeId || null, college_name: collegeName || null,
       url, source_type: sourceType || "other", discovery_method: "manual_url", fetch_status: "skipped_pdf",
-      http_status: null, raw_title: null, notes: "PDF source — not fetched automatically. Re-add with allowPdf to extract text.",
+      http_status: null, raw_title: null, notes: "PDF source - not fetched automatically. Re-add with allowPdf to extract text.",
       last_checked: ts, created_at: ts,
     });
     return { source: { sourceId, fetchStatus: "skipped_pdf" }, program: null };
@@ -562,7 +562,7 @@ function saveExtractedProgram(studentId, { collegeId, collegeName, sourceId, url
 }
 
 // ---------------------------------------------------------------------------
-// Layer 3 — bounded official-domain discovery.
+// Layer 3 - bounded official-domain discovery.
 // ---------------------------------------------------------------------------
 function extractLinks(html, baseUrl) {
   const $ = cheerio.load(html);
@@ -679,10 +679,10 @@ export async function discoverFromOfficialDomain(studentId, { collegeId, college
 }
 
 // ---------------------------------------------------------------------------
-// "Research this college" — the one-button family workflow. Orchestrates
+// "Research this college" - the one-button family workflow. Orchestrates
 // Layer 1 (College Scorecard / CIP) and, when the college's official website
 // is known from College Scorecard itself, Layer 3 (bounded official-domain
-// discovery) automatically — the family never has to know or type a domain.
+// discovery) automatically - the family never has to know or type a domain.
 // If no official website is on file, Layer 3 is skipped and the response says
 // so plainly; the family can still add a known link under "Advanced."
 // ---------------------------------------------------------------------------
@@ -690,7 +690,7 @@ export async function researchCollege(studentId, { collegeId, collegeName, track
   const summary = {
     collegeId, collegeName, track: track || null, keyword: keyword || null,
     scorecard: null, domainDiscovery: null, domainUsed: null,
-    incompleteNotice: "Programs discovered from official sources. College program discovery may be incomplete — always verify final decisions on official college websites.",
+    incompleteNotice: "Programs discovered from official sources. College program discovery may be incomplete - always verify final decisions on official college websites.",
   };
 
   // Layer 1: broad fields of study.
@@ -707,7 +707,7 @@ export async function researchCollege(studentId, { collegeId, collegeName, track
     const found = await getCollegeById(collegeId);
     websiteUrl = found?.college?.websiteUrl || null;
     if (found?.college?.name && !collegeName) summary.collegeName = found.college.name;
-  } catch { /* Scorecard lookup failed — proceed without Layer 3 */ }
+  } catch { /* Scorecard lookup failed - proceed without Layer 3 */ }
 
   if (websiteUrl) {
     const domain = websiteUrl.replace(/^https?:\/\//, "").replace(/\/.*/, "");
@@ -745,12 +745,12 @@ export async function researchCollege(studentId, { collegeId, collegeName, track
 }
 
 // ---------------------------------------------------------------------------
-// Layer 4 — live official-site majors/departments scan (NOT persisted).
+// Layer 4 - live official-site majors/departments scan (NOT persisted).
 //
 // Why this exists: the "All undergraduate programs" list elsewhere in this
 // app comes from College Scorecard's federal CIP taxonomy, which a college
 // reports to the Dept. of Education for every bachelor's program it grants.
-// That's real, government-verified data — but it's organized by federal
+// That's real, government-verified data - but it's organized by federal
 // classification, not by how the college's own website groups its
 // departments/majors, so the two lists rarely read the same for the same
 // college (e.g. Scorecard may show "Nuclear Engineering" as its own CIP code
@@ -763,11 +763,11 @@ export async function researchCollege(studentId, { collegeId, collegeName, track
 // Opportunities" crawl above) that looks specifically for major/department
 // listing pages, and returns exactly what it found with a live link back to
 // each source page. Nothing is persisted to the database and nothing is
-// merged with the CIP list — it's a fresh, on-demand, side-by-side reference
+// merged with the CIP list - it's a fresh, on-demand, side-by-side reference
 // so a family can literally click through and confirm for themselves. This
 // is inherently a heuristic best-effort scan (college websites are not
 // standardized), so it can miss things or occasionally pick up a
-// near-miss — every result carries its real source URL for that reason.
+// near-miss - every result carries its real source URL for that reason.
 const MAJOR_PAGE_URL_HINTS = [
   "major", "majors", "department", "departments", "academics", "academic-programs",
   "programs-of-study", "program-of-study", "fields-of-study", "undergraduate-majors",
@@ -795,11 +795,11 @@ function looksLikeMajorPage(url, title) {
   return hintedUrl || titleMatch;
 }
 
-// Cleans a raw <title> tag down to a readable department/major name — strips
+// Cleans a raw <title> tag down to a readable department/major name - strips
 // the usual " | University Name" / " - University Name" suffix noise.
 function cleanMajorTitle(title, collegeName) {
   if (!title) return null;
-  let t = title.replace(/\s*[|\-–—]\s*.*$/, "").trim();
+  let t = title.replace(/\s*[|\-–-]\s*.*$/, "").trim();
   if (collegeName && t.toLowerCase() === collegeName.toLowerCase()) return null;
   return t.length >= 3 && t.length <= 120 ? t : title.slice(0, 120);
 }
@@ -868,8 +868,8 @@ export async function scanOfficialSiteMajors({ collegeId, collegeName, domain, s
     majorsFound: found.length,
     majors: found,
     note: found.length
-      ? `Found ${found.length} department/major page${found.length === 1 ? "" : "s"} on ${cleanDomain}. This is a best-effort scan of the college's own site, not an official or complete catalog — click through to confirm.`
-      : `No clear department/major pages were found within a ${MAX_PAGES}-page scan of ${cleanDomain}. Some colleges list majors under a structure this scan doesn't recognize, or require JavaScript to render — open the site directly to check.`,
+      ? `Found ${found.length} department/major page${found.length === 1 ? "" : "s"} on ${cleanDomain}. This is a best-effort scan of the college's own site, not an official or complete catalog - click through to confirm.`
+      : `No clear department/major pages were found within a ${MAX_PAGES}-page scan of ${cleanDomain}. Some colleges list majors under a structure this scan doesn't recognize, or require JavaScript to render - open the site directly to check.`,
   };
 }
 
@@ -877,7 +877,7 @@ export async function scanOfficialSiteMajors({ collegeId, collegeName, domain, s
 // Shared crawl primitives, exported for reuse by other bounded-discovery
 // features (e.g. Essay Center's "Find essay prompts", services/essayCenter.js)
 // so they don't duplicate fetch/robots/link-extraction logic. Purely additive
-// — nothing above this changes behavior for the existing Programs feature.
+// - nothing above this changes behavior for the existing Programs feature.
 // ---------------------------------------------------------------------------
 export {
   fetchPage,

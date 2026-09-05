@@ -1,4 +1,4 @@
-// Compare.jsx — side-by-side comparison of 2–5 saved colleges with adjustable
+// Compare.jsx - side-by-side comparison of 2–5 saved colleges with adjustable
 // weights, plus CSV export. Pulls live official data per college.
 import React, { useState, useEffect, useMemo } from "react";
 import { CompareChart } from "./CompareChart.jsx";
@@ -154,15 +154,15 @@ export function Compare({ saved, profile }) {
             <tbody>
               <tr>
                 <td><strong>Weighted score</strong></td>
-                {picked.map((id) => <td key={id}><strong className="mono" style={{ fontSize: 16, color: id === best ? "var(--safety)" : "var(--ink-900)" }}>{weighted[id] ?? "—"}</strong></td>)}
+                {picked.map((id) => <td key={id}><strong className="mono" style={{ fontSize: 16, color: id === best ? "var(--safety)" : "var(--ink-900)" }}>{weighted[id] ?? "-"}</strong></td>)}
               </tr>
               <Row label="Category" picked={picked} val={(id) => rows[id]?.scored?.admission?.label} />
-              <Row label="Admit rate" picked={picked} val={(id) => fmtPct(rows[id]?.detail?.college?.admissionRate) || "—"} />
-              <Row label="SAT midpoint" picked={picked} val={(id) => rows[id]?.detail?.college?.satMidpoint ?? "—"} />
-              <Row label="Net price" picked={picked} val={(id) => fmtUSD(rows[id]?.scored?.netCost) || "—"} />
-              <Row label="Median earnings" picked={picked} val={(id) => fmtUSD(rows[id]?.detail?.college?.medianEarnings) || "—"} />
-              <Row label="Graduation rate" picked={picked} val={(id) => { const g = rows[id]?.detail?.college?.graduationRate; return g != null ? Math.round(g*100)+"%" : "—"; }} />
-              <Row label="Culture fit" picked={picked} val={(id) => rows[id]?.fit?.cultureFit?.score ?? "—"} />
+              <Row label="Admit rate" picked={picked} val={(id) => fmtPct(rows[id]?.detail?.college?.admissionRate) || "-"} />
+              <Row label="SAT midpoint" picked={picked} val={(id) => rows[id]?.detail?.college?.satMidpoint ?? "-"} />
+              <Row label="Net price" picked={picked} val={(id) => fmtUSD(rows[id]?.scored?.netCost) || "-"} />
+              <Row label="Median earnings" picked={picked} val={(id) => fmtUSD(rows[id]?.detail?.college?.medianEarnings) || "-"} />
+              <Row label="Graduation rate" picked={picked} val={(id) => { const g = rows[id]?.detail?.college?.graduationRate; return g != null ? Math.round(g*100)+"%" : "-"; }} />
+              <Row label="Culture fit" picked={picked} val={(id) => rows[id]?.fit?.cultureFit?.score ?? "-"} />
             </tbody>
           </table>
           <div className="row" style={{ gap: 8, marginTop: 12 }}>

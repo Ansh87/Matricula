@@ -1,4 +1,4 @@
-// bls.js — U.S. Bureau of Labor Statistics career data.
+// bls.js - U.S. Bureau of Labor Statistics career data.
 //
 // The BLS public API (v2) serves time series by series ID (e.g. employment,
 // wages). Occupation-level median pay + projected growth for careers come from

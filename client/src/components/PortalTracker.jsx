@@ -1,4 +1,4 @@
-// PortalTracker.jsx — Apply -> Portal Tracker. There is no dedicated
+// PortalTracker.jsx - Apply -> Portal Tracker. There is no dedicated
 // post-submission portal checklist system in the app yet (nothing to invent
 // here), so this is an honest placeholder rather than a fake feature: it
 // says plainly that this isn't tracked as its own system, and points to the

@@ -1,7 +1,7 @@
-// FinancialAid.jsx — two tools: (1) Financial Aid Planner (FAFSA/CSS per saved
+// FinancialAid.jsx - two tools: (1) Financial Aid Planner (FAFSA/CSS per saved
 // college + general SAI/loan/appeal guidance), (2) a manual Scholarship Tracker
 // where the family enters scholarships they find and tracks status/deadlines.
-// No scholarship "search" — there's no free, accurate database, so we don't fake
+// No scholarship "search" - there's no free, accurate database, so we don't fake
 // one; instead we make it easy to track the real ones you find.
 import React, { useState, useEffect } from "react";
 import { api } from "../lib/api.js";
@@ -78,7 +78,7 @@ function Planner({ studentId, profile }) {
 
       <div className="card pad">
         <h3 style={{ marginBottom: 8 }}>Aid forms for your saved colleges</h3>
-        {!plan.items.length ? <p className="note">Save some colleges first — then you'll see FAFSA/CSS requirements per school here.</p> : (
+        {!plan.items.length ? <p className="note">Save some colleges first - then you'll see FAFSA/CSS requirements per school here.</p> : (
           <div className="stack" style={{ gap: 8 }}>
             {plan.items.map((it) => (
               <div key={it.collegeId} className="card pad" style={{ background: "var(--paper-2)", padding: 12 }}>
@@ -127,7 +127,7 @@ function Tracker({ studentId }) {
   return (
     <div className="stack">
       <div className="row spread wrap">
-        <p className="note">Track scholarships you find (merit, state, private, STEM, local, first-gen, employer, etc.). Matricula doesn't search a scholarship database — those aren't freely available and would go stale — so this keeps <em>your</em> real finds organized.</p>
+        <p className="note">Track scholarships you find (merit, state, private, STEM, local, first-gen, employer, etc.). Matricula doesn't search a scholarship database - those aren't freely available and would go stale - so this keeps <em>your</em> real finds organized.</p>
         <div className="row" style={{ gap: 8 }}>
           {rows.length > 0 && <button className="btn ghost sm" onClick={exportCsv}>Export CSV</button>}
           <button className="btn amber sm" onClick={() => setEditing({ ...BLANK })}>+ Add scholarship</button>
@@ -145,7 +145,7 @@ function Tracker({ studentId }) {
                   <strong>{s.name || "Untitled scholarship"}</strong>
                   {s.provider && <span className="note"> · {s.provider}</span>}
                 </div>
-                <span className="pill" style={{ background: statusColor(s.status) }}>{s.status || "—"}</span>
+                <span className="pill" style={{ background: statusColor(s.status) }}>{s.status || "-"}</span>
               </div>
               <div className="row wrap" style={{ gap: 6, margin: "8px 0" }}>
                 {s.amount && <span className="pill">{s.amount}</span>}
@@ -184,7 +184,7 @@ function ScholarshipForm({ value, onChange, onSave, onCancel }) {
         <F k="deadline" label="Deadline" ph="2026-11-01" />
         <div><label className="lbl">Renewable?</label>
           <select className="inp" value={value.renewable || ""} onChange={(e) => set("renewable", e.target.value)}>
-            <option value="">—</option><option>One-time</option><option>Renewable</option>
+            <option value="">-</option><option>One-time</option><option>Renewable</option>
           </select></div>
         <div><label className="lbl">Status</label>
           <select className="inp" value={value.status || "Researching"} onChange={(e) => set("status", e.target.value)}>

@@ -1,4 +1,4 @@
-// careerSeed.js — rows for the careers + major_career_mapping tables.
+// careerSeed.js - rows for the careers + major_career_mapping tables.
 // Figures transcribed from the BLS Occupational Outlook Handbook (2024 vintage).
 // AI-impact and grad-school notes are editorial guidance, labeled "Estimated".
 const BLS = "U.S. Bureau of Labor Statistics, Occupational Outlook Handbook";

@@ -1,4 +1,4 @@
-// Simulator.jsx — "what if" panel inside the college dossier. Toggle changes to
+// Simulator.jsx - "what if" panel inside the college dossier. Toggle changes to
 // the profile and see how the estimated category/probability/culture-fit shift.
 import React, { useState, useEffect } from "react";
 import { api } from "../lib/api.js";
@@ -35,7 +35,7 @@ export function Simulator({ collegeId, profile }) {
         <span className="pill">estimate</span>
       </div>
       <p className="note" style={{ margin: "6px 0 12px" }}>
-        Toggle changes to see how they shift your estimated fit at this college. Directional only — not a real admission decision.
+        Toggle changes to see how they shift your estimated fit at this college. Directional only - not a real admission decision.
       </p>
 
       <div className="chips" style={{ marginBottom: 14 }}>
@@ -78,7 +78,7 @@ function Stat({ k, v, up }) {
     <div>
       <div className="note" style={{ fontSize: 11 }}>{k}</div>
       <div className="mono" style={{ fontSize: 18, fontWeight: 600, color: up ? "var(--safety)" : "var(--ink-900)" }}>
-        {v == null ? "—" : v}{up ? " ↑" : ""}
+        {v == null ? "-" : v}{up ? " ↑" : ""}
       </div>
     </div>
   );

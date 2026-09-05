@@ -1,4 +1,4 @@
-// Matches.jsx — personalized recommendations ONLY. No search, no full database.
+// Matches.jsx - personalized recommendations ONLY. No search, no full database.
 // Two views: Balanced List (default) and Best Fit.
 import React, { useEffect, useMemo, useState } from "react";
 import { api } from "../lib/api.js";
@@ -51,7 +51,7 @@ export function Matches({
 
   // Matching basis: "profile" (use Profile majors/interests) or "track" (use the
   // selected Career Track). This ONLY controls whether the endpoints are called
-  // with a scenario id (track) or without one (profile) — no scoring change.
+  // with a scenario id (track) or without one (profile) - no scoring change.
   // null until we've loaded the catalog and picked a sensible default.
   const [matchingBasis, setMatchingBasis] = useState(null);
 
@@ -95,7 +95,7 @@ export function Matches({
   // Load the scenario catalog once. Default scenario precedence:
   //   1. the student's saved preferred track (profile.preferredScenarioId)
   //   2. the server's default scenario
-  // The user can still change the scenario freely below — this only sets the
+  // The user can still change the scenario freely below - this only sets the
   // initial selection and never locks it.
   useEffect(() => {
     let cancelled = false;
@@ -129,7 +129,7 @@ export function Matches({
   // Soft conflict: in Career Track mode, does the student's Profile primary major
   // appear UNALIGNED with the selected track? Aligned = the major matches the
   // track's primary/secondary/supporting fields (case-insensitive, loose). This
-  // is a clarity warning only — it never blocks or changes results.
+  // is a clarity warning only - it never blocks or changes results.
   const primaryMajor = profile?.primaryMajor || null;
   const trackConflict = useMemo(() => {
     if (matchingBasis !== "track" || !activeScenario || !primaryMajor) return false;
@@ -144,7 +144,7 @@ export function Matches({
   }, [matchingBasis, activeScenario, primaryMajor]);
 
   // Balanced List comes from the server (quota-based, not top-N-by-score).
-  // Passing the scenario id reshapes it into "Balanced Top N — <scenario>".
+  // Passing the scenario id reshapes it into "Balanced Top N - <scenario>".
   useEffect(() => {
     if (tab !== "balanced" || !recs.length || matchingBasis == null) return;
     let cancelled = false;
@@ -308,7 +308,7 @@ export function Matches({
           {/* Header line */}
           <div className="note" style={{ marginTop: 8, fontWeight: 600 }}>
             {matchingBasis === "track"
-              ? `Results based on Career Track: ${activeScenario?.scenarioName || "—"}`
+              ? `Results based on Career Track: ${activeScenario?.scenarioName || "-"}`
               : "Results based on Profile majors/interests"}
           </div>
 
@@ -341,7 +341,7 @@ export function Matches({
             {matchingBasis === "track" ? (
               <div className="note" style={{ fontSize: 12 }}>
                 <div><strong>Matching basis:</strong> Career Track</div>
-                <div><strong>Selected track:</strong> {activeScenario?.scenarioName || "—"}</div>
+                <div><strong>Selected track:</strong> {activeScenario?.scenarioName || "-"}</div>
                 {primaryMajor && <div><strong>Profile major:</strong> {primaryMajor}</div>}
                 <div><strong>Service academies:</strong> {includeServiceAcademies ? "Included" : "Excluded"}</div>
                 <div style={{ color: "var(--muted)" }}>Note: Results are based on the selected Career Track.</div>
@@ -351,7 +351,7 @@ export function Matches({
                 <div><strong>Matching basis:</strong> Profile majors/interests</div>
                 {primaryMajor && <div><strong>Primary major:</strong> {primaryMajor}</div>}
                 {profile?.secondaryMajor && <div><strong>Second major/minor:</strong> {profile.secondaryMajor}</div>}
-                <div><strong>Academic interests:</strong> {(profile?.interests || []).join(", ") || "—"}</div>
+                <div><strong>Academic interests:</strong> {(profile?.interests || []).join(", ") || "-"}</div>
                 <div><strong>Service academies:</strong> {includeServiceAcademies ? "Included" : "Excluded"}</div>
               </div>
             )}

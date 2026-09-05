@@ -1,4 +1,4 @@
-// ui.jsx — shared primitives. The provenance badge is the signature element:
+// ui.jsx - shared primitives. The provenance badge is the signature element:
 // every value shows where it came from and how confident we are.
 import React, { useState } from "react";
 import { api } from "../lib/api.js";
@@ -149,7 +149,7 @@ export function LegalDisclaimer() {
       College Scorecard; career figures from the U.S. Bureau of Labor Statistics; admissions details from each
       college’s official site or Common Data Set, each labeled with its source and review date. Fit scores and
       Reach/Target/Safety categories are <em>estimates</em> generated from that data. Admissions are holistic
-      and unpredictable, and these estimates are not guarantees. Costs and aid vary by family — always confirm
+      and unpredictable, and these estimates are not guarantees. Costs and aid vary by family - always confirm
       with each college’s official net price calculator and admissions office before making decisions.
     </div>
   );

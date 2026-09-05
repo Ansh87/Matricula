@@ -1,4 +1,4 @@
-// ImportColleges.jsx — "Import College List": paste or upload a list of
+// ImportColleges.jsx - "Import College List": paste or upload a list of
 // college names, review the matches (never auto-adding anything the app
 // isn't confident about), then add the confirmed colleges to My List. Three
 // steps: input -> review -> summary. Every college added here is scored with
@@ -41,7 +41,7 @@ function ManualSearch({ onPick, onCancel }) {
           <div className="stack" style={{ gap: 4, marginTop: 8 }}>
             {results.slice(0, 8).map((c) => (
               <button key={c.id} className="link" style={{ textAlign: "left" }} onClick={() => onPick(c)}>
-                {c.name} — {[c.city, c.state].filter(Boolean).join(", ")}
+                {c.name} - {[c.city, c.state].filter(Boolean).join(", ")}
               </button>
             ))}
           </div>
@@ -192,7 +192,7 @@ export function ImportColleges({ studentId, profile, saved, onImported }) {
         <h3 style={{ marginBottom: 4 }}>Import College List</h3>
         <p className="note">
           Paste a list of colleges, or upload a CSV or text file. We'll match each name to an official college,
-          show you a review screen, and only add the ones you confirm — colleges we're not confident about are
+          show you a review screen, and only add the ones you confirm - colleges we're not confident about are
           never added automatically.
         </p>
         <RestoredNote restoredFrom={restoredFrom} />
@@ -274,7 +274,7 @@ export function ImportColleges({ studentId, profile, saved, onImported }) {
                         Suggested category: <strong>{r.suggested.category === "Insufficient Data" ? "Admissions category needs review" : r.suggested.category}</strong>
                       </div>
                     )}
-                    {r.alreadySaved && <div className="note" style={{ color: "var(--safety)", marginTop: 2 }}>Already in My List — we'll add "Also found in imported list" instead of a duplicate.</div>}
+                    {r.alreadySaved && <div className="note" style={{ color: "var(--safety)", marginTop: 2 }}>Already in My List - we'll add "Also found in imported list" instead of a duplicate.</div>}
                   </div>
                 )}
 
@@ -282,11 +282,11 @@ export function ImportColleges({ studentId, profile, saved, onImported }) {
 
                 {r.options && r.options.length > 0 && (
                   <div className="stack" style={{ gap: 4, marginTop: 8 }}>
-                    <div className="note" style={{ fontWeight: 600 }}>{r.confidence === "Ambiguous" ? "Choose the correct college:" : "Possible matches — choose one:"}</div>
+                    <div className="note" style={{ fontWeight: 600 }}>{r.confidence === "Ambiguous" ? "Choose the correct college:" : "Possible matches - choose one:"}</div>
                     {r.options.map((opt) => (
                       <button key={opt.collegeId || opt.officialName} className="link" style={{ textAlign: "left" }}
                         onClick={() => chooseOption(r.originalName, opt)}>
-                        {opt.officialName}{opt.campusLabel ? ` (${opt.campusLabel})` : ""} — {[opt.city, opt.state].filter(Boolean).join(", ") || "state unknown"}
+                        {opt.officialName}{opt.campusLabel ? ` (${opt.campusLabel})` : ""} - {[opt.city, opt.state].filter(Boolean).join(", ") || "state unknown"}
                         {opt.suggested ? ` · ${opt.suggested.category === "Insufficient Data" ? "needs review" : opt.suggested.category}` : ""}
                       </button>
                     ))}

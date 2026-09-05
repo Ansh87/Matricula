@@ -1,4 +1,4 @@
-// selectionContext.js — shared label constants and merge logic for tracking
+// selectionContext.js - shared label constants and merge logic for tracking
 // WHERE a saved college came from (My List) and, when relevant, its
 // double-major context. Used by routes/misc.js (student_college_list) and
 // routes/decisionPlan.js (decision_plan_items). Kept as one small, dependency
@@ -22,7 +22,7 @@ export const SELECTION_CONTEXTS = [
 export const DOUBLE_MAJOR_STATUSES = [
   "Confirmed double-major path",
   "Confirmed with restrictions",
-  "Programs exist — double-major rules not verified",
+  "Programs exist - double-major rules not verified",
   "Second program is not confirmed as an undergraduate major",
   "Needs official verification",
   "Not confirmed",

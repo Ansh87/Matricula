@@ -1,4 +1,4 @@
-// scenarios.js — Major / career-track SCENARIOS for a single student.
+// scenarios.js - Major / career-track SCENARIOS for a single student.
 //
 // The student is not "Computer Science only," nor a flat bag of equal interests.
 // Instead we model a small set of realistic major/career TRACKS, each with a
@@ -58,7 +58,7 @@ const NARROW_CIP = {
   "statistics": ["2705", "2706"],
   "physics": ["4008"],
   "artificial intelligence": ["1102", "3017"], // AI/ML-specific, not plain CS
-  // New engineering fields — narrow so they distinguish (not general CS/eng).
+  // New engineering fields - narrow so they distinguish (not general CS/eng).
   "aerospace engineering": ["1402"],
   "mechanical engineering": ["1419"],
   "chemical engineering": ["1407"],
@@ -111,7 +111,7 @@ export const SCENARIOS = [
     doubleMajorIdeas: ["CS + Statistics", "CS + Mathematics", "Data Science + Economics"],
     skillsToBuild: ["Python & ML frameworks", "Linear algebra, probability & statistics", "Data pipelines", "A research or applied ML project"],
     projectIdeas: ["End-to-end ML model (collect, clean, train, present)", "Data pipeline or dashboard on a public dataset"],
-    risks: ["Fast-moving tooling — fundamentals outlast frameworks", "Entry-level bar rising as routine coding automates"],
+    risks: ["Fast-moving tooling - fundamentals outlast frameworks", "Entry-level bar rising as routine coding automates"],
     sourceNotes: [
       { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Data Scientists", growth: "34%", note: "Projection is for the occupation, not a guarantee for every student." },
     ],
@@ -208,7 +208,7 @@ export const SCENARIOS = [
     doubleMajorIdeas: ["Physics + CS", "Physics + EE", "Engineering Physics + CS"],
     skillsToBuild: ["Quantum mechanics & linear algebra", "EE/CS electives", "Undergraduate research in a quantum/physics lab"],
     projectIdeas: ["Qubit/gate simulator", "Clear explainer of a quantum algorithm"],
-    risks: ["Most quantum roles expect graduate school (often a PhD)", "Rarely a dedicated undergraduate 'Quantum Engineering' major — verify the pathway"],
+    risks: ["Most quantum roles expect graduate school (often a PhD)", "Rarely a dedicated undergraduate 'Quantum Engineering' major - verify the pathway"],
     sourceNotes: [
       { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Computer & Information Research Scientists", growth: "20%", note: "Projection is for the occupation, not a guarantee for every student." },
     ],
@@ -448,7 +448,7 @@ function scoreFromStatuses(scenario, primary, secondary, supStatuses, career) {
   if (scenario.isQuantum) {
     const anyPathway = primary.matched || secondary.matched || supStatuses.some((s) => s.matched);
     if (anyPathway) {
-      out.quantumNote = "Quantum research fit — undergraduate major pathway must be verified.";
+      out.quantumNote = "Quantum research fit - undergraduate major pathway must be verified.";
     }
   }
 
@@ -457,7 +457,7 @@ function scoreFromStatuses(scenario, primary, secondary, supStatuses, career) {
 
 // --- scenarioFit: scores a college that carries full official program arrays
 // (college.bachelorCips), e.g. from a major-search record. Unchanged behavior.
-// Returns { score, label, breakdown, quantumNote? } — additive.
+// Returns { score, label, breakdown, quantumNote? } - additive.
 export function scenarioFit(scenario, c) {
   // Primary field uses the forgiving match (the student's core major); secondary
   // and supporting use NARROW matching so distinguishing fields (finance, cyber,
@@ -482,7 +482,7 @@ export function scenarioFit(scenario, c) {
 // on one field isn't proof the college lacks it. This keeps secondary/supporting
 // signals as positive-only bonuses and preserves the required ordering
 // (primary-only > secondary/supporting-only > unknown). The single exception is
-// a college where verification COMPLETELY covered every field but matched NONE —
+// a college where verification COMPLETELY covered every field but matched NONE -
 // that is affirmative "verified no scenario match", scored lowest via no-match
 // on the primary field. A PARTIAL/truncated lookup never triggers no-match,
 // because a missing id may live beyond the loaded pages.

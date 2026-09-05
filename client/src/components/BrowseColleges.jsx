@@ -1,4 +1,4 @@
-// BrowseColleges.jsx — search/explore the full U.S. database. Works WITHOUT
+// BrowseColleges.jsx - search/explore the full U.S. database. Works WITHOUT
 // running Matches. Not a personalized recommendation list.
 import React, { useState } from "react";
 import { api } from "../lib/api.js";
@@ -109,7 +109,7 @@ function AllColleges({ profile, onOpen, savedIds, onToggleSave, studentId }) {
       <div className="card pad">
         <label className="lbl">Search any U.S. college</label>
         <div className="row wrap" style={{ gap: 8, marginTop: 6 }}>
-          <input className="inp" style={{ flex: 1, minWidth: 200 }} value={name} placeholder="College name — e.g. Rutgers, Purdue"
+          <input className="inp" style={{ flex: 1, minWidth: 200 }} value={name} placeholder="College name - e.g. Rutgers, Purdue"
             onChange={(e) => setName(e.target.value)} onKeyDown={(e) => e.key === "Enter" && run(0)} />
           <select className="inp" style={{ width: "auto" }} value={stateFilter} onChange={(e) => setStateFilter(e.target.value)}>
             <option value="">All states</option>
@@ -198,7 +198,7 @@ function BrowseCard({ c, profile, saved, onOpen, onToggleSave }) {
       {scored && (
         <div className="row wrap" style={{ gap: 6, marginBottom: 8 }}>
           <span className="pill" style={{ background: "var(--amber-b)" }}>
-            Estimated fit based on your profile: {scored.overall ?? "—"}
+            Estimated fit based on your profile: {scored.overall ?? "-"}
           </span>
           {scored.coarseCategory && <span className="pill">{scored.coarseCategory}</span>}
         </div>

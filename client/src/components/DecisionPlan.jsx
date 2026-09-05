@@ -394,7 +394,7 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
                       </div>
                       <div className="note">
                         {it.program_name || "No specific program set"} · {it.admission_category || "Category not set"} · {it.decision_status}
-                        {inactive && <strong style={{ color: "var(--reach)" }}> — not moving forward</strong>}
+                        {inactive && <strong style={{ color: "var(--reach)" }}> - not moving forward</strong>}
                       </div>
                       {it.import_batch_id && (
                         <div className="note" style={{ fontSize: 11, color: "var(--muted)" }}>
@@ -432,7 +432,7 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
                       {it.primary_major && (
                         <div className="note" style={{ fontSize: 11 }}>
                           <span className="pill" style={{ background: "var(--target-b)" }}>Double Major</span>{" "}
-                          Primary: {it.primary_major} · Second major / minor: {it.secondary_major || "—"}
+                          Primary: {it.primary_major} · Second major / minor: {it.secondary_major || "-"}
                           {" · "}Status: {it.double_major_status || "Needs official verification"}
                           {it.double_major_verification_status && !["Official source verified", "User verified"].includes(it.double_major_verification_status) && (
                             <strong style={{ color: "var(--amber)" }}> · Verify double-major rules</strong>
@@ -470,13 +470,13 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
                         <div>
                           <label className="lbl">Admission category</label>
                           <select className="inp" value={it.admission_category || ""} onChange={(e) => updateItem(it.item_id, { admissionCategory: e.target.value })}>
-                            {CATEGORY_OPTS.map((o) => <option key={o} value={o}>{o || "—"}</option>)}
+                            {CATEGORY_OPTS.map((o) => <option key={o} value={o}>{o || "-"}</option>)}
                           </select>
                         </div>
                         <div>
                           <label className="lbl">Application round</label>
                           <select className="inp" value={it.application_round || ""} onChange={(e) => updateItem(it.item_id, { applicationRound: e.target.value })}>
-                            {ROUND_OPTS.map((o) => <option key={o} value={o}>{o || "—"}</option>)}
+                            {ROUND_OPTS.map((o) => <option key={o} value={o}>{o || "-"}</option>)}
                           </select>
                         </div>
                         <div>

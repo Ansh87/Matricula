@@ -1,9 +1,9 @@
-// routes/decisionPlan.js — the "Decision Plan" tab API: final application list
+// routes/decisionPlan.js - the "Decision Plan" tab API: final application list
 // builder, program verification checklist, major-specific admission risk, cost
 // risk, strategy notes, course/prep plan, timeline/tasks, and CSV export.
 // Mounted behind requireAuth; router.param("id") forces every request onto the
 // authenticated Firebase UID, identical to the existing studentRouter/
-// programsRouter pattern — no user can read or write another family's plan.
+// programsRouter pattern - no user can read or write another family's plan.
 import express from "express";
 import crypto from "node:crypto";
 import { db } from "../db/database.js";

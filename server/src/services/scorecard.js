@@ -1,4 +1,4 @@
-// scorecard.js — talks to the U.S. Dept. of Education College Scorecard API.
+// scorecard.js - talks to the U.S. Dept. of Education College Scorecard API.
 // The API key lives only here (server-side). We cache responses, attach source
 // metadata to every field, and NEVER invent values: a missing field becomes null
 // and is rendered downstream as "Data unavailable".
@@ -10,7 +10,7 @@ const SOURCE = "U.S. Department of Education College Scorecard";
 
 // Fields we request. "latest.*" resolves to the most recent available cohort.
 // BASE_FIELDS: used for broad national scans and general college lookups.
-// Deliberately EXCLUDES latest.programs.cip_4_digit — that field returns a
+// Deliberately EXCLUDES latest.programs.cip_4_digit - that field returns a
 // large nested array per college, and requesting it for ~2,000 colleges makes
 // the scan enormous (slow, timeout-prone, and easy to trip rate limits).
 const BASE_FIELDS = [
@@ -116,7 +116,7 @@ function normalize(raw) {
 
   // Bachelor's-level program CIP codes (credential level 3), when the caller
   // requested the programs field. Empty array => no program data available
-  // (which is different from "offers nothing" — we say so honestly downstream).
+  // (which is different from "offers nothing" - we say so honestly downstream).
   const rawPrograms = rawProgramArray(raw);
   const hasProgramData = rawPrograms.length > 0;
   const bachelor = hasProgramData ? bachelorPrograms(raw) : [];
@@ -217,7 +217,7 @@ function buildUrl(params) {
   return u.toString();
 }
 
-// Returns { data, meta:{ cached, fetchedAt, stale, source } } — never throws
+// Returns { data, meta:{ cached, fetchedAt, stale, source } } - never throws
 // fake data. On failure it surfaces the error so routes can respond honestly.
 async function cachedFetch(cacheKey, url) {
   const cached = cacheGet(cacheKey);
@@ -230,7 +230,7 @@ async function cachedFetch(cacheKey, url) {
     cacheSet(cacheKey, json);
     return { data: json, meta: { cached: false, fetchedAt: Date.now(), stale: false, source: SOURCE } };
   } catch (err) {
-    // Live call failed — fall back to cache ONLY if we have it, flagged stale.
+    // Live call failed - fall back to cache ONLY if we have it, flagged stale.
     if (cached) {
       const stale = Date.now() - cached.fetchedAt > config.staleAfterMs;
       return {
@@ -238,7 +238,7 @@ async function cachedFetch(cacheKey, url) {
         meta: { cached: true, fetchedAt: cached.fetchedAt, stale, source: SOURCE, degraded: true, error: err.message },
       };
     }
-    throw err; // No cache, no data — route will report "unable to retrieve".
+    throw err; // No cache, no data - route will report "unable to retrieve".
   }
 }
 
@@ -461,12 +461,12 @@ const MAJOR_DISCLAIMER = "Program availability is based on College Scorecard fie
 
 // Scorecard's nested CIP filter expects UNDOTTED 4-digit codes (e.g. "1107").
 // Verified empirically: code=11.07 returns 0 results; code=1107 returns matches.
-// Do not "helpfully" insert a dot here — it silently zeroes out every search.
+// Do not "helpfully" insert a dot here - it silently zeroes out every search.
 function apiCip(c) { return normalizeCip(c); }
 
 // Major-search candidate-pool sizes. "Standard" is the default and is what
 // keeps this fast enough for Railway; "Deep" is an explicit, opt-in, advanced
-// option the user must choose — it is never run automatically. These bound
+// option the user must choose - it is never run automatically. These bound
 // how many raw Scorecard records we scan before verifying program matches,
 // NOT a cap on how many verified results we show (all verified matches within
 // the scanned pool are returned; the client windows through them).
@@ -526,7 +526,7 @@ async function fetchMajorCandidatePool({ cips, state = null, control = null, poo
 // Search colleges offering ONE major. Scans a candidate pool (Standard: up to
 // 500 colleges; Deep: up to 2,000, opt-in only) instead of a single page of
 // ~25, then verifies bachelor's-level program evidence for every candidate in
-// the pool. The verification/normalize logic below is UNCHANGED from before —
+// the pool. The verification/normalize logic below is UNCHANGED from before -
 // only how many raw candidates it runs against has changed.
 export async function searchByMajor({ major, state = null, control = null, deep = false }) {
   const { primary } = cipsForMajor(major);
@@ -542,7 +542,7 @@ export async function searchByMajor({ major, state = null, control = null, deep 
 
   const pool = await fetchMajorCandidatePool({ cips: primary, state, control, poolLimit });
 
-  // No live data at all AND nothing cached — surface the honest upstream error.
+  // No live data at all AND nothing cached - surface the honest upstream error.
   if (!pool.raws.length && pool.error && !cached) throw pool.error;
 
   const colleges = [];
@@ -586,7 +586,7 @@ export async function searchByMajor({ major, state = null, control = null, deep 
 // whose bachelor's-level programs include major1's CIP codes, requesting the
 // FULL nested program list per record (all_programs_nested=true) so major2 can
 // also be checked against the same record without a second request. Mirrors
-// fetchMajorCandidatePool()'s resilient, throttled pagination pattern above —
+// fetchMajorCandidatePool()'s resilient, throttled pagination pattern above -
 // a page failure stops the scan and returns what was already fetched
 // (partial:true) instead of failing the whole search.
 async function fetchComboCandidatePool({ cips1, state = null, control = null, poolLimit }) {
@@ -656,7 +656,7 @@ function doubleMajorEvidenceStatus(m1, m2) {
 
 // Combination search: one or two majors. Scans a candidate pool (Standard: up
 // to 500 colleges; Deep: up to 2,000, opt-in only) instead of the previous
-// single page of ~20. Per-candidate match/filter logic is UNCHANGED — only how
+// single page of ~20. Per-candidate match/filter logic is UNCHANGED - only how
 // many raw candidates it runs against, and the pool-limit/cache/mode metadata,
 // are new.
 export async function searchMajorCombos({ major1, major2 = null, state = null, control = null, deep = false }) {
@@ -753,7 +753,7 @@ export async function verifyProgramAvailability({ cips, state = null, perPage = 
     for (let page = 0; page < maxPages; page++) {
       const u = new URL(config.scorecard.baseUrl);
       u.searchParams.set("api_key", config.scorecard.apiKey);
-      u.searchParams.set("fields", "id"); // ids only — tiny payload
+      u.searchParams.set("fields", "id"); // ids only - tiny payload
       u.searchParams.set("school.operating", "1");
       if (state) u.searchParams.set("school.state", state);
       u.searchParams.set("latest.programs.cip_4_digit.code", cips.map(apiCip).join(","));

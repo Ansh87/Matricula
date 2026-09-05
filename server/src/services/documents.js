@@ -1,4 +1,4 @@
-// documents.js — handles uploaded transcripts/resumes/portfolios.
+// documents.js - handles uploaded transcripts/resumes/portfolios.
 //
 // Privacy-first design:
 //  - Files are stored LOCALLY on your server disk (uploads/ dir). Nothing is
@@ -6,11 +6,11 @@
 //  - We extract plain text locally (PDF/TXT) so you can read/confirm it.
 //  - AI parsing (turning that text into structured profile fields) is OPTIONAL
 //    and only runs if GEMINI_API_KEY is set. Without a key, the feature still
-//    works — you just map the fields yourself.
+//    works - you just map the fields yourself.
 //
 // If enabled, the extracted TEXT (not the raw file) is sent to Google's Gemini
 // API for parsing. On Google's FREE tier, Google may use inputs to improve their
-// models — the UI states this clearly so the choice is informed.
+// models - the UI states this clearly so the choice is informed.
 import { db } from "../db/database.js";
 import { config } from "../config.js";
 import { randomUUID } from "node:crypto";
@@ -114,7 +114,7 @@ export async function saveDocument({ studentId, kind, filename, mimetype, buffer
 }
 
 // Optional: parse extracted text into structured profile fields via Gemini.
-// Returns { available:false } if no key. Never invents — asks Gemini to return
+// Returns { available:false } if no key. Never invents - asks Gemini to return
 // only fields it can find, and to use null otherwise.
 export async function parseWithGemini(text, kind) {
   if (!config.gemini.apiKey) {
@@ -153,7 +153,7 @@ ${text.slice(0, MAX_PARSE_CHARS)}
     });
     if (!res.ok) {
       const detail = await res.text().catch(() => "");
-      return { available: false, reason: `Gemini API error ${res.status}. Check your key/model. ${detail.slice(0,160)}${res.status===404?" — model name may be retired; try GEMINI_MODEL=gemini-2.5-flash":""}` };
+      return { available: false, reason: `Gemini API error ${res.status}. Check your key/model. ${detail.slice(0,160)}${res.status===404?" - model name may be retired; try GEMINI_MODEL=gemini-2.5-flash":""}` };
     }
     const data = await res.json();
     const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
@@ -316,7 +316,7 @@ Return ONLY a JSON object (no markdown) with these keys, using null/empty when n
 }
 
 IMPORTANT for activities/projects/awards: keep the ROLE, CATEGORY, LEVEL, and a
-short DESCRIPTION. Do NOT reduce an activity to just its name — "Founder" and
+short DESCRIPTION. Do NOT reduce an activity to just its name - "Founder" and
 "tutoring nonprofit" carry real signal. If a document is a portfolio page, the
 TITLE/DESCRIPTION/HEADINGS lines are extracted metadata; treat them as content.
 Documents:
@@ -331,7 +331,7 @@ ${combined}`;
     });
     if (!res.ok) {
       const detail = await res.text().catch(() => "");
-      return { available: false, reason: `Gemini API error ${res.status}. ${detail.slice(0,180)}${res.status===404?" — the model name may be retired; set GEMINI_MODEL to a current one (e.g. gemini-2.5-flash) in .env and restart.":""}` };
+      return { available: false, reason: `Gemini API error ${res.status}. ${detail.slice(0,180)}${res.status===404?" - the model name may be retired; set GEMINI_MODEL to a current one (e.g. gemini-2.5-flash) in .env and restart.":""}` };
     }
     const data = await res.json();
     const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";

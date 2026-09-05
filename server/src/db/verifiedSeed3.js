@@ -1,10 +1,10 @@
-// verifiedSeed3.js — verified admissions-details profiles for the colleges that
+// verifiedSeed3.js - verified admissions-details profiles for the colleges that
 // appear in the app's curated Top 50 STEM / Top 30 Finance / Top 30 Business
 // lists but weren't yet in verifiedSeed2.js. Same rule as the other verified
 // seed files: application ROUND DATES (ED/EA/RD/priority deadlines) were
 // checked directly against each college's own official admissions site or a
 // close secondary source citing it. Round-level ED/EA/RD ACCEPTANCE RATES are
-// always left null — colleges rarely publish these, and we never invent them.
+// always left null - colleges rarely publish these, and we never invent them.
 // Fields not explicitly researched here (exact testing policy nuance,
 // recommendation/essay requirements beyond the Common App baseline, CSS
 // Profile status) use the same safe "confirm on official site" defaults as
@@ -45,7 +45,7 @@ export const VERIFIED_SEED_3 = [
   // Rice University
   V({ id: "227757", url: "https://admission.rice.edu/apply/first-year-domestic-applicants", ed: true, ea: false, rd: true,
       deadlines: { ED_I: "Nov 1", "ED II / RD": "Jan 4" },
-      testing: "Test-recommended (not required) — confirm current cycle policy",
+      testing: "Test-recommended (not required) - confirm current cycle policy",
       majorRestrictions: { note: "Applicants choose one of Rice's residential colleges' academic schools on the application; switching majors within Rice is generally flexible." } }),
   // UNC Chapel Hill
   V({ id: "199120", url: "https://admissions.unc.edu/apply/", ed: false, ea: true, rd: true,

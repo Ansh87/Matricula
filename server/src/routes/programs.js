@@ -1,4 +1,4 @@
-// routes/programs.js — the "Programs" tab API. Every route is mounted behind
+// routes/programs.js - the "Programs" tab API. Every route is mounted behind
 // requireAuth in index.js, and router.param("id", ...) below forces the :id
 // segment to the authenticated Firebase UID (identical pattern to
 // routes/misc.js's studentRouter), so a user can never read or write another
@@ -136,8 +136,8 @@ programsRouter.post("/:id/discovered/manual", (req, res) => {
     eligibility: b.eligibility || null, who_can_apply: b.whoCanApply || null, application_deadline: b.applicationDeadline || null,
     application_process: b.applicationProcess || null, benefits: b.benefits || null, requirements: b.requirements || null,
     relevant_tracks_json: JSON.stringify(b.relevantTracks || []), source_url: b.sourceUrl || null,
-    last_checked: ts, notes: b.notes || "Entered directly by the family. Treated as user-verified — keep the source URL current.",
-    action_needed: b.actionNeeded || "Ready to include in Decision Plan strategy — recheck before the application deadline.",
+    last_checked: ts, notes: b.notes || "Entered directly by the family. Treated as user-verified - keep the source URL current.",
+    action_needed: b.actionNeeded || "Ready to include in Decision Plan strategy - recheck before the application deadline.",
     created_at: ts, updated_at: ts,
   });
   res.json(db.prepare("SELECT * FROM discovered_programs WHERE program_id=?").get(programId));

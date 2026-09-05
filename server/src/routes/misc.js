@@ -65,7 +65,7 @@ studentRouter.param("id", (req, _res, next, _value) => {
   if (req.user && req.user.uid) req.params.id = req.user.uid;
   next();
 });
-// POST /api/students/:id/signals — what the matching engine derives from the
+// POST /api/students/:id/signals - what the matching engine derives from the
 // profile's free text. Shown in the UI so nothing is a black box.
 studentRouter.post("/:id/signals", (req, res) => {
   const profile = req.body?.profile || {};
@@ -299,11 +299,11 @@ studentRouter.post("/:id/aid-plan", (req, res) => {
   res.json({
     items,
     general: {
-      fafsa: "File the FAFSA (studentaid.gov) as early as October of senior year — it's required for all federal aid and most institutional aid.",
+      fafsa: "File the FAFSA (studentaid.gov) as early as October of senior year - it's required for all federal aid and most institutional aid.",
       css: "Some private colleges also require the CSS Profile (cssprofile.collegeboard.org) for institutional aid. Check each college.",
       sai: "Your Student Aid Index (SAI) from the FAFSA estimates what federal formulas expect your family to contribute. Net price calculators on each college's site give a school-specific estimate.",
       loans: "Borrow federal (Direct Subsidized/Unsubsidized) before private loans. Keep total borrowing under your expected first-year salary as a rule of thumb.",
-      appeal: "If admitted with a gap between aid and cost, you can submit a financial-aid appeal to the college's aid office — especially with a competing offer or a change in circumstances.",
+      appeal: "If admitted with a gap between aid and cost, you can submit a financial-aid appeal to the college's aid office - especially with a competing offer or a change in circumstances.",
     },
     disclaimer: "General guidance plus verified form requirements for seeded colleges. Confirm every deadline and requirement with each college's financial-aid office.",
   });
@@ -691,6 +691,6 @@ advisorRouter.post("/ask", async (req, res) => {
     const out = await answerAdvisor({ question, profile, recommendations, essayContext });
     res.json(out);
   } catch (err) {
-    res.status(500).json({ answer: "Sorry — I couldn't answer that just now. Try again.", disclaimer: "Planning aid only.", detail: err.message });
+    res.status(500).json({ answer: "Sorry - I couldn't answer that just now. Try again.", disclaimer: "Planning aid only.", detail: err.message });
   }
 });

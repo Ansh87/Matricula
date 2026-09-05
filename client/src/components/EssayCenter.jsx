@@ -127,7 +127,7 @@ function OverviewGroup({ title, prompts, emptyText, onCreateTask, onShowStoryMat
             <div key={p.prompt_id} className="card pad" style={{ background: "var(--paper-2)" }}>
               <div className="row spread wrap" style={{ gap: 8 }}>
                 <div style={{ fontWeight: 600 }}>
-                  {p.essay_type}{p.school_or_program ? ` — ${p.school_or_program}` : ""}{p.program_label ? ` — ${p.program_label}` : ""}
+                  {p.essay_type}{p.school_or_program ? ` - ${p.school_or_program}` : ""}{p.program_label ? ` - ${p.program_label}` : ""}
                 </div>
                 <div className="row wrap" style={{ gap: 6 }}>
                   <SourceBadge level={promptStatusLevel(p.prompt_status)}>{p.prompt_status || "Unknown"}</SourceBadge>
@@ -758,7 +758,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
                       <div key={p.prompt_id} className="card">
                         <div className="pad row spread wrap" style={{ gap: 8 }}>
                           <div style={{ cursor: "pointer", flex: 1, minWidth: 200 }} onClick={() => setExpanded(isOpen ? null : p.prompt_id)}>
-                            <h3>{p.essay_type}{p.school_or_program ? ` — ${p.school_or_program}` : ""}{p.program_label ? ` — ${p.program_label}` : ""}</h3>
+                            <h3>{p.essay_type}{p.school_or_program ? ` - ${p.school_or_program}` : ""}{p.program_label ? ` - ${p.program_label}` : ""}</h3>
                             <div className="note">{p.prompt_text ? `${p.prompt_text.slice(0, 120)}${p.prompt_text.length > 120 ? "…" : ""}` : "No prompt text saved yet"}</div>
                           </div>
                           <div className="row wrap" style={{ gap: 6, alignItems: "center" }}>

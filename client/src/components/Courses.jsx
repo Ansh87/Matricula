@@ -1,4 +1,4 @@
-// Courses.jsx — type a college name, see its undergraduate & engineering
+// Courses.jsx - type a college name, see its undergraduate & engineering
 // programs (live from College Scorecard) plus verified major combinations /
 // dual-degrees for seeded colleges.
 import React, { useState, useEffect } from "react";
@@ -176,7 +176,7 @@ export function Courses({ onOpen, studentId, profile, initialTrackId }) {
                   </div>
                   <div className="note" style={{ marginBottom: 4 }}>{programs.programs.length} bachelor's programs · Source: {programs.source}, {programs.sourceYear}</div>
                   <div className="note" style={{ marginBottom: 10 }}>
-                    This is the federal government's program taxonomy, not {selected.name}'s own department page — titles and groupings won't always match the college's own website.
+                    This is the federal government's program taxonomy, not {selected.name}'s own department page - titles and groupings won't always match the college's own website.
                     {programs.officialWebsiteUrl && (
                       <> <a className="link" href={fixUrl(programs.officialWebsiteUrl)} target="_blank" rel="noreferrer">Compare with {selected.name}'s official site ↗</a></>
                     )}
@@ -204,7 +204,7 @@ export function Courses({ onOpen, studentId, profile, initialTrackId }) {
                 </div>
                 <p className="note">
                   A direct, on-demand scan of {programs.officialWebsiteUrl ? <a className="link" href={fixUrl(programs.officialWebsiteUrl)} target="_blank" rel="noreferrer">{selected.name}'s official site</a> : "the college's official site"} for its own
-                  department/major pages — a different lens than the federal list above. Not saved anywhere; run it fresh any time. Best-effort only, so treat gaps
+                  department/major pages - a different lens than the federal list above. Not saved anywhere; run it fresh any time. Best-effort only, so treat gaps
                   or misses as "check the site directly," not "doesn't exist."
                 </p>
                 <button className="btn ghost sm" onClick={scanSite} disabled={siteScanLoading} style={{ alignSelf: "flex-start" }}>

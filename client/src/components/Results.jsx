@@ -1,4 +1,4 @@
-// Results.jsx — live recommendations. Each card shows official data with source
+// Results.jsx - live recommendations. Each card shows official data with source
 // badges, an estimated category, and a control to save to the student's list.
 import React, { useState, useMemo } from "react";
 import { CategoryTag, Meter, SourceBadge, fmtUSD, fmtPct } from "./ui.jsx";
@@ -11,7 +11,7 @@ function ScoreRow({ label, value }) {
     <div style={{ marginBottom: 8 }}>
       <div className="row spread" style={{ marginBottom: 3 }}>
         <span className="note">{label}</span>
-        <span className="mono" style={{ fontSize: 12.5 }}>{value == null ? "—" : value}</span>
+        <span className="mono" style={{ fontSize: 12.5 }}>{value == null ? "-" : value}</span>
       </div>
       <Meter value={value} />
     </div>
@@ -27,7 +27,7 @@ function CollegeCard({ scored, saved, onOpen, onToggleSave }) {
           {scored.rank && <span className="mono" style={{ fontSize: 13, color: "var(--amber)", fontWeight: 600, marginTop: 2 }}>#{scored.rank}</span>}
           <div>
             <h3 style={{ marginBottom: 3 }}>{c.name}</h3>
-            <div className="note">{[c.city, c.state].filter(Boolean).join(", ")} · {c.controlType || "—"}</div>
+            <div className="note">{[c.city, c.state].filter(Boolean).join(", ")} · {c.controlType || "-"}</div>
           </div>
         </div>
         <CategoryTag category={scored.admission.category} label={scored.admission.label} range={scored.admission.range} />
@@ -59,7 +59,7 @@ function CollegeCard({ scored, saved, onOpen, onToggleSave }) {
         <ScoreRow label="Major / Program Fit" value={scored.subs.major} />
       </div>
 
-      {/* Program-availability provenance — never claim a major without evidence */}
+      {/* Program-availability provenance - never claim a major without evidence */}
       {scored.majorFit && (
         <div className="row" style={{ gap: 6, marginTop: 6 }}>
           {scored.matchType === "verified-major-match" ? (
@@ -70,7 +70,7 @@ function CollegeCard({ scored, saved, onOpen, onToggleSave }) {
           ) : scored.matchType === "relaxed-profile-match" ? (
             <>
               <SourceBadge level="unavailable" />
-              <span className="note" style={{ fontSize: 11, color: "var(--amber)" }}>Program availability not verified — confirm on official college website</span>
+              <span className="note" style={{ fontSize: 11, color: "var(--amber)" }}>Program availability not verified - confirm on official college website</span>
             </>
           ) : scored.majorFit.status === "no-match" ? (
             <>
@@ -104,7 +104,7 @@ function CollegeCard({ scored, saved, onOpen, onToggleSave }) {
       <div className="row spread" style={{ marginTop: 4 }}>
         <div className="row" style={{ gap: 8 }}>
           <SourceBadge level="official">Scorecard</SourceBadge>
-          <span className="note">Overall {scored.overall ?? "—"}</span>
+          <span className="note">Overall {scored.overall ?? "-"}</span>
         </div>
         <div className="row" style={{ gap: 8 }}>
           <button className="btn ghost sm" onClick={() => onOpen(c.id)}>Details</button>
@@ -161,7 +161,7 @@ export function Results({ recs, meta, savedIds, onOpen, onToggleSave, onRefilter
 
   const filtered = useMemo(() => {
     let r = [...safeRecs];
-    // Matches never shows the full national scan — that's what Browse is for.
+    // Matches never shows the full national scan - that's what Browse is for.
     const effCat = (mode === "matches" && cat === "All") ? "Match" : cat;
     if (effCat === "Match") {
       r = r.filter((x) => x.isMatch);
@@ -237,7 +237,7 @@ export function Results({ recs, meta, savedIds, onOpen, onToggleSave, onRefilter
         )}
       </div>
 
-      {/* CURRENT VIEW SUMMARY — counts what's actually on screen */}
+      {/* CURRENT VIEW SUMMARY - counts what's actually on screen */}
       <div className="kpis">
         <div className="kpi">
           <div className="n">{filtered.length}</div>
@@ -262,11 +262,11 @@ export function Results({ recs, meta, savedIds, onOpen, onToggleSave, onRefilter
         <div className="disclaimer" style={{ borderLeftColor: "var(--amber)" }}>
           Program availability could not be verified for {relaxedCount} of these colleges
           {programVerification?.error ? ` (${programVerification.error})` : ""}. They're shown as
-          relaxed profile matches — confirm your major on each official college website.
+          relaxed profile matches - confirm your major on each official college website.
         </div>
       )}
 
-      {/* SCAN DETAILS — collapsed, so it never masquerades as a planning summary */}
+      {/* SCAN DETAILS - collapsed, so it never masquerades as a planning summary */}
       <details className="card pad">
         <summary className="note" style={{ cursor: "pointer" }}>Data scan details</summary>
         <div className="note" style={{ marginTop: 6 }}>
@@ -282,7 +282,7 @@ export function Results({ recs, meta, savedIds, onOpen, onToggleSave, onRefilter
       <div className="card pad">
         <label className="lbl">Search any U.S. college to add manually</label>
         <div className="note" style={{ marginBottom: 6, color: "var(--muted)" }}>
-          This is a lookup tool for any U.S. college — separate from your personalized matches above.
+          This is a lookup tool for any U.S. college - separate from your personalized matches above.
         </div>
         <div className="row" style={{ gap: 8 }}>
           <input className="inp" value={search} onChange={(e) => setSearch(e.target.value)}
@@ -379,13 +379,13 @@ export function Results({ recs, meta, savedIds, onOpen, onToggleSave, onRefilter
         </div>
       </div>
 
-      {/* Balanced list builder — Matches tab only */}
+      {/* Balanced list builder - Matches tab only */}
       {mode === "matches" && (
       <div className="card pad">
         <div className="row spread wrap" style={{ gap: 8 }}>
           <div>
             <strong>Build Balanced List</strong>
-            <div className="note">A practical application list with the right mix of reach, target, safety, and financial-safety schools — not just the top scores.</div>
+            <div className="note">A practical application list with the right mix of reach, target, safety, and financial-safety schools - not just the top scores.</div>
           </div>
           <div className="row" style={{ gap: 6 }}>
             {[10, 20, 30].map((n) => (
@@ -421,7 +421,7 @@ export function Results({ recs, meta, savedIds, onOpen, onToggleSave, onRefilter
                     <span className="pill">{c.admission?.category}</span>
                   </div>
                   <div className="note">
-                    {c.netCost != null ? fmtUSD(c.netCost) : "cost n/a"} · fit {c.overall ?? "—"}
+                    {c.netCost != null ? fmtUSD(c.netCost) : "cost n/a"} · fit {c.overall ?? "-"}
                     {c.listRole && c.listRole !== c.admission?.category ? ` · ${c.listRole}` : ""}
                   </div>
                   <div className="row" style={{ gap: 8, marginTop: 6 }}>

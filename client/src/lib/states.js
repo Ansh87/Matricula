@@ -1,4 +1,4 @@
-// states.js — shared list of U.S. states + DC for filter dropdowns.
+// states.js - shared list of U.S. states + DC for filter dropdowns.
 export const US_STATES = [
   ["AL", "Alabama"], ["AK", "Alaska"], ["AZ", "Arizona"], ["AR", "Arkansas"],
   ["CA", "California"], ["CO", "Colorado"], ["CT", "Connecticut"], ["DE", "Delaware"],

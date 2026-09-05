@@ -1,4 +1,4 @@
-// colleges.js — /api/colleges/* routes. All live-data access to College
+// colleges.js - /api/colleges/* routes. All live-data access to College
 // Scorecard happens here, server-side, behind our own key. Errors are honest:
 // on upstream failure with no cache we return a clear message, never fake data.
 import express from "express";
@@ -27,7 +27,7 @@ import { SCENARIOS, getScenario, scenarioFit, scenarioFitVerified, scenarioVerif
 // major/minor, and academic interests, deduped (case-insensitive) and cleaned.
 // Used ONLY to build the profile passed into scoring/verification on the
 // Profile-based (no-scenario) paths, so Profile matching reflects the actual
-// major fields — not just the legacy `interests` array. Never mutates the saved
+// major fields - not just the legacy `interests` array. Never mutates the saved
 // profile.
 function profileMatchingInterests(profile) {
   return [
@@ -57,7 +57,7 @@ function uniqueTextLines(lines) {
 // Service academies / military-pathway colleges. These aren't normal options:
 // they require nomination, a military service commitment, physical/medical
 // qualification, and strong interest in military life. Matches excludes them by
-// default (the user can opt in). List is explicit and conservative — it does NOT
+// default (the user can opt in). List is explicit and conservative - it does NOT
 // match normal universities that merely host ROTC.
 const SERVICE_ACADEMY_NAMES = [
   "united states air force academy",
@@ -73,7 +73,7 @@ function isServiceAcademyOrMilitaryPathway(college) {
   return SERVICE_ACADEMY_NAMES.some((x) => name.includes(x));
 }
 const SERVICE_ACADEMY_CONCERN =
-  "Service academy / military-pathway option — verify nomination requirements, service commitment, physical/medical qualifications, and military lifestyle fit.";
+  "Service academy / military-pathway option - verify nomination requirements, service commitment, physical/medical qualifications, and military lifestyle fit.";
 
 // Attach the service-academy concern to a scored college (when included).
 function addServiceAcademyConcern(s) {
@@ -104,7 +104,7 @@ function applyProgramVerification(c, verify) {
   }
   if (verify.partial) {
     // Truncated results: a missing id is unknown, never confirmed-absent.
-    c.programVerificationError = "program lookup partial — major availability not fully verified";
+    c.programVerificationError = "program lookup partial - major availability not fully verified";
   } else {
     c.programVerified = false; // complete lookup, genuinely not offered
   }
@@ -112,7 +112,7 @@ function applyProgramVerification(c, verify) {
 
 // Build a lightweight, scenario-aware program-verification object. Runs one
 // tiny `fields=id` verifyProgramAvailability() query per scenario field
-// (primary, secondary, each supporting) — NOT the heavy program arrays. Returns
+// (primary, secondary, each supporting) - NOT the heavy program arrays. Returns
 // verified-id Sets the scenario scorer uses to grade each college.
 async function buildScenarioVerification(scenario, state) {
   const plan = scenarioVerificationPlan(scenario);
@@ -149,7 +149,7 @@ async function buildScenarioVerification(scenario, state) {
 
 // Build a temporary scenario profile: same student, but interests replaced by
 // the scenario's own fields so the major-fit GATE reflects the selected track.
-// Only interests change — academics, budget, state, EC all stay as-is.
+// Only interests change - academics, budget, state, EC all stay as-is.
 function scenarioProfileFor(profile, scenario) {
   return {
     ...profile,
@@ -157,7 +157,7 @@ function scenarioProfileFor(profile, scenario) {
   };
 }
 
-// Attach scenario fit to a scored college (additive — never alters overall/admission).
+// Attach scenario fit to a scored college (additive - never alters overall/admission).
 // Returns a blended ranking score = 70% base overall + 30% scenario fit, so the
 // chosen scenario reshapes ordering without discarding the honest overall fit.
 // When `verification` (lightweight scenario-aware) is supplied, uses it; else
@@ -172,7 +172,7 @@ function withScenario(s, scenario, verification = null) {
   // Scenario-mode major/program score: replace the flat base majorFit (which is a
   // saturated 100 whenever the scenario primary field is verified) with the
   // scenario's WEIGHTED fit (primary + secondary + supporting + career). This
-  // makes subs.major — and therefore overall — scenario-aware, instead of every
+  // makes subs.major - and therefore overall - scenario-aware, instead of every
   // verified-primary school getting an identical 100. We do NOT touch majorFit()
   // or overallFit() or the weighting constants; we only substitute the value fed
   // into overallFit for scenario mode, then recompute overall and scenarioRank
@@ -194,7 +194,7 @@ function withScenario(s, scenario, verification = null) {
   // Career-Track-aware explanation wording. In scenario mode the match is about
   // the selected TRACK, not the student's "intended major", so rewrite the
   // major-related reasons/concerns and add concise per-field evidence. This is
-  // wording only — no score or ranking change.
+  // wording only - no score or ranking change.
   rewriteExplanationForScenario(s, scenario);
   return s;
 }
@@ -225,9 +225,9 @@ function rewriteExplanationForScenario(s, scenario) {
   if (primStatus === "verified") {
     s.explanation.reasons.unshift(`Official program data confirms programs aligned with the selected Career Track (${trackName}).`);
   } else if (primStatus === "no-match") {
-    s.explanation.concerns.unshift(`Official program data doesn't confirm the selected Career Track's primary field at this college — confirm on the college's official website.`);
+    s.explanation.concerns.unshift(`Official program data doesn't confirm the selected Career Track's primary field at this college - confirm on the college's official website.`);
   } else {
-    s.explanation.concerns.unshift(`Program data is partially verified through College Scorecard — confirm exact major availability on the college's official website.`);
+    s.explanation.concerns.unshift(`Program data is partially verified through College Scorecard - confirm exact major availability on the college's official website.`);
   }
 
   // Concise per-field evidence (only fields that are actually verified / partial).
@@ -269,7 +269,7 @@ function honestError(res, err) {
       ? "College Scorecard rate limit reached on the shared DEMO_KEY. Add your own free COLLEGE_SCORECARD_API_KEY."
       : "College Scorecard rate limit reached. Wait a few minutes and try again.";
   } else if (errorType === "timeout") {
-    message = "The College Scorecard request timed out — the response was likely too large. This has been reported; try a narrower search (add a state filter).";
+    message = "The College Scorecard request timed out - the response was likely too large. This has been reported; try a narrower search (add a state filter).";
   } else if (errorType === "network") {
     message = `Could not reach College Scorecard from the server (${err.cause?.code || "network error"}). Check internet access, VPN, proxy, or firewall rules for node.exe.`;
   } else if (usingDemoKey) {
@@ -279,14 +279,14 @@ function honestError(res, err) {
   }
 
   const suggestion = errorType === "timeout"
-    ? "Narrow the search with a state filter, or retry — large program requests can exceed the timeout."
+    ? "Narrow the search with a state filter, or retry - large program requests can exceed the timeout."
     : errorType === "network"
     ? "Verify node.exe can reach api.data.gov (VPN/proxy/firewall). A browser working does not guarantee Node can connect."
     : usingDemoKey
     ? "Get a free key at https://api.data.gov/signup and set COLLEGE_SCORECARD_API_KEY in server/.env."
     : "Verify the key is valid and check https://api.data.gov status.";
 
-  // Diagnostic object — never includes the API key.
+  // Diagnostic object - never includes the API key.
   const diagnostic = {
     usingDemoKey,
     errorType,
@@ -335,19 +335,19 @@ const CURATED = {
     list: TOP_STEM,
     scoreKey: "stemScore",
     rankingType: "STEM (editorial)",
-    note: "STEM strength is an editorial ranking of undergraduate CS/engineering/science reputation and outcomes — not an official government ranking. Earnings, cost, graduation, and admit rate are live from College Scorecard.",
+    note: "STEM strength is an editorial ranking of undergraduate CS/engineering/science reputation and outcomes - not an official government ranking. Earnings, cost, graduation, and admit rate are live from College Scorecard.",
   },
   finance: {
     list: TOP_FINANCE,
     scoreKey: "financeScore",
     rankingType: "Finance (editorial)",
-    note: "Finance strength is an editorial ranking of undergraduate finance program reputation and recruiting outcomes — not an official government ranking. Earnings, cost, graduation, and admit rate are live from College Scorecard.",
+    note: "Finance strength is an editorial ranking of undergraduate finance program reputation and recruiting outcomes - not an official government ranking. Earnings, cost, graduation, and admit rate are live from College Scorecard.",
   },
   business: {
     list: TOP_BUSINESS,
     scoreKey: "businessScore",
     rankingType: "Business (editorial)",
-    note: "Business strength is an editorial ranking of undergraduate business program reputation and outcomes — not an official government ranking. Earnings, cost, graduation, and admit rate are live from College Scorecard.",
+    note: "Business strength is an editorial ranking of undergraduate business program reputation and outcomes - not an official government ranking. Earnings, cost, graduation, and admit rate are live from College Scorecard.",
   },
 };
 
@@ -376,7 +376,7 @@ collegesRouter.post("/top-list/:kind", async (req, res) => {
           cultureFit: sel.available ? cultureFit(profile || {}, sel)?.score ?? null : null,
         };
       }
-    } catch { /* degrade to ranking only — never fake numbers */ }
+    } catch { /* degrade to ranking only - never fake numbers */ }
     out.push({
       rank: i + 1, id: s.id, name: s.name, tier: s.tier, specialties: s.specialties,
       [cfg.scoreKey]: s.score, score: s.score,
@@ -412,7 +412,7 @@ collegesRouter.get("/top-stem", async (req, res) => {
   }));
   res.json({
     rankingType: "STEM (editorial)",
-    note: "STEM strength is an editorial ranking of undergraduate CS/engineering/science reputation and outcomes — not an official government ranking. Earnings, cost, graduation, and admit rate are live from College Scorecard.",
+    note: "STEM strength is an editorial ranking of undergraduate CS/engineering/science reputation and outcomes - not an official government ranking. Earnings, cost, graduation, and admit rate are live from College Scorecard.",
     colleges: enriched,
   });
 });
@@ -744,7 +744,7 @@ collegesRouter.post("/recommend", async (req, res) => {
     const f = filters || {};
 
     // Scan the full national set (cached 24h), optionally narrowed by state or
-    // control at the source for speed. Score everything, then return all —
+    // control at the source for speed. Score everything, then return all -
     // the client's filters decide what's shown.
     const scan = await scanAllColleges({
       state: f.state || undefined,
@@ -798,7 +798,7 @@ collegesRouter.post("/recommend", async (req, res) => {
         verifiedCount: verify.verified.size,
         cached: !!verify.cached,
         error: verify.error || null,
-        note: verify.available ? null : "Program availability not verified — confirm on official college website.",
+        note: verify.available ? null : "Program availability not verified - confirm on official college website.",
       },
       matchCriteria: "overall ≥ 55, academic fit ≥ 40, classifiable admission chance, sufficient official data. Verified major fit preferred; when program data is unavailable the college is included as a relaxed match and flagged.",
     });
@@ -854,7 +854,7 @@ function evaluateMatch(s, profile) {
 // POST /api/colleges/balanced-list { profile, size, filters, scenario } -> balanced list
 // When `scenario` (a track id) is supplied, each college also gets a scenario fit,
 // and the balanced pool is ordered by the blended scenario rank so the list is
-// "Balanced Top N — <scenario>". Omitting `scenario` keeps the original behavior.
+// "Balanced Top N - <scenario>". Omitting `scenario` keeps the original behavior.
 collegesRouter.post("/balanced-list", async (req, res) => {
   try {
     const { profile, size = 10, filters, scenario: scenarioId, includeServiceAcademies = false } = req.body || {};
@@ -893,7 +893,7 @@ collegesRouter.post("/balanced-list", async (req, res) => {
         } else if (scenVerify.primaryVerifiedIds.has(String(c.id))) {
           c.programVerified = true;
         } else if (scenVerify.primaryPartial) {
-          c.programVerificationError = "Program availability not fully verified — confirm on official college website.";
+          c.programVerificationError = "Program availability not fully verified - confirm on official college website.";
         } else {
           c.programVerified = false; // complete primary lookup, genuinely absent
         }
@@ -959,7 +959,7 @@ collegesRouter.post("/best-fit", async (req, res) => {
         } else if (scenVerify.primaryVerifiedIds.has(String(c.id))) {
           c.programVerified = true;
         } else if (scenVerify.primaryPartial) {
-          c.programVerificationError = "Program availability not fully verified — confirm on official college website.";
+          c.programVerificationError = "Program availability not fully verified - confirm on official college website.";
         } else {
           c.programVerified = false;
         }

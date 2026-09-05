@@ -1,9 +1,9 @@
-// business.js — editorial strength ratings for undergraduate BUSINESS programs
+// business.js - editorial strength ratings for undergraduate BUSINESS programs
 // (general management, marketing, strategy, entrepreneurship, business
 // analytics). Distinct from finance.js, which focuses narrowly on finance.
 //
 // EDITORIAL rankings reflecting widely-recognized program reputation and
-// outcomes — NOT an official government ranking. Live cost/earnings data still
+// outcomes - NOT an official government ranking. Live cost/earnings data still
 // comes from College Scorecard and is shown alongside.
 //
 // score: 0-100 business strength (editorial).
@@ -24,7 +24,7 @@
 //   - "Arizona State (W. P. Carey)" was tagged 104179 (that's actually
 //     University of Arizona, a different school). Real ASU id is 104151.
 // UConn id below has not been independently re-verified (falls outside the
-// app's Top 30 view) — flagged rather than silently trusted.
+// app's Top 30 view) - flagged rather than silently trusted.
 
 const B = (id, name, score, tier, specialties) => ({ id, name, score, tier, specialties });
 

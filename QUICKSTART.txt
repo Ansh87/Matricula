@@ -1,9 +1,9 @@
 ========================================================================
-  Matricula — QUICK START
+  Matricula - QUICK START
 ========================================================================
 
 ------------------------------------------------------------------------
-STEP 0 — Check Node.js (one-time)
+STEP 0 - Check Node.js (one-time)
 ------------------------------------------------------------------------
 Open a terminal and run:
 
@@ -16,7 +16,7 @@ You need v22.5.0 or higher (e.g. v22.22.2).
 
 
 ------------------------------------------------------------------------
-STEP 1 — Open a terminal IN the project folder
+STEP 1 - Open a terminal IN the project folder
 ------------------------------------------------------------------------
 Unzip the download, then in your terminal "cd" into the folder that
 contains this file. It should contain: server/  client/  README.md
@@ -27,7 +27,7 @@ contains this file. It should contain: server/  client/  README.md
 
 
 ------------------------------------------------------------------------
-STEP 2 — Run these four commands, one at a time
+STEP 2 - Run these four commands, one at a time
 ------------------------------------------------------------------------
     npm run install:all
     npm run import
@@ -42,7 +42,7 @@ What each does:
 
 
 ------------------------------------------------------------------------
-STEP 3 — Open the app
+STEP 3 - Open the app
 ------------------------------------------------------------------------
 When the terminal says "Matricula server on http://localhost:4000",
 open that address in your browser:
@@ -66,7 +66,7 @@ To STOP the app: press  Ctrl + C  in the terminal.
 
 
 ------------------------------------------------------------------------
-OPTIONAL — Your own free API key (recommended, ~1 minute)
+OPTIONAL - Your own free API key (recommended, ~1 minute)
 ------------------------------------------------------------------------
 The app works immediately with a shared demo key, but it's rate-limited.
 For smoother use, get your own free key:
@@ -80,13 +80,13 @@ Your key stays on your computer and is never sent to the browser.
 
 
 ------------------------------------------------------------------------
-OPTIONAL — Free Gemini key (turns ON document reading)
+OPTIONAL - Free Gemini key (turns ON document reading)
 ------------------------------------------------------------------------
 This is what lets the app READ your transcript / resume / portfolio and
 auto-build your profile (GPA, scores, activities, awards, projects), which
 then feeds your admission chances.
 
-Without this key, uploads still work — the app stores your files and shows
+Without this key, uploads still work - the app stores your files and shows
 their text, but you fill in the fields yourself. Add the key to get the
 "Build profile from documents" auto-fill.
 
@@ -113,12 +113,12 @@ When you use the auto-read/auto-fill, the TEXT from your documents is sent
 to Google's Gemini service. On Google's FREE tier, Google may use those
 inputs to improve their models. For a real student's transcript, decide if
 you're comfortable with that. If not, leave the key out and enter fields
-manually — everything else in the app still works. (A paid Gemini tier turns
+manually - everything else in the app still works. (A paid Gemini tier turns
 off that data-use, if you ever want the stronger privacy guarantee.)
 
 If the model name ever stops working (Google sometimes retires model names),
 just change GEMINI_MODEL in .env to a current one (e.g. gemini-2.5-flash)
-and restart — no code changes needed.
+and restart - no code changes needed.
 
 
 ------------------------------------------------------------------------
@@ -161,12 +161,12 @@ IF SOMETHING BREAKS
 WHERE YOUR DATA LIVES
 ------------------------------------------------------------------------
 Your profile, saved college list, and application tracker are saved in a
-database file inside the "server" folder (matricula.db) — on your own
+database file inside the "server" folder (matricula.db) - on your own
 computer. Nothing leaves your machine when running locally.
 
 
 ------------------------------------------------------------------------
-NEXT: PUTTING IT ONLINE (Railway) — when you're ready
+NEXT: PUTTING IT ONLINE (Railway) - when you're ready
 ------------------------------------------------------------------------
 Once it works locally, deploying to Railway makes it reachable from your
 phone or any computer. The short version:
@@ -178,7 +178,7 @@ phone or any computer. The short version:
        Build:  npm run install:all && npm run build:client
        Start:  npm run start
   4. Add an environment variable:  COLLEGE_SCORECARD_API_KEY = your key
-  5. IMPORTANT — add a persistent Volume so your saved data survives
+  5. IMPORTANT - add a persistent Volume so your saved data survives
      restarts:
        - Attach a Volume, mount it at:  /data
        - Add an environment variable:   DB_PATH = /data/matricula.db
@@ -187,7 +187,7 @@ phone or any computer. The short version:
          leave it as-is -- that's where your real saved data already lives.)
   6. Run the one-time data import (Railway shell, or add it to the build):
        npm run import
-  7. Railway gives you a public URL — open it from anywhere.
+  7. Railway gives you a public URL - open it from anywhere.
 
 Note: there is no login, so treat that URL as private (it's set up for
 one student / one family). Multiple independent students would require

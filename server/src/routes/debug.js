@@ -1,5 +1,5 @@
-// debug.js — local diagnostic endpoints. These NEVER expose the API key.
-// Purpose: tell you exactly why a program/major search returned nothing —
+// debug.js - local diagnostic endpoints. These NEVER expose the API key.
+// Purpose: tell you exactly why a program/major search returned nothing -
 // wrong CIP code, wrong field name, credential-level parsing, API failure,
 // rate limit, no internet, or a too-narrow state filter.
 import express from "express";
@@ -25,7 +25,7 @@ debugRouter.get("/scorecard-major", async (req, res) => {
     u.searchParams.set("latest.programs.cip_4_digit.credential.level", "3");
   }
   u.searchParams.set("per_page", "5");
-  const queryWithoutApiKey = u.toString(); // key not set yet — safe to echo
+  const queryWithoutApiKey = u.toString(); // key not set yet - safe to echo
 
   // Now add the key only for the actual request.
   const withKey = new URL(queryWithoutApiKey);
@@ -52,7 +52,7 @@ debugRouter.get("/scorecard-major", async (req, res) => {
     out.elapsedMs = Date.now() - started;
     if (!r.ok) {
       const body = await r.text().catch(() => "");
-      out.error = `HTTP ${r.status} ${r.statusText}${body ? ` — ${body.slice(0, 300)}` : ""}`;
+      out.error = `HTTP ${r.status} ${r.statusText}${body ? ` - ${body.slice(0, 300)}` : ""}`;
       if (r.status === 429) out.error += " (rate limit)";
       return res.json(out);
     }
@@ -144,7 +144,7 @@ debugRouter.get("/probe-cip", async (req, res) => {
   });
 });
 
-// POST /api/debug/clear-program-cache — removes cached program/major searches
+// POST /api/debug/clear-program-cache - removes cached program/major searches
 // so a stale zero-result response can't persist after a fix. Local use only.
 debugRouter.post("/clear-program-cache", async (req, res) => {
   const { db } = await import("../db/database.js");
@@ -155,7 +155,7 @@ debugRouter.post("/clear-program-cache", async (req, res) => {
     note: "Cleared cached major/combo/program-verification responses. Re-run your search." });
 });
 
-// POST /api/debug/clear-all-cache — nuke the whole Scorecard cache.
+// POST /api/debug/clear-all-cache - nuke the whole Scorecard cache.
 debugRouter.post("/clear-all-cache", async (req, res) => {
   const { db } = await import("../db/database.js");
   const r = db.prepare("DELETE FROM api_cache").run();

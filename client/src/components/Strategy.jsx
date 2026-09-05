@@ -1,4 +1,4 @@
-// Strategy.jsx — application strategy: list balance vs. ideal, issues to fix,
+// Strategy.jsx - application strategy: list balance vs. ideal, issues to fix,
 // best ED pick, test plan. Reads the saved list from the server.
 import React, { useState, useEffect } from "react";
 import { api } from "../lib/api.js";
@@ -6,7 +6,7 @@ import { Spinner } from "./ui.jsx";
 
 function downloadReport(s, profile) {
   const lines = [];
-  lines.push("Matricula — Application Strategy Report");
+  lines.push("Matricula - Application Strategy Report");
   lines.push(new Date().toLocaleDateString());
   if (profile.name) lines.push(`Student: ${profile.name}`);
   lines.push("");
@@ -21,7 +21,7 @@ function downloadReport(s, profile) {
     s.issues.forEach((i) => lines.push("  - " + i));
     lines.push("");
   }
-  if (s.edPick) { lines.push("BEST EARLY DECISION PICK"); lines.push(`  ${s.edPick.name} — ${s.edPick.why}`); lines.push(""); }
+  if (s.edPick) { lines.push("BEST EARLY DECISION PICK"); lines.push(`  ${s.edPick.name} - ${s.edPick.why}`); lines.push(""); }
   lines.push("TEST SUBMISSION PLAN"); lines.push("  " + s.testPlan); lines.push("");
   lines.push(`RECOMMENDED NUMBER OF APPLICATIONS: ~${s.recommendedApplications}`); lines.push("");
   lines.push(s.disclaimer);
@@ -87,7 +87,7 @@ export function Strategy({ studentId, profile, onGo }) {
           <button className="btn ghost sm" onClick={() => downloadReport(s, profile)}>Download strategy report</button>
           <span className="note">
             Looking for a "why this college / essay angle" writeup for one specific college? That's per-college
-            in <button className="link" onClick={() => onGo && onGo("decisionPlan")}>Decision Plan</button> — this page is your whole-list balance.
+            in <button className="link" onClick={() => onGo && onGo("decisionPlan")}>Decision Plan</button> - this page is your whole-list balance.
           </span>
         </div>
       </div>

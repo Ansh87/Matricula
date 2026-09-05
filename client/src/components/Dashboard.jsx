@@ -1,4 +1,4 @@
-// Dashboard.jsx — home overview: profile completeness, list balance, open
+// Dashboard.jsx - home overview: profile completeness, list balance, open
 // verification items, upcoming deadlines, essay workload, final list health,
 // and recommended next steps. Pulls together the whole app -- the family
 // command center. Every card below reads from data that already exists and
@@ -40,9 +40,9 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
     if (!total) return "You haven't saved any colleges yet. Generate matches and add a balanced set.";
     const tips = [];
     if (byCat.Safety < 2) tips.push("add 1–2 more safety schools you'd be happy to attend");
-    if (byCat.Target < 3) tips.push("aim for 3–5 targets — they're the core of a strong list");
+    if (byCat.Target < 3) tips.push("aim for 3–5 targets - they're the core of a strong list");
     if (byCat.Reach > 6) tips.push("you have a lot of reaches; make sure targets and safeties are solid");
-    return tips.length ? "Suggestion: " + tips.join("; ") + "." : "Nice — your list looks reasonably balanced across reach, target, and safety.";
+    return tips.length ? "Suggestion: " + tips.join("; ") + "." : "Nice - your list looks reasonably balanced across reach, target, and safety.";
   }, [saved, byCat]);
 
   // Cross-page summary data (Verification Center, Decision Plan summary --
@@ -69,10 +69,10 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
     if (comp.pct < 100) actions.push({ label: "Profile incomplete", detail: `${comp.pct}% complete`, go: "profile" });
     if (!saved.length) actions.push({ label: "No colleges saved yet", detail: "Run Matches or Browse Colleges to start a list", go: "matches" });
 
-    if (verification === null) actions.push({ label: "Verification items", detail: "Needs review — couldn't load", go: "decisionPlan" });
+    if (verification === null) actions.push({ label: "Verification items", detail: "Needs review - couldn't load", go: "decisionPlan" });
     else if (verification && verification.totalItems > 0) actions.push({ label: "Verification items open", detail: `${verification.totalItems} open item(s)`, go: "decisionPlan" });
 
-    if (planSummary === null) actions.push({ label: "Deadlines", detail: "Needs review — couldn't load", go: "decisionPlan" });
+    if (planSummary === null) actions.push({ label: "Deadlines", detail: "Needs review - couldn't load", go: "decisionPlan" });
     else if (planSummary) {
       if (planSummary.tasks?.overdue > 0) actions.push({ label: "Tasks overdue", detail: `${planSummary.tasks.overdue} overdue`, go: "decisionPlan" });
       else if (planSummary.tasks?.dueSoon > 0) actions.push({ label: "Upcoming deadlines", detail: `${planSummary.tasks.dueSoon} due in the next 14 days`, go: "decisionPlan" });
@@ -83,7 +83,7 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
       }
     }
 
-    if (decisionItems === null) actions.push({ label: "Net price calculators (NPC)", detail: "Needs review — couldn't load", go: "decisionPlan" });
+    if (decisionItems === null) actions.push({ label: "Net price calculators (NPC)", detail: "Needs review - couldn't load", go: "decisionPlan" });
     else if (Array.isArray(decisionItems) && decisionItems.length) {
       const npcNotDone = decisionItems.filter((it) => it.college_id && !it.npc_completed).length;
       if (npcNotDone > 0) actions.push({ label: "NPC not completed", detail: `${npcNotDone} college(s)`, go: "decisionPlan" });
@@ -100,7 +100,7 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
         <div>
           <div className="eyebrow">Dashboard</div>
           <h1>{profile.name ? `${profile.name}'s plan` : "Your college plan"}</h1>
-          <p className="lead">A quick snapshot — your profile, your list balance, and where things stand.</p>
+          <p className="lead">A quick snapshot - your profile, your list balance, and where things stand.</p>
         </div>
         <button className="btn amber" onClick={() => onGo("journey")}>Continue your Journey →</button>
       </div>
@@ -156,7 +156,7 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
         <div className="card pad stack">
           <div className="row spread"><h3>Open verification items</h3><button className="btn ghost sm" onClick={() => onGo("decisionPlan")}>Verification Center →</button></div>
           {verification === undefined && <p className="note">Loading…</p>}
-          {verification === null && <p className="note">Needs review — couldn't load right now.</p>}
+          {verification === null && <p className="note">Needs review - couldn't load right now.</p>}
           {verification && (
             <p className="note">{verification.totalItems > 0
               ? `${verification.totalItems} open item(s) across ${verification.totalColleges} college(s).`
@@ -167,7 +167,7 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
         <div className="card pad stack">
           <div className="row spread"><h3>Upcoming deadlines</h3><button className="btn ghost sm" onClick={() => onGo("decisionPlan")}>Timeline & Tasks →</button></div>
           {planSummary === undefined && <p className="note">Loading…</p>}
-          {planSummary === null && <p className="note">Needs review — couldn't load right now.</p>}
+          {planSummary === null && <p className="note">Needs review - couldn't load right now.</p>}
           {planSummary && (
             <p className="note">
               {planSummary.tasks?.overdue > 0 && <strong style={{ color: "var(--reach)" }}>{planSummary.tasks.overdue} overdue. </strong>}
@@ -180,7 +180,7 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
         <div className="card pad stack">
           <div className="row spread"><h3>Essay workload</h3><button className="btn ghost sm" onClick={() => onGo("essays")}>Essays →</button></div>
           {planSummary === undefined && <p className="note">Loading…</p>}
-          {planSummary === null && <p className="note">Needs review — couldn't load right now.</p>}
+          {planSummary === null && <p className="note">Needs review - couldn't load right now.</p>}
           {planSummary && (
             <p className="note">{planSummary.totalEssaysTracked ?? 0} essay(s) tracked.
               {planSummary.essayCoverageMissing > 0 ? ` ${planSummary.essayCoverageMissing} college(s) have none tracked yet.` : ""}</p>
@@ -190,7 +190,7 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
         <div className="card pad stack">
           <div className="row spread"><h3>Final list health</h3><button className="btn ghost sm" onClick={() => onGo("decisionPlan")}>Final List Health Check →</button></div>
           {planSummary === undefined && <p className="note">Loading…</p>}
-          {planSummary === null && <p className="note">Needs review — couldn't load right now.</p>}
+          {planSummary === null && <p className="note">Needs review - couldn't load right now.</p>}
           {planSummary && !planSummary.finalListHealth && <p className="note">Add colleges to your Decision Plan to see a health check.</p>}
           {planSummary?.finalListHealth && (
             <p className="note">
@@ -207,7 +207,7 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
           <p className="note">Loading…</p>
         )}
         {!nextActions.length && verification !== undefined && planSummary !== undefined && decisionItems !== undefined && (
-          <p className="note">Nothing urgent right now — nice work.</p>
+          <p className="note">Nothing urgent right now - nice work.</p>
         )}
         {nextActions.map((a, i) => (
           <div key={i} className="row spread wrap" style={{ padding: "6px 0", borderBottom: i < nextActions.length - 1 ? "1px solid var(--line-2)" : "none", gap: 8 }}>
@@ -218,7 +218,7 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
       </div>
 
       <div className="disclaimer">
-        This dashboard summarizes your own entries and official data. Estimates aren't guarantees — confirm
+        This dashboard summarizes your own entries and official data. Estimates aren't guarantees - confirm
         deadlines, costs, and requirements with each college's official site.
       </div>
     </div>

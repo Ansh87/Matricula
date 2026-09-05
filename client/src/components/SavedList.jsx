@@ -1,4 +1,4 @@
-// SavedList.jsx — the student's SAVED colleges (persisted). Distinct from
+// SavedList.jsx - the student's SAVED colleges (persisted). Distinct from
 // "Matches" (live recommendations). Always shows what you've saved, so the tab
 // is never mysteriously blank.
 import React, { useState, useEffect } from "react";
@@ -56,7 +56,7 @@ export function SavedList({ studentId, saved, profile, onOpen, onRemove, onClear
     return (
       <div className="empty">
         Your saved list is empty. Go to <strong>Matches</strong> or <strong>Top STEM</strong> and tap
-        <span className="pill" style={{ margin: "0 4px" }}>+ List</span> on colleges you like — they'll appear here and in your Tracker.
+        <span className="pill" style={{ margin: "0 4px" }}>+ List</span> on colleges you like - they'll appear here and in your Tracker.
       </div>
     );
   }

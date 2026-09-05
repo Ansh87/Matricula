@@ -1,4 +1,4 @@
-// MatchCard.jsx — the single card style used by BOTH Balanced List and Best Fit.
+// MatchCard.jsx - the single card style used by BOTH Balanced List and Best Fit.
 // Score bars are collapsed by default so cards stay scannable.
 import React from "react";
 import { CategoryTag, Meter, SourceBadge, fmtUSD, fmtPct } from "./ui.jsx";
@@ -9,7 +9,7 @@ function ScoreRow({ label, value }) {
     <div className="row spread" style={{ gap: 10 }}>
       <span className="note" style={{ minWidth: 130 }}>{label}</span>
       <Meter value={value} />
-      <span className="mono" style={{ fontSize: 12, minWidth: 28, textAlign: "right" }}>{value ?? "—"}</span>
+      <span className="mono" style={{ fontSize: 12, minWidth: 28, textAlign: "right" }}>{value ?? "-"}</span>
     </div>
   );
 }
@@ -46,7 +46,7 @@ export function MatchCard({ scored, saved, onOpen, onToggleSave, decisionItem, p
       </div>
 
       <div className="row wrap" style={{ gap: 6, margin: "12px 0" }}>
-        <span className="pill">Fit {scored.overall ?? "—"}</span>
+        <span className="pill">Fit {scored.overall ?? "-"}</span>
         <span className="pill">Admit {fmtPct(c.admissionRate) || "n/a"}</span>
         <span className="pill">Est. cost {fmtUSD(scored.netCost) || "n/a"}</span>
         {subs.major != null && <span className="pill">Major fit {subs.major}</span>}
@@ -71,7 +71,7 @@ export function MatchCard({ scored, saved, onOpen, onToggleSave, decisionItem, p
         </div>
       )}
 
-      {/* Program-availability provenance — never claim a major without evidence.
+      {/* Program-availability provenance - never claim a major without evidence.
           Baseline from official Scorecard CIP matching (always available). */}
       {mf && (
         <div className="row" style={{ gap: 6, marginBottom: 6 }}>
@@ -90,7 +90,7 @@ export function MatchCard({ scored, saved, onOpen, onToggleSave, decisionItem, p
           ) : (
             <>
               <SourceBadge level="unavailable" />
-              <span className="note" style={{ fontSize: 11, color: "var(--amber)" }}>Program availability not verified — confirm on official site</span>
+              <span className="note" style={{ fontSize: 11, color: "var(--amber)" }}>Program availability not verified - confirm on official site</span>
             </>
           )}
         </div>
@@ -158,7 +158,7 @@ export function MatchCard({ scored, saved, onOpen, onToggleSave, decisionItem, p
       <div className="row spread" style={{ marginTop: 10 }}>
         <div className="row" style={{ gap: 8 }}>
           <SourceBadge level="official">Scorecard</SourceBadge>
-          <span className="note" style={{ fontSize: 11 }}>Overall {scored.overall ?? "—"}</span>
+          <span className="note" style={{ fontSize: 11 }}>Overall {scored.overall ?? "-"}</span>
         </div>
         <div className="row" style={{ gap: 8 }}>
           <button className="btn ghost sm" onClick={() => onOpen(c.id)}>Details</button>

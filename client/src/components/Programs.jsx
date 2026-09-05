@@ -67,7 +67,7 @@ function Field({ label, value }) {
   return (
     <div style={{ marginBottom: 6 }}>
       <div className="note" style={{ fontWeight: 600 }}>{label}</div>
-      <div className="note">{value || "Data unavailable — needs manual verification"}</div>
+      <div className="note">{value || "Data unavailable - needs manual verification"}</div>
     </div>
   );
 }
@@ -549,7 +549,7 @@ export function Programs({ studentId, profile }) {
                       <Field label="Requirements" value={p.requirements} />
                     </div>
                     <div className="note" style={{ marginTop: 8 }}>
-                      Source: {p.source_label || "Unknown"}{p.source_url ? <> — <a href={p.source_url} target="_blank" rel="noreferrer">{p.source_url}</a></> : null}<br />
+                      Source: {p.source_label || "Unknown"}{p.source_url ? <> - <a href={p.source_url} target="_blank" rel="noreferrer">{p.source_url}</a></> : null}<br />
                       Confidence: {p.confidence_level || "unknown"} · Last checked: {p.last_checked ? new Date(p.last_checked).toLocaleDateString() : "never"}
                     </div>
                     {p.notes && <div className="note" style={{ marginTop: 6, fontStyle: "italic" }}>{p.notes}</div>}
@@ -591,7 +591,7 @@ export function Programs({ studentId, profile }) {
               {review.length > 0 && (
                 <div className="stack" style={{ gap: 8 }}>
                   <div className="row spread" style={{ alignItems: "center" }}>
-                    <div className="note" style={{ fontWeight: 600 }}>Needs review — auto-discovered, not yet verified ({review.length})</div>
+                    <div className="note" style={{ fontWeight: 600 }}>Needs review - auto-discovered, not yet verified ({review.length})</div>
                     <button className="link" onClick={() => setShowNeedsReview((v) => !v)}>{showNeedsReview ? "Hide" : "Show"}</button>
                   </div>
                   {showNeedsReview && (

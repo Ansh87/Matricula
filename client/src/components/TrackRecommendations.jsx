@@ -1,9 +1,9 @@
-// TrackRecommendations.jsx — Advisor's dynamic career-track recommender.
+// TrackRecommendations.jsx - Advisor's dynamic career-track recommender.
 //
 // Lightweight, CLIENT-ONLY heuristics: it ranks the SAME scenario catalog that
 // Matches and Career Planner use (GET /api/colleges/scenarios) against the saved
 // Profile. No College Scorecard calls, no scoring-engine changes, no hardcoded
-// track list, and no hardcoded "CS+AI is always best" — the ranking is entirely
+// track list, and no hardcoded "CS+AI is always best" - the ranking is entirely
 // profile-driven, so it changes with the profile.
 import React, { useEffect, useMemo, useState } from "react";
 import { api } from "../lib/api.js";
@@ -75,7 +75,7 @@ function scoreTrack(sc, profile, mathScience, researchStrong) {
   const interests = (profile.interests || []).map(lc);
   const matchField = (val, field) => field.includes(val) || val.includes(field);
 
-  // 1. Major overlap — weighted by WHERE it matches (primary field matters most).
+  // 1. Major overlap - weighted by WHERE it matches (primary field matters most).
   //    A student's primary major matching the track's PRIMARY field is the
   //    strongest possible signal, so domain-specific tracks rank for the right
   //    students rather than generic bonuses dominating.
@@ -109,7 +109,7 @@ function scoreTrack(sc, profile, mathScience, researchStrong) {
   for (const g of groups) { for (const kw of KW[g] || []) { if (freeText.includes(kw)) kwHits++; } }
   if (kwHits) { score += Math.min(kwHits * 1.2, 4); evidence.push("Your activities/goals mention keywords related to this track."); }
 
-  // 5. Math/science strength — a smaller, tie-breaking nudge for quantitative
+  // 5. Math/science strength - a smaller, tie-breaking nudge for quantitative
   //    tracks (not large enough to override direct major/interest evidence).
   if (mathScience && (MATH_HEAVY.has(sc.id) || ENGINEERING.has(sc.id))) {
     score += 1; evidence.push("Your math/science profile supports this quantitative track.");

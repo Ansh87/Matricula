@@ -1,8 +1,8 @@
-// coursePlans.js — seed data for the Course & Preparation Plan (Decision Plan
+// coursePlans.js - seed data for the Course & Preparation Plan (Decision Plan
 // tab). This is general, evidence-based curriculum/prep guidance (the kind any
 // high school counselor or department website would describe), NOT a claim
 // about what any specific college requires or offers. It is intentionally
-// generic and reused across every family — see database.js for why this table
+// generic and reused across every family - see database.js for why this table
 // is not keyed by student_id. Track ids/names are reused from the app's
 // existing Career Track scenarios (services/scenarios.js) so the language here
 // stays consistent with what Matches/Advisor already tell the family; we do
@@ -17,7 +17,7 @@ export const COURSE_PLANS = [
     domainExpectations: "Python fluency, familiarity with at least one ML framework (e.g. scikit-learn/PyTorch), understanding of data structures & algorithms, and basic data pipeline/ETL concepts.",
     suggestedProjects: "End-to-end ML model (collect, clean, train, present); a data pipeline or dashboard built on a public dataset.",
     suggestedSkills: "Python & ML frameworks; linear algebra, probability & statistics; data pipelines; a research or applied ML project.",
-    risksIfWeak: "Fast-moving tooling — fundamentals (math, algorithms) outlast frameworks. Weak math prep is the most common reason students struggle in intro ML/AI coursework.",
+    risksIfWeak: "Fast-moving tooling - fundamentals (math, algorithms) outlast frameworks. Weak math prep is the most common reason students struggle in intro ML/AI coursework.",
   },
   {
     trackId: "cs_finance_quant",
@@ -56,12 +56,12 @@ export const COURSE_PLANS = [
     trackId: "cs_cyber_security",
     trackName: "CS + Cybersecurity / AI Security",
     seniorYearCourses: "AP Computer Science A, AP Calculus (AB or BC), a networking or cybersecurity elective if the high school offers one.",
-    collegeEarlyDirection: "CS1/CS2, discrete math, and an intro networks or systems course in year one; a dedicated intro cybersecurity/security-fundamentals course by sophomore year (note: many colleges offer cybersecurity as a concentration, minor, or certificate rather than a standalone major — verify exactly how a given school structures it).",
+    collegeEarlyDirection: "CS1/CS2, discrete math, and an intro networks or systems course in year one; a dedicated intro cybersecurity/security-fundamentals course by sophomore year (note: many colleges offer cybersecurity as a concentration, minor, or certificate rather than a standalone major - verify exactly how a given school structures it).",
     mathExpectations: "Discrete math and probability; calculus is generally supportive rather than central for a security-focused path.",
     domainExpectations: "Networking fundamentals, operating systems, cryptography basics, and secure-coding practice.",
     suggestedProjects: "A security-focused build (e.g. a CTF write-up portfolio, a small penetration-testing lab report, or a secure-coding project).",
     suggestedSkills: "Networking, operating systems, cryptography fundamentals, secure coding.",
-    risksIfWeak: "Cybersecurity program structure varies widely by school (major vs. concentration vs. certificate) — confirm the exact structure before assuming a standalone major exists.",
+    risksIfWeak: "Cybersecurity program structure varies widely by school (major vs. concentration vs. certificate) - confirm the exact structure before assuming a standalone major exists.",
   },
   {
     trackId: "quantum_physics_eecs",
@@ -70,7 +70,7 @@ export const COURSE_PLANS = [
     collegeEarlyDirection: "Multivariable calculus, linear algebra, and Physics C-level mechanics/E&M in year one; intro modern/quantum physics and a computational or simulation methods course by sophomore year.",
     mathExpectations: "Multivariable calculus and linear algebra are foundational; differential equations and complex analysis follow closely.",
     domainExpectations: "Applied math, simulation/numerical methods, and (where available) an undergraduate research placement in a physics or applied-physics lab.",
-    suggestedProjects: "A simulation or applied-research project (e.g. a computational physics model) — ideally connected to a lab or research mentor.",
+    suggestedProjects: "A simulation or applied-research project (e.g. a computational physics model) - ideally connected to a lab or research mentor.",
     suggestedSkills: "Multivariable calculus, linear algebra, Physics C, applied math, simulation/research project experience.",
     risksIfWeak: "Quantum/applied-physics research tracks lean heavily on math maturity; gaps in calculus or linear algebra compound quickly.",
   },
@@ -127,7 +127,7 @@ export const COURSE_PLANS = [
     domainExpectations: "Human biology/physiology, instrumentation/signals basics, and increasingly, health-data analytics/ML.",
     suggestedProjects: "A biomedical-data or device-related project (e.g. analyzing a public health dataset or building a simple biosignal-processing demo).",
     suggestedSkills: "Biology fundamentals, calculus, statistics, programming.",
-    risksIfWeak: "Biomedical engineering blends biology and engineering rigor — students weak in either often struggle more than in a single-discipline major.",
+    risksIfWeak: "Biomedical engineering blends biology and engineering rigor - students weak in either often struggle more than in a single-discipline major.",
   },
   {
     trackId: "materials_semiconductor_energy",
@@ -138,7 +138,7 @@ export const COURSE_PLANS = [
     domainExpectations: "Materials science fundamentals, solid-state/semiconductor physics, and energy-systems basics.",
     suggestedProjects: "A materials characterization or energy-systems data project (lab-based or data-analysis based).",
     suggestedSkills: "Chemistry and physics fundamentals, calculus, lab technique.",
-    risksIfWeak: "This is a smaller, specialized field at many schools — confirm the exact program structure (major vs. concentration) before assuming standalone availability.",
+    risksIfWeak: "This is a smaller, specialized field at many schools - confirm the exact program structure (major vs. concentration) before assuming standalone availability.",
   },
   {
     trackId: "environmental_energy_systems",
@@ -149,18 +149,18 @@ export const COURSE_PLANS = [
     domainExpectations: "Environmental science fundamentals, thermodynamics/fluid mechanics, and energy-systems basics.",
     suggestedProjects: "An environmental or energy-systems data project (e.g. analyzing public environmental/energy datasets).",
     suggestedSkills: "Chemistry/environmental science fundamentals, calculus, data analysis.",
-    risksIfWeak: "Program naming varies widely (environmental engineering vs. environmental science vs. energy engineering) — verify which one a school actually offers.",
+    risksIfWeak: "Program naming varies widely (environmental engineering vs. environmental science vs. energy engineering) - verify which one a school actually offers.",
   },
   {
     trackId: "business_data_leadership",
     trackName: "Business / Data / Leadership",
     seniorYearCourses: "AP Statistics, AP Microeconomics/Macroeconomics, AP Calculus (AB or BC), and a business/leadership elective if offered.",
-    collegeEarlyDirection: "Intro micro/macro economics, statistics, and a business-analytics or spreadsheet-modeling course in year one; a leadership/cohort program (if the school offers one — verify officially) alongside core business coursework.",
+    collegeEarlyDirection: "Intro micro/macro economics, statistics, and a business-analytics or spreadsheet-modeling course in year one; a leadership/cohort program (if the school offers one - verify officially) alongside core business coursework.",
     mathExpectations: "Statistics is central; calculus supports economics and quantitative business coursework.",
     domainExpectations: "Business analytics, economics fundamentals, spreadsheet/financial modeling, and communication/leadership skills.",
     suggestedProjects: "A business-analytics project (e.g. a market or operations analysis using public data) or a documented leadership initiative.",
     suggestedSkills: "Statistics, economics, business analytics, leadership, communication, spreadsheet/modeling skills.",
-    risksIfWeak: "Many strong business programs (e.g. cohort/direct-admit business programs) have separate, often more selective, admission processes — verify this is not assumed the same as general-university admission.",
+    risksIfWeak: "Many strong business programs (e.g. cohort/direct-admit business programs) have separate, often more selective, admission processes - verify this is not assumed the same as general-university admission.",
   },
 ];
 

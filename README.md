@@ -1,21 +1,21 @@
-# Matricula — live-data edition
+# Matricula - live-data edition
 
 A college, major, career, and admissions planning app for high school students and
 their families. Unlike a demo, it runs on **official data**:
 
-- **Colleges** — U.S. Department of Education **College Scorecard** API (admission
+- **Colleges** - U.S. Department of Education **College Scorecard** API (admission
   rate, SAT/ACT, tuition, average net price, graduation & retention rates, median
   earnings, median debt, size).
-- **Careers** — U.S. **Bureau of Labor Statistics** Occupational Outlook Handbook
+- **Careers** - U.S. **Bureau of Labor Statistics** Occupational Outlook Handbook
   (median pay, projected growth, entry education), mapped from majors.
-- **Admissions details** — manually verified from each college's official
+- **Admissions details** - manually verified from each college's official
   admissions site / Common Data Set (rounds offered, testing policy, essays,
   CSS Profile, deadlines), each stored with a source URL, year, review date, and
   confidence level.
 
 Every value in the UI wears a **provenance badge**: `Official`, `Verified`,
-`Estimated`, or `Unavailable`. Nothing is invented — if a field isn't published,
-the app shows **"Data unavailable"** or **"Not publicly available — verify with the
+`Estimated`, or `Unavailable`. Nothing is invented - if a field isn't published,
+the app shows **"Data unavailable"** or **"Not publicly available - verify with the
 college's admissions office."**
 
 API keys live only on the server. The browser talks solely to the app's own
@@ -80,7 +80,7 @@ server/   Node + Express API             (holds keys, calls Scorecard/BLS, cache
   financial, career, and outcome fit from real Scorecard fields, then a
   Reach/Target/Safety category with an admission-probability **range** (never a
   false-precision percentage). Missing inputs yield `null` sub-scores, never guesses.
-- **Caching** — live responses are cached in SQLite (`api_cache`) for 24h by
+- **Caching** - live responses are cached in SQLite (`api_cache`) for 24h by
   default. If a live call fails and a cache exists, the cached copy is served and
   flagged; if it's older than the stale threshold it's marked stale. If there's no
   cache, the app returns an honest error rather than fake data.
@@ -89,7 +89,7 @@ server/   Node + Express API             (holds keys, calls Scorecard/BLS, cache
 
 ## Requirements
 
-- **Node.js 22.5+** (uses the built-in `node:sqlite` module — no compiler needed).
+- **Node.js 22.5+** (uses the built-in `node:sqlite` module - no compiler needed).
   Check with `node --version`.
 
 ---
@@ -111,9 +111,9 @@ Set these in `server/.env` (copy from `server/.env.example`):
 
 ### Getting API keys
 
-- **College Scorecard** — free, ~1 minute: https://api.data.gov/signup/
+- **College Scorecard** - free, ~1 minute: https://api.data.gov/signup/
   (The same `api.data.gov` key works across federal APIs.)
-- **BLS** (optional) — free: https://data.bls.gov/registrationEngine/
+- **BLS** (optional) - free: https://data.bls.gov/registrationEngine/
 
 You can run the app with **no keys at all** thanks to the Scorecard `DEMO_KEY`
 (rate-limited to 1,000 requests/hour) and the bundled BLS snapshot.
@@ -148,10 +148,10 @@ npm run start          # Express serves API + the built client on :4000
 
 ## Refreshing data
 
-- **Live College Scorecard / BLS** — refreshed automatically on request; cached
+- **Live College Scorecard / BLS** - refreshed automatically on request; cached
   for `CACHE_TTL_MS`. To force-refresh, delete the `api_cache` rows (or the
   `.db` file) and reload.
-- **Verified admissions profiles, selection profiles + career tables** — re-run
+- **Verified admissions profiles, selection profiles + career tables** - re-run
   `npm run import` after editing `server/src/db/importVerified.js` (verified
   admissions details), `server/src/db/selectionSeed.js` (selection / "what they
   want" / culture / major-strategy profiles), or `server/src/db/careerSeed.js`
@@ -232,9 +232,9 @@ Reach/Target/Safety estimator · fit + ROI scoring · major→career (BLS) explo
 application & deadline tracker · manual verified-data overrides · grounded advisor ·
 source labels + disclaimers throughout · student & parent notes · CSV export.
 
-### "What each college wants" — verified selection profiles
+### "What each college wants" - verified selection profiles
 
-28 colleges across all tiers are seeded with verified selection data — MIT, Stanford,
+28 colleges across all tiers are seeded with verified selection data - MIT, Stanford,
 Princeton, Harvard, Yale, Columbia, Cornell, UPenn, Brown, Dartmouth, CMU,
 Northwestern, Duke, Johns Hopkins, Caltech, UC Berkeley, UCLA, USC, Georgia Tech,
 UIUC, Purdue, Michigan, UT Austin, Rutgers, NJIT, Penn State, Maryland, and Stevens. Each profile carries:
@@ -250,7 +250,7 @@ UIUC, Purdue, Michigan, UT Austin, Rutgers, NJIT, Penn State, Maryland, and Stev
 
 The **culture-fit engine** compares the student's own profile against the factors
 *that college* weights most and returns an explainable score with aligned strengths
-and gaps — honestly framed as an estimate from stated priorities, not a prediction.
+and gaps - honestly framed as an estimate from stated priorities, not a prediction.
 
 The **major-strategy engine** gives honest guidance: it flags impacted majors, warns
 when switching in later is hard by design, and explicitly refuses to pitch an
@@ -265,7 +265,7 @@ full essay review.
 ## Uploading documents (transcript / resume / portfolio)
 
 The **Documents** tab lets you upload PDFs or text files. Files are stored on your
-own server's disk (the `uploads/` folder) and their text is extracted **locally** —
+own server's disk (the `uploads/` folder) and their text is extracted **locally** -
 nothing is sent anywhere by default.
 
 Optional AI auto-fill: if you set a free `GEMINI_API_KEY`, an "Auto-fill" button
@@ -273,18 +273,18 @@ appears on each uploaded document. It sends the extracted *text* (not the raw fi
 to Google Gemini, which returns structured fields (GPA, SAT/ACT, AP count, rank,
 activities) that you review and then apply to your profile. Without a key, uploads
 still work and you enter fields yourself. Note: on Google's free tier, inputs may be
-used to improve their models — the app states this on the upload screen so the choice
+used to improve their models - the app states this on the upload screen so the choice
 is informed. To use a stronger no-training privacy guarantee, use a paid Gemini tier
 or swap the provider.
 
 ## Reading documents into your college list (the full loop)
 
 With a free `GEMINI_API_KEY` set, the **Profile** screen's document section can read
-your transcript, resume, and portfolio **together** and build a structured profile —
+your transcript, resume, and portfolio **together** and build a structured profile -
 GPA, rigor, scores, plus your activities, awards, research, and projects. Those
 extracurriculars now feed an **extracurricular-strength score** that nudges your
-admission chances at holistic colleges (so real accomplishments — a patent, an IEEE
-paper, founder roles — move the needle, not just GPA/SAT). Portfolios can be added as
+admission chances at holistic colleges (so real accomplishments - a patent, an IEEE
+paper, founder roles - move the needle, not just GPA/SAT). Portfolios can be added as
 a **link** (Netlify, GitHub, personal site); the app fetches and reads the page text.
 Without a Gemini key, uploads still store and show text; you map fields yourself.
 
@@ -306,7 +306,7 @@ Your profile, saved list, tracker, and documents live in the SQLite database on 
 
 There is no full database backup route for security reasons. Use authenticated
 per-user CSV exports for Decision Plan, Programs & Opportunities, Tasks,
-Application Timeline, and Essay Center instead — each export only ever contains
+Application Timeline, and Essay Center instead - each export only ever contains
 the signed-in family's own data, never the whole database.
 
 ## Comparing colleges
@@ -328,10 +328,10 @@ Export the comparison to CSV.
   `importVerified.js` (admissions details) and `selectionSeed.js` (selection
   profiles).
 - **Culture-fit and major-strategy are estimates from stated priorities**, not
-  predictions. The app never claims an "easier major backdoor" — it lays out real
+  predictions. The app never claims an "easier major backdoor" - it lays out real
   trade-offs and warns when switching majors later is hard by design.
 - **ED/EA/RD acceptance rates are intentionally left blank** unless a college
-  officially publishes them — the app never estimates round-level rates.
+  officially publishes them - the app never estimates round-level rates.
 - **BLS career figures are a dated OOH snapshot** unless you wire a live BLS key;
   the source year is shown on every figure.
 - **Admission probability is an estimate, expressed as a range.** Admissions are
@@ -345,14 +345,14 @@ Export the comparison to CSV.
 ---
 
 Built as an independent, family-use college planning project.
-Planning aid only — not a counseling service or a college admissions office.
+Planning aid only - not a counseling service or a college admissions office.
 
 ### Top 30 STEM colleges
 
 The **Top STEM** tab ranks the strongest undergraduate CS / engineering / science
 programs (Top 10 / 20 / 30). The STEM-strength ordering is an **editorial ranking**
-of program reputation and outcomes — clearly labeled as such, not an official
-government ranking — while each college's admit rate, cost, earnings, and graduation
+of program reputation and outcomes - clearly labeled as such, not an official
+government ranking - while each college's admit rate, cost, earnings, and graduation
 data are pulled live from College Scorecard, and (with a profile) each shows your
 estimated Reach/Target/Safety category and culture-fit score. All 28 seeded colleges
 carry full verified admissions details (rounds, testing policy, essays, CSS, honors)

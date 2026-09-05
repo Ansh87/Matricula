@@ -1,5 +1,5 @@
 import { coarseCategory } from "./scoring.js";
-// balancedList.js — builds a practical, balanced application list from scored
+// balancedList.js - builds a practical, balanced application list from scored
 // matches (spec §6). Unlike "top N by score", this fills category quotas so the
 // student ends up with a realistic mix of reach/target/safety plus financial
 // safeties and an in-state public option.
@@ -73,7 +73,7 @@ export function buildBalancedList(scored, profile, size = 10) {
   // FALLBACK FILL: quotas are the first priority, but if a bucket is empty/short
   // (e.g. a scenario pool with zero Target-band schools) the list can fall well
   // below `size` while valid candidates remain in OTHER buckets. Rather than
-  // return a short list — or, worse, relabel Reach/Safety as Target — fill the
+  // return a short list - or, worse, relabel Reach/Safety as Target - fill the
   // remaining slots with the best remaining eligible candidates in existing rank
   // order, preserving each school's TRUE category. This changes neither quota
   // targets nor Reach/Target/Safety classification.
@@ -118,6 +118,6 @@ export function buildBalancedList(scored, profile, size = 10) {
     colleges: picked,
     warnings,
     fallbackUsed,
-    note: "A balanced list fills reach/target/safety quotas rather than simply taking the highest scores. Categories are estimates from official admit rates and your profile — not guarantees.",
+    note: "A balanced list fills reach/target/safety quotas rather than simply taking the highest scores. Categories are estimates from official admit rates and your profile - not guarantees.",
   };
 }

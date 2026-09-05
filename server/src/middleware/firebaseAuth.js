@@ -1,4 +1,4 @@
-// firebaseAuth.js — verifies Firebase ID tokens with the Admin SDK and attaches
+// firebaseAuth.js - verifies Firebase ID tokens with the Admin SDK and attaches
 // the authenticated user to the request. Identity only; no Firestore, no change
 // to the app's own database model. Service-account credentials live ONLY here on
 // the server and are never sent to the client.
@@ -11,7 +11,7 @@ let initError = null;
 
 // Lazily initialize the Admin SDK from whatever credentials are configured.
 // Prefer FIREBASE_SERVICE_ACCOUNT_JSON (one blob, easiest on Railway); otherwise
-// use the three discrete fields. If neither is present, we don't initialize —
+// use the three discrete fields. If neither is present, we don't initialize -
 // protected routes then 401 (unless dev bypass is on).
 function ensureInit() {
   if (initialized || initError) return;
@@ -50,7 +50,7 @@ function ensureInit() {
     initialized = true;
     console.log("[auth] Firebase Admin initialized OK.");
   } catch (e) {
-    // Log the REASON only — never the key material or token.
+    // Log the REASON only - never the key material or token.
     initError = new Error(`Firebase Admin init failed: ${e.message.slice(0, 160)}`);
     console.error("[auth] Firebase Admin init FAILED:", e.message.slice(0, 160));
   }
@@ -60,10 +60,10 @@ function ensureInit() {
 // init rather than merely checking that env strings exist, so health can't
 // disagree with what protected routes experience.
 export function authStatus() {
-  if (config.authDevBypass) return "DEV BYPASS (no Firebase — local only)";
+  if (config.authDevBypass) return "DEV BYPASS (no Firebase - local only)";
   ensureInit();
   if (initialized) return "Firebase Admin configured";
-  return `NOT configured — ${initError ? initError.message : "unknown reason"}`;
+  return `NOT configured - ${initError ? initError.message : "unknown reason"}`;
 }
 
 // A fixed dev user used only when AUTH_DEV_BYPASS=true and NODE_ENV!=="production".

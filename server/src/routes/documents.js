@@ -1,4 +1,4 @@
-// documents routes — upload, list, delete, and optional AI-parse.
+// documents routes - upload, list, delete, and optional AI-parse.
 import express from "express";
 import multer from "multer";
 import { config } from "../config.js";

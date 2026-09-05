@@ -1,4 +1,4 @@
-// scoring.js — transparent, rule-based fit + admission-probability engine.
+// scoring.js - transparent, rule-based fit + admission-probability engine.
 // It consumes ONLY real values from College Scorecard (admission rate, SAT,
 // net price, grad rate, earnings). When an input field is null (unavailable),
 // the corresponding sub-score is returned as null rather than guessed, and the
@@ -30,7 +30,7 @@ export function ecStrength(profile) {
 
 // --- Academic fit: reflects FOUR YEARS of coursework, not just one test.
 // A transparent base (SAT/ACT vs the college's midpoint) plus a set of BOUNDED
-// nudges — unweighted GPA, weighted-GPA rigor gap, AP/IB/Honors count, course
+// nudges - unweighted GPA, weighted-GPA rigor gap, AP/IB/Honors count, course
 // rigor, class rank, and research. Every nudge is individually capped so no
 // single input can dominate the score. Each cap is stated inline for clarity.
 export function academicFit(profile, c) {
@@ -56,7 +56,7 @@ export function academicFit(profile, c) {
 
   // --- Weighted GPA: a RIGOR/CONTEXT signal. Weighted scales vary by school
   // (5.0, 4.5, etc.), so instead of assuming a scale we reward the GAP between
-  // weighted and unweighted GPA — how much harder-than-average the courseload
+  // weighted and unweighted GPA - how much harder-than-average the courseload
   // was. Scale-independent, and capped small (+6) so it supplements, never leads.
   if (profile.gpaWeighted != null && profile.gpa != null) {
     const rigorGap = profile.gpaWeighted - profile.gpa; // e.g. 4.42 - 4.0 = 0.42
@@ -122,7 +122,7 @@ export function estNetCost(profile, c, inState) {
 
 // --- ROI: 4-year net cost vs. projected early-career earnings. Returns a
 // distinct score plus the underlying figures (all from official Scorecard
-// fields — earnings and net price). Payback = years of the earnings premium
+// fields - earnings and net price). Payback = years of the earnings premium
 // (over a ~$40k HS-diploma baseline) needed to recoup 4-year cost.
 export function computeROI(profile, c, inState) {
   const annualNet = estNetCost(profile, c, inState);
@@ -171,19 +171,19 @@ export function majorFit(profile, c) {
       note: "Official program data doesn't show a bachelor's program in your intended major." };
   }
 
-  // The lookup itself failed — that's an error, not evidence of anything.
+  // The lookup itself failed - that's an error, not evidence of anything.
   // Score neutral-low (45): unknown/unverified major data must NOT be rewarded
   // as if a match were confirmed, but the college is not excluded on this basis.
   if (c.programVerificationError) {
     return { score: 45, status: "error", matchedTitles: [],
-      note: "Program availability not fully verified — confirm on official college website." };
+      note: "Program availability not fully verified - confirm on official college website." };
   }
 
   // Fallback: full program arrays present on the record (e.g. major search).
   // Same neutral-low treatment for unavailable/partial program data.
   if (!c.hasProgramData || !Array.isArray(c.bachelorCips) || !c.bachelorCips.length) {
     return { score: 45, status: "unavailable", matchedTitles: [],
-      note: "Program availability not fully verified — confirm on official college website." };
+      note: "Program availability not fully verified - confirm on official college website." };
   }
 
   const collegeCips = new Set(c.bachelorCips);
@@ -311,7 +311,7 @@ export function classify(profile, c, academic, ec) {
 
   const baseRate = c.admissionRate * 100; // percent
 
-  // HARD RULES on raw selectivity — these are properties of the college, not
+  // HARD RULES on raw selectivity - these are properties of the college, not
   // the student. No profile, however strong, makes a <10% admit school a safety.
   if (baseRate < 6) {
     return { category: "Far Reach", label: "Very Low", range: "below 15%", completeness,
@@ -390,7 +390,7 @@ export function matchExplanation(profile, c, ctx) {
   } else if (mf.status === "no-match") {
     concerns.push("Official program data does not show a bachelor's program aligned with your Profile majors/interests.");
   } else {
-    concerns.push("Program data is partially verified through College Scorecard — confirm exact major availability on the college's official website.");
+    concerns.push("Program data is partially verified through College Scorecard - confirm exact major availability on the college's official website.");
   }
 
   if (academic != null) {
@@ -406,7 +406,7 @@ export function matchExplanation(profile, c, ctx) {
 
   if (outcome != null && outcome >= 70) reasons.push("Strong graduation and outcome data.");
   if (c.admissionRate != null && c.admissionRate < 0.15) concerns.push("Reach school due to a very low admit rate.");
-  if (inState && c.controlType === "Public") reasons.push("In-state public option — typically the most affordable, predictable choice.");
+  if (inState && c.controlType === "Public") reasons.push("In-state public option - typically the most affordable, predictable choice.");
 
   return { reasons: reasons.slice(0, 5), concerns: concerns.slice(0, 4) };
 }
@@ -418,35 +418,35 @@ function fmtMoney(n) { return n == null ? "n/a" : `$${Math.round(n).toLocaleStri
 export function testSubmitAdvice(profile, c) {
   const sat = profile.satSuper || profile.sat;
   const act = profile.actSuper || profile.act;
-  if (!sat && !act) return { submit: null, text: "No test score entered. Many colleges are test-optional — you can apply without one." };
+  if (!sat && !act) return { submit: null, text: "No test score entered. Many colleges are test-optional - you can apply without one." };
   if (c.testPolicy && /not used|Not used/.test(c.testPolicy)) {
-    return { submit: false, text: "This college is test-blind — scores aren't considered, so don't worry about submitting." };
+    return { submit: false, text: "This college is test-blind - scores aren't considered, so don't worry about submitting." };
   }
   // Compare SAT to range/midpoint.
   const hi = c.sat75 || (c.satMidpoint != null ? c.satMidpoint + 60 : null);
   const mid = c.satMidpoint;
   if (sat && mid != null) {
-    if (sat >= (c.sat75 || mid)) return { submit: true, text: `Your SAT (${sat}) is at or above their upper range — submitting strengthens your application.` };
-    if (sat >= mid) return { submit: true, text: `Your SAT (${sat}) is around their midpoint (${mid}) — submitting is generally fine.` };
-    if (sat >= (c.sat25 || mid - 60)) return { submit: null, text: `Your SAT (${sat}) is in their lower-middle range — submitting is a judgment call; test-optional may be safer.` };
-    return { submit: false, text: `Your SAT (${sat}) is below their typical range (mid ${mid}) — applying test-optional is likely the stronger choice.` };
+    if (sat >= (c.sat75 || mid)) return { submit: true, text: `Your SAT (${sat}) is at or above their upper range - submitting strengthens your application.` };
+    if (sat >= mid) return { submit: true, text: `Your SAT (${sat}) is around their midpoint (${mid}) - submitting is generally fine.` };
+    if (sat >= (c.sat25 || mid - 60)) return { submit: null, text: `Your SAT (${sat}) is in their lower-middle range - submitting is a judgment call; test-optional may be safer.` };
+    return { submit: false, text: `Your SAT (${sat}) is below their typical range (mid ${mid}) - applying test-optional is likely the stronger choice.` };
   }
   return { submit: null, text: "Compare your score to this college's middle-50% range before deciding; test-optional is an option at many schools." };
 }
 
-// What makes this college risky for THIS student — honest, specific.
+// What makes this college risky for THIS student - honest, specific.
 export function riskFactors(profile, c, admission, inState) {
   const out = [];
   const sat = profile.satSuper || profile.sat || actToSat(profile.actSuper || profile.act);
   if (c.satMidpoint != null && sat && sat < (c.sat25 || c.satMidpoint - 60)) {
     out.push("Your test score is below their typical admitted range.");
   }
-  if (c.admissionRate != null && c.admissionRate < 0.10) out.push("Extremely low admit rate — even strong applicants are frequently denied.");
+  if (c.admissionRate != null && c.admissionRate < 0.10) out.push("Extremely low admit rate - even strong applicants are frequently denied.");
   if (admission?.category === "Reach") out.push("Classified as a reach; treat any acceptance as a bonus, not a plan.");
   if (!inState && c.tuitionOutOfState != null && profile.budget && c.tuitionOutOfState > profile.budget * 1.3) {
     out.push("Out-of-state cost runs well above your budget unless you get strong aid.");
   }
-  if (c.graduationRate != null && c.graduationRate < 0.6) out.push("Lower graduation rate — worth asking why before committing.");
+  if (c.graduationRate != null && c.graduationRate < 0.6) out.push("Lower graduation rate - worth asking why before committing.");
   if (profile.gpa && profile.gpa < 3.3 && c.admissionRate != null && c.admissionRate < 0.3) out.push("Your GPA is below what this selectivity level usually expects.");
   return out;
 }
@@ -461,9 +461,9 @@ export function improvementTips(profile, c, admission) {
   }
   if (!profile.hasResearch && c.admissionRate != null && c.admissionRate < 0.2) out.push("A research project or independent work stands out at selective schools like this.");
   if (!profile.hasLeadership) out.push("A clear leadership role (founder, captain, editor) strengthens a holistic review.");
-  if ((profile.awards || "none") === "none") out.push("Earning a recognized award — even regional — adds credibility.");
+  if ((profile.awards || "none") === "none") out.push("Earning a recognized award - even regional - adds credibility.");
   if (profile.apCount != null && profile.apCount < 5 && c.admissionRate != null && c.admissionRate < 0.25) out.push("More rigorous courses (AP/IB/honors) would reinforce your academic case.");
-  if (!out.length) out.push("Your profile is already well-aligned here — focus on a strong, authentic essay.");
+  if (!out.length) out.push("Your profile is already well-aligned here - focus on a strong, authentic essay.");
   return out.slice(0, 3);
 }
 
@@ -471,9 +471,9 @@ export function improvementTips(profile, c, admission) {
 export function finalVerdict(overall, admission, subs) {
   const cat = admission?.category;
   if (overall == null) return { label: "Consider", tone: "neutral" };
-  if (cat === "Safety" && overall >= 65) return { label: "Strong backup — Apply", tone: "safety" };
+  if (cat === "Safety" && overall >= 65) return { label: "Strong backup - Apply", tone: "safety" };
   if (cat === "Target" && overall >= 65) return { label: "Apply", tone: "target" };
-  if (cat === "Reach" && overall >= 70) return { label: "Worth a reach — Apply", tone: "reach" };
+  if (cat === "Reach" && overall >= 70) return { label: "Worth a reach - Apply", tone: "reach" };
   if (overall >= 55) return { label: "Consider", tone: "neutral" };
   return { label: "Backup / lower priority", tone: "neutral" };
 }
@@ -486,14 +486,14 @@ export function recommendRound(profile, c, admission) {
   const needsAid = profile.costPref === "aid" || (profile.budget && profile.budget < 25000);
   // Base guidance by category.
   if (cat === "Reach") {
-    if (willingED && !needsAid) return { round: "ED", why: "This is a reach — applying Early Decision gives the biggest admissions boost, but it's binding, so only commit if the finances work.", caution: needsAid ? "You flagged needing aid; ED limits your ability to compare offers." : null };
-    return { round: "EA", why: "A reach school — apply Early Action if offered to show interest and hear back sooner, without a binding commitment.", caution: null };
+    if (willingED && !needsAid) return { round: "ED", why: "This is a reach - applying Early Decision gives the biggest admissions boost, but it's binding, so only commit if the finances work.", caution: needsAid ? "You flagged needing aid; ED limits your ability to compare offers." : null };
+    return { round: "EA", why: "A reach school - apply Early Action if offered to show interest and hear back sooner, without a binding commitment.", caution: null };
   }
   if (cat === "Target") {
-    return { round: willingED ? "EA or ED" : "EA", why: "A target — Early Action is a low-risk way to lock in an early answer; ED only if it's a clear top choice and finances allow.", caution: null };
+    return { round: willingED ? "EA or ED" : "EA", why: "A target - Early Action is a low-risk way to lock in an early answer; ED only if it's a clear top choice and finances allow.", caution: null };
   }
   if (cat === "Safety") {
-    return { round: "EA / Rolling", why: "A likely admit — apply early or rolling to secure an acceptance early and reduce stress on the rest of your list.", caution: null };
+    return { round: "EA / Rolling", why: "A likely admit - apply early or rolling to secure an acceptance early and reduce stress on the rest of your list.", caution: null };
   }
   return { round: "RD", why: "Regular Decision keeps your options open.", caution: null };
 }

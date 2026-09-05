@@ -1,16 +1,16 @@
-// decisionSupport.js — rule-based (no invented facts) helpers for the Decision
+// decisionSupport.js - rule-based (no invented facts) helpers for the Decision
 // Plan: major-specific admission-risk defaults, cost-risk defaults, and the
 // Strategy Notes generator. Everything here either (a) reflects data already
 // on the decision_plan_item / discovered_programs / verification_checklist
 // rows the family entered or verified, or (b) is generic, non-school-specific
 // planning language. Nothing that looks like a school-specific fact is ever
-// synthesized — unknowns are always phrased as "Verify with official source."
+// synthesized - unknowns are always phrased as "Verify with official source."
 
 // Majors/fields where a general university-wide admit rate is well known to be
 // a poor proxy for the real difficulty of getting into THAT specific program
 // (impacted majors, direct-admit schools, capped enrollment, etc). When a
 // program/track matches one of these and the family hasn't recorded
-// school-specific evidence, we default to a caution flag — never to a specific
+// school-specific evidence, we default to a caution flag - never to a specific
 // risk level we can't support.
 const CAUTION_KEYWORDS = [
   "computer science", "cs ", " cs", "engineering", "business", "data science",
@@ -36,7 +36,7 @@ export const DECISION_STATUS_OPTIONS = ["Keep", "Maybe", "Remove", "Need to veri
 export const APPLICATION_ROUND_OPTIONS = ["ED", "EA", "REA", "RD", "Rolling"];
 
 // Cost risk default from whatever the family has filled in so far. Never
-// invents a sticker price or net price — only reasons from fields present.
+// invents a sticker price or net price - only reasons from fields present.
 export function defaultCostRisk({ npcCompleted, estimatedFamilyCost, budget, averageNetPrice }) {
   if (!npcCompleted) return "Unknown";
   if (estimatedFamilyCost == null || budget == null) return "Unknown";
@@ -58,7 +58,7 @@ function listOrNote(arr, fallback) {
 // Builds the 7 Strategy Notes fields from: the decision-plan item, the
 // student's profile, any discovered_programs evidence linked to this college,
 // and the verification checklist (used to derive concrete "actions before
-// applying"). Purely templated/deterministic — no LLM call, so it never
+// applying"). Purely templated/deterministic - no LLM call, so it never
 // hallucinates a school-specific fact.
 export function generateStrategyNotes({ item, profile = {}, programs = [], checklist = null }) {
   const collegeName = item.college_name || "this college";
@@ -82,9 +82,9 @@ export function generateStrategyNotes({ item, profile = {}, programs = [], check
   let bestRound = "Verify with official source.";
   const cat = (item.admission_category || "").toLowerCase();
   if (cat.includes("reach") || cat.includes("dream")) {
-    bestRound = "If this college offers Early Decision/REA and it is a genuine top choice, applying early can meaningfully raise odds at reach schools that reward demonstrated first-choice interest — but ED is binding and forecloses comparing aid offers. Confirm ED/EA/REA availability and binding terms on the official admissions page before deciding.";
+    bestRound = "If this college offers Early Decision/REA and it is a genuine top choice, applying early can meaningfully raise odds at reach schools that reward demonstrated first-choice interest - but ED is binding and forecloses comparing aid offers. Confirm ED/EA/REA availability and binding terms on the official admissions page before deciding.";
   } else if (cat.includes("target")) {
-    bestRound = "EA (non-binding) is often a reasonable way to get an early read at a target school without giving up the ability to compare offers. Confirm the college actually offers EA — not all do.";
+    bestRound = "EA (non-binding) is often a reasonable way to get an early read at a target school without giving up the ability to compare offers. Confirm the college actually offers EA - not all do.";
   } else if (cat.includes("safety")) {
     bestRound = "RD or rolling admission is usually sufficient for a safety/financial-safety school; save ED/EA bandwidth for reach/target schools. Confirm the college's actual deadlines.";
   }
@@ -95,7 +95,7 @@ export function generateStrategyNotes({ item, profile = {}, programs = [], check
   if (profile.hasLeadership) activities.push("leadership roles");
   if (profile.hasVolunteer) activities.push("service/volunteer work");
   const activitiesToEmphasize = activities.length
-    ? `Emphasize: ${activities.join(", ")} — especially any that connect directly to ${track || "the intended program"}.`
+    ? `Emphasize: ${activities.join(", ")} - especially any that connect directly to ${track || "the intended program"}.`
     : "No standout activity flags are set on the profile yet. Add resume/activity detail in Profile so this can be more specific.";
 
   const risks = [];
@@ -106,7 +106,7 @@ export function generateStrategyNotes({ item, profile = {}, programs = [], check
   }
   if (item.cost_risk && item.cost_risk !== "Low") risks.push(`Cost risk recorded as "${item.cost_risk}".`);
   if (item.program_verification_status && item.program_verification_status.includes("Needs")) {
-    risks.push("Program is still unverified — do not finalize this college until an official source confirms the program details.");
+    risks.push("Program is still unverified - do not finalize this college until an official source confirms the program details.");
   }
 
   const actions = [];
@@ -131,7 +131,7 @@ export function generateStrategyNotes({ item, profile = {}, programs = [], check
     whyProgram,
     bestRound,
     essayAngle: track
-      ? `Consider an essay angle that connects genuine interest/experience in ${track} to this specific college — but only reference college-specific programs/resources you have verified actually exist. Verify with official source before naming any specific lab, class, or professor.`
+      ? `Consider an essay angle that connects genuine interest/experience in ${track} to this specific college - but only reference college-specific programs/resources you have verified actually exist. Verify with official source before naming any specific lab, class, or professor.`
       : "Set a primary major/track in Profile to get a more specific essay-angle suggestion. Verify with official source before naming any specific lab, class, or professor.",
     activitiesToEmphasize,
     risks: listOrNote(risks, "No elevated risks flagged from recorded data yet."),

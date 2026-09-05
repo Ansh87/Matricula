@@ -1,4 +1,4 @@
-// programsSeed.js — verified notable major combinations, dual-degrees, and
+// programsSeed.js - verified notable major combinations, dual-degrees, and
 // program notes for seeded colleges. Transcribed from official department/
 // admissions pages. This complements the live College Scorecard program list
 // (which gives the raw field-of-study titles) with the combination/dual-degree
@@ -35,7 +35,7 @@ export const PROGRAM_NOTES = {
   },
   "215062": { // UPenn
     combinations: ["M&T (Management + Technology, Wharton + Engineering)", "Networked & Social Systems Engineering", "Digital Media Design", "Computer & Cognitive Science", "Wharton concentrations"],
-    dualDegrees: ["M&T, VIPER (energy), Huntsman (business+international), NETS — all competitive dual/coordinated programs"],
+    dualDegrees: ["M&T, VIPER (energy), Huntsman (business+international), NETS - all competitive dual/coordinated programs"],
     engineering: "School of Engineering & Applied Science (SEAS): CS, CIS, Electrical, Systems, Mechanical, Bioengineering, Materials, Chemical.",
     note: "M&T is a famous, extremely selective Wharton+Engineering dual-degree.",
     url: "https://www.upenn.edu/undergraduate-majors",

@@ -1,7 +1,7 @@
-// CareerPlanner.jsx — a decision aid for future-safe career tracks. Content is
+// CareerPlanner.jsx - a decision aid for future-safe career tracks. Content is
 // balanced (no "AI will take all jobs"). All track content is driven from the
-// scenario catalog (GET /api/colleges/scenarios) — the SAME source Matches uses
-// — so names, roles, majors, skills, risks, projects, and BLS source notes can
+// scenario catalog (GET /api/colleges/scenarios) - the SAME source Matches uses
+// - so names, roles, majors, skills, risks, projects, and BLS source notes can
 // never drift away from Matches. There is NO separate hardcoded track list here.
 //
 // This is a reference view. It does NOT touch scoring, Matches, scenario logic,
@@ -28,7 +28,7 @@ export function CareerPlanner() {
   const [selId, setSelId] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Everything comes from the scenario catalog Matches uses — single source.
+  // Everything comes from the scenario catalog Matches uses - single source.
   useEffect(() => {
     let cancelled = false;
     api.scenarios()
@@ -50,12 +50,12 @@ export function CareerPlanner() {
       <div>
         <div className="eyebrow">Career planning</div>
         <h1>Future-safe career tracks</h1>
-        <p className="lead">A balanced guide to where computing and engineering careers are heading — and how to
+        <p className="lead">A balanced guide to where computing and engineering careers are heading - and how to
           combine a technical core with a hard-to-automate domain. Choose a career track to see roles, majors,
           skills, risks, and projects. For personalized recommendations, use Advisor or Matches.</p>
       </div>
 
-      {/* Career Market Overview — high level, source-labeled */}
+      {/* Career Market Overview - high level, source-labeled */}
       <div className="card pad">
         <div className="row spread"><h2>Career market overview</h2><SourceBadge level="official">BLS OOH 2024–34</SourceBadge></div>
         <p className="note" style={{ marginTop: 8, fontSize: 13.5 }}>
@@ -70,7 +70,7 @@ export function CareerPlanner() {
         </p>
       </div>
 
-      {/* Interactive track selector — names come from the catalog */}
+      {/* Interactive track selector - names come from the catalog */}
       <div className="card pad">
         <label className="lbl">Choose a career track</label>
         <p className="note" style={{ marginTop: 2, marginBottom: 8 }}>
@@ -86,7 +86,7 @@ export function CareerPlanner() {
         )}
       </div>
 
-      {/* Selected-track detail — 100% from catalog metadata */}
+      {/* Selected-track detail - 100% from catalog metadata */}
       {selected && (
         <div className="card pad">
           <div className="row spread wrap" style={{ gap: 8, alignItems: "flex-start" }}>
@@ -124,7 +124,7 @@ export function CareerPlanner() {
           {/* Source-labeled BLS outlook notes */}
           {selected.sourceNotes && selected.sourceNotes.length > 0 && (
             <div style={{ marginTop: 10 }}>
-              <div className="k" style={{ fontSize: 11 }}>Projected demand — source-labeled outlook</div>
+              <div className="k" style={{ fontSize: 11 }}>Projected demand - source-labeled outlook</div>
               <div className="row wrap" style={{ gap: 6, marginTop: 4 }}>
                 {selected.sourceNotes.map((n, i) => (
                   <span key={i} className="pill" style={{ background: "var(--safety-b)" }}>

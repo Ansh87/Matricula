@@ -705,9 +705,9 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
                   )}
                   {timelineSummary?.events?.map((ev) => (
                     <tr key={ev.event_id} style={{ borderBottom: "1px solid var(--line-2)" }}>
-                      <td style={{ padding: 8 }} data-label="Date">{ev.event_date || "—"}</td>
+                      <td style={{ padding: 8 }} data-label="Date">{ev.event_date || "-"}</td>
                       <td style={{ padding: 8 }} data-label="Event">{ev.event_label || ev.event_type}</td>
-                      <td style={{ padding: 8 }} data-label="Round">{ev.application_round || "—"}</td>
+                      <td style={{ padding: 8 }} data-label="Round">{ev.application_round || "-"}</td>
                       <td style={{ padding: 8 }} data-label="Source">{ev.source_url ? <a href={ev.source_url} target="_blank" rel="noreferrer">source</a> : "not set"}</td>
                       <td style={{ padding: 8 }} data-label="Verification status">
                         <select className="inp" style={{ minWidth: 190 }} value={ev.verification_status} onChange={(e) => updateTimelineEventRow(ev.event_id, { verificationStatus: e.target.value, markLastChecked: true })}>

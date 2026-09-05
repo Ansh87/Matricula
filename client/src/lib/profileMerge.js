@@ -1,4 +1,4 @@
-// profileMerge.js — single source of truth for turning AI-parsed document data
+// profileMerge.js - single source of truth for turning AI-parsed document data
 // into profile fields. Used by both App.jsx and ProfileForm.jsx so the mapping
 // logic never diverges.
 
@@ -157,7 +157,7 @@ export function normalizeParsed(parsed) {
   // Free-text activities: combine activities/projects/awards_detail/summary
   const chunks = [];
   // Turn a structured entry into readable text that KEEPS role, category, and
-  // level — collapsing to just the name loses the detail scoring relies on.
+  // level - collapsing to just the name loses the detail scoring relies on.
   const describeEntry = (x) => {
     if (typeof x === "string") return x.trim();
     if (!x || typeof x !== "object") return "";
@@ -166,7 +166,7 @@ export function normalizeParsed(parsed) {
     const lead = x.role && x.role !== name ? `${x.role}, ${name}` : name;
     const tail = [x.category, x.level].filter(Boolean).join(", ");
     const desc = x.summary || x.description || "";
-    let out = tail ? `${lead} — ${tail}` : lead;
+    let out = tail ? `${lead} - ${tail}` : lead;
     if (desc) out += `: ${desc}`;
     return out.trim();
   };

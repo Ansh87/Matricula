@@ -1,4 +1,4 @@
-// MyList.jsx — the student's saved colleges, with side-by-side Compare folded
+// MyList.jsx - the student's saved colleges, with side-by-side Compare folded
 // in as a sub-view. Compare only ever operates on saved colleges, so it belongs
 // here rather than as its own top-level tab.
 import React, { useState } from "react";

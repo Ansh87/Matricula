@@ -1,4 +1,4 @@
-// collegeImportParse.js — Import College List: turns raw pasted text, a CSV
+// collegeImportParse.js - Import College List: turns raw pasted text, a CSV
 // file, or a plain text file into a clean, deduped list of candidate college
 // names. Deliberately simple and dependency-free (no CSV library needed for
 // the single-column shape this supports) -- matching/confidence happens

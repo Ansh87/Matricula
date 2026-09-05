@@ -1,4 +1,4 @@
-// CompareChart.jsx — a dependency-free grouped bar chart comparing colleges
+// CompareChart.jsx - a dependency-free grouped bar chart comparing colleges
 // across the same factors the weighted score uses. Missing data is drawn as a
 // hollow slot labeled "n/a" rather than a zero bar, so absent data never looks
 // like a bad score.
@@ -72,7 +72,7 @@ export function CompareChart({ factors, colleges, metricsFor }) {
                   <g key={c.id}>
                     <rect x={x + 1} y={y} width={barW - 2} height={padT + plotH - y}
                       fill={PALETTE[ci % PALETTE.length]} rx="2">
-                      <title>{`${c.name} — ${label}: ${v}`}</title>
+                      <title>{`${c.name} - ${label}: ${v}`}</title>
                     </rect>
                     {barW >= 16 && (
                       <text x={x + barW / 2} y={y - 4} textAnchor="middle" fontSize="10" fill="var(--ink-900, #333)">{v}</text>
@@ -93,7 +93,7 @@ export function CompareChart({ factors, colleges, metricsFor }) {
 
       <div className="note" style={{ fontSize: 11, color: "var(--muted)", marginTop: 6 }}>
         Scores are estimates from official College Scorecard data and your profile. A dashed slot means the
-        college doesn't publish that data — not a low score.
+        college doesn't publish that data - not a low score.
       </div>
     </div>
   );

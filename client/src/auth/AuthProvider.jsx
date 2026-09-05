@@ -1,4 +1,4 @@
-// AuthProvider.jsx — exposes Firebase auth state + actions via React context.
+// AuthProvider.jsx - exposes Firebase auth state + actions via React context.
 // Uses Firebase's default persistence (do NOT hand-store tokens in localStorage).
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import {
@@ -17,7 +17,7 @@ const AuthContext = createContext(null);
 // VITE_AUTH_DEV_BYPASS=true in client/.env to skip Firebase sign-in entirely
 // and use a fixed local dev identity (matches the server's dev-bypass uid so
 // the two line up, though the server ignores this value either way once its
-// own AUTH_DEV_BYPASS is on). NEVER set this in a real deployment — it must be
+// own AUTH_DEV_BYPASS is on). NEVER set this in a real deployment - it must be
 // paired with the server also being in dev bypass, or requests will simply
 // 401 against a real Firebase-protected server.
 const DEV_BYPASS = import.meta.env.VITE_AUTH_DEV_BYPASS === "true";

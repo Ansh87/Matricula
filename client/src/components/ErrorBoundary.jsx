@@ -1,4 +1,4 @@
-// ErrorBoundary.jsx — catches render errors in any panel and shows the actual
+// ErrorBoundary.jsx - catches render errors in any panel and shows the actual
 // message instead of a silent blank screen. This turns "the page is blank" into
 // a visible, debuggable error.
 import React from "react";

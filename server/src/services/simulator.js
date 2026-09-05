@@ -1,7 +1,7 @@
-// simulator.js — "what if" admission simulator. Applies hypothetical changes to
+// simulator.js - "what if" admission simulator. Applies hypothetical changes to
 // the student's profile and re-runs the SAME transparent scoring engine against
 // a college, showing how the estimated category/probability shifts. Every result
-// is an estimate, clearly labeled — never a promise.
+// is an estimate, clearly labeled - never a promise.
 import { scoreCollege, classify, academicFit } from "./scoring.js";
 import { getSelection, cultureFit } from "./selection.js";
 

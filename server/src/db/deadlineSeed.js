@@ -1,4 +1,4 @@
-// deadlineSeed.js — verified deadline profiles for seeded colleges. Dates that
+// deadlineSeed.js - verified deadline profiles for seeded colleges. Dates that
 // recur year to year (e.g. common EA/RD dates) are marked "verified" with a
 // source URL and last-reviewed date; anything uncertain is left null and shows
 // "Data unavailable" rather than a guess. ALWAYS confirmed on official sites.
@@ -53,7 +53,7 @@ export const DEADLINE_PROFILES = [
     fafsa_source_url: "https://financialaid.rutgers.edu/",
     scholarship_deadline: "Dec 1 (with EA for merit consideration)",
     scholarship_source_url: "https://scholarships.rutgers.edu/",
-    honors_deadline: "Dec 1 (Honors College — apply EA)",
+    honors_deadline: "Dec 1 (Honors College - apply EA)",
     honors_source_url: "https://honorscollege.rutgers.edu/",
     portfolio_deadline: null, portfolio_source_url: null,
     interview_deadline: null, interview_source_url: null,

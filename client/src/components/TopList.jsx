@@ -1,4 +1,4 @@
-// TopList.jsx — a curated, editorial ranking (STEM / Finance / Business) with
+// TopList.jsx - a curated, editorial ranking (STEM / Finance / Business) with
 // live College Scorecard data and personalized fit estimates layered on.
 // Replaces the single-purpose TopStem so all three lists share one code path.
 import React, { useEffect, useState } from "react";
@@ -94,7 +94,7 @@ function TopListCard({ c, profile, onOpen, savedIds, onToggleSave }) {
 
   const evaluate = async () => {
     setEvalErr(null);
-    // If we already have a score from list load, just reveal it — no refetch.
+    // If we already have a score from list load, just reveal it - no refetch.
     if (scored?.overall != null) { setRevealed(true); return; }
     setEvaluating(true);
     try {
@@ -135,7 +135,7 @@ function TopListCard({ c, profile, onOpen, savedIds, onToggleSave }) {
       {revealed && scored && (
         <div className="row wrap" style={{ gap: 6, marginBottom: 8 }}>
           <span className="pill" style={{ background: "var(--amber-b)" }}>
-            Estimated fit based on your profile: {scored.overall ?? "—"}
+            Estimated fit based on your profile: {scored.overall ?? "-"}
           </span>
           {scored.coarseCategory && <span className="pill">{scored.coarseCategory}</span>}
         </div>

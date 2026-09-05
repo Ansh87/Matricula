@@ -643,7 +643,7 @@ addColumnIfMissing("decision_plan_items", "admission_category_at_import", "TEXT"
 // junk ("Apply to Texas", "State and System Resources") and duplicate rows
 // (the same program discovered from two pages) sitting in their data. This
 // runs once per boot, is cheap (the table is small per family), and only
-// ever deletes rows that were auto-discovered by the crawl — never anything
+// ever deletes rows that were auto-discovered by the crawl - never anything
 // the family added manually or a College Scorecard / CIP record.
 function cleanupLowQualityDiscoveredPrograms() {
   const JUNK_EXACT_TITLES = new Set([

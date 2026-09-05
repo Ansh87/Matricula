@@ -1,4 +1,4 @@
-// importVerified.js — one-time / scheduled import of manually verified college
+// importVerified.js - one-time / scheduled import of manually verified college
 // admissions profiles and the careers + major_career_mapping tables.
 //
 // This is the "admin/import process" the spec asks for. Records here are
@@ -28,7 +28,7 @@ const VERIFIED = [
   {
     college_id: "166683", // MIT
     application_deadlines_json: JSON.stringify({ EA: "Nov 1", RA: "Jan 4" }),
-    testing_policy: "Required (SAT or ACT) for the applicable cycle — confirm current policy",
+    testing_policy: "Required (SAT or ACT) for the applicable cycle - confirm current policy",
     recommendation_requirements: "Two teacher evaluations (one math/science, one humanities) + counselor",
     essay_requirements: "Several short-response essays via MIT application",
     scholarship_deadlines_json: JSON.stringify({ note: "Need-based aid via CSS Profile; see MIT SFS" }),
@@ -62,7 +62,7 @@ const VERIFIED = [
     recommendation_requirements: "Two teacher recommendations + counselor",
     essay_requirements: "Princeton supplement + Common/Coalition essay",
     scholarship_deadlines_json: JSON.stringify({ note: "All aid is need-based; no merit scholarships" }),
-    css_profile_required: "Institutional form (not CSS) — confirm on official site",
+    css_profile_required: "Institutional form (not CSS) - confirm on official site",
     ed_available: 0, ea_available: 0, rea_available: 1, rd_available: 1,
     ed_acceptance_rate: null, ea_acceptance_rate: null, rd_acceptance_rate: null,
     major_restrictions_json: JSON.stringify({ note: "B.S.E. vs A.B. selected on application" }),
@@ -74,10 +74,10 @@ const VERIFIED = [
     college_id: "139755", // Georgia Tech
     application_deadlines_json: JSON.stringify({ "EA I (GA)": "Oct 15", "EA II (non-GA)": "Nov 1", RD: "Jan 4" }),
     testing_policy: "Confirm current SAT/ACT policy on official site",
-    recommendation_requirements: "Recommendations optional/limited — confirm on official site",
+    recommendation_requirements: "Recommendations optional/limited - confirm on official site",
     essay_requirements: "Georgia Tech essay prompt + Common App essay",
     scholarship_deadlines_json: JSON.stringify({ note: "Institute merit + need aid; see GT financial aid" }),
-    css_profile_required: "Not required (FAFSA-based) — confirm",
+    css_profile_required: "Not required (FAFSA-based) - confirm",
     ed_available: 0, ea_available: 1, rea_available: 0, rd_available: 1,
     ed_acceptance_rate: null, ea_acceptance_rate: null, rd_acceptance_rate: null,
     major_restrictions_json: JSON.stringify({ note: "Admitted by college/major; CS is highly competitive" }),
@@ -88,8 +88,8 @@ const VERIFIED = [
   {
     college_id: "186380", // Rutgers-New Brunswick
     application_deadlines_json: JSON.stringify({ EA: "Nov 1", RD: "Dec 1 (priority)" }),
-    testing_policy: "Test-optional — confirm current policy",
-    recommendation_requirements: "Not required for most programs — confirm",
+    testing_policy: "Test-optional - confirm current policy",
+    recommendation_requirements: "Not required for most programs - confirm",
     essay_requirements: "Rutgers essay; Common App or Rutgers application",
     scholarship_deadlines_json: JSON.stringify({ note: "Automatic merit consideration by deadline; see Rutgers SAS" }),
     css_profile_required: "Not required (FAFSA-based)",
@@ -172,5 +172,5 @@ try {
   console.log(`Imported ${deadlineCount} verified deadline profiles.`);
   console.log("Source labels and confidence levels stored. ED/EA/RD acceptance rates left null unless officially published.");
 } catch (e) {
-  console.error("Verified-data import failed (non-fatal — server will still start):", e.message);
+  console.error("Verified-data import failed (non-fatal - server will still start):", e.message);
 }

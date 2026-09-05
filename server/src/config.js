@@ -1,4 +1,4 @@
-// config.js — central configuration. All secrets come from environment variables.
+// config.js - central configuration. All secrets come from environment variables.
 // NOTHING here is ever sent to the browser. The client talks only to our own /api routes.
 import dotenv from "dotenv";
 dotenv.config();
@@ -31,7 +31,7 @@ export const config = {
   // Optional Google Gemini (free tier available at aistudio.google.com/apikey).
   // Used ONLY for optional document parsing. Without it, uploads still work and
   // you enter fields manually. Note: on Google's FREE tier, inputs may be used
-  // to improve their models — the app tells users this.
+  // to improve their models - the app tells users this.
   gemini: {
     apiKey: process.env.GEMINI_API_KEY || null,
     model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
@@ -41,7 +41,7 @@ export const config = {
 
   dbPath: process.env.DB_PATH || "./matricula.db",
 
-  // Firebase Admin — identity verification only. Prefer a single JSON blob
+  // Firebase Admin - identity verification only. Prefer a single JSON blob
   // (easiest on Railway); fall back to the three discrete fields. NONE of this
   // is ever sent to the browser.
   firebase: {

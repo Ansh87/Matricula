@@ -1,4 +1,4 @@
-// profileSignals.js — turns free text (activities, resume, portfolio summary,
+// profileSignals.js - turns free text (activities, resume, portfolio summary,
 // projects, awards) into concrete signals the scoring engine uses. Keyword-based
 // and transparent: the UI shows the user exactly which signals were detected, so
 // nothing is a black box.
@@ -24,7 +24,7 @@ function textOf(profile) {
   return parts.filter(Boolean).join("\n").toLowerCase();
 }
 
-// Split activities on newlines, semicolons, and bullets — not just newlines.
+// Split activities on newlines, semicolons, and bullets - not just newlines.
 export function splitActivities(text) {
   if (!text) return [];
   return String(text)
@@ -70,7 +70,7 @@ export function deriveProfileSignals(profile) {
   const stateHits = hit(RX.state);
   const stemHits = hit(RX.stemComp);
 
-  // Explicit profile checkboxes OR text evidence — either counts.
+  // Explicit profile checkboxes OR text evidence - either counts.
   const hasResearch = !!profile.hasResearch || researchHits > 0;
   const hasInternship = !!profile.hasInternship || internshipHits > 0;
   const hasLeadership = !!profile.hasLeadership || leadershipHits > 0;

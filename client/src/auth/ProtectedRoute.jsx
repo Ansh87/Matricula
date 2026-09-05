@@ -1,4 +1,4 @@
-// ProtectedRoute.jsx — renders children only when signed in; otherwise the login
+// ProtectedRoute.jsx - renders children only when signed in; otherwise the login
 // screen. While auth state is resolving, shows a lightweight loading state.
 import React from "react";
 import { useAuth } from "./AuthProvider.jsx";

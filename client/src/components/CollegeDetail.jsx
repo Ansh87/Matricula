@@ -1,4 +1,4 @@
-// CollegeDetail.jsx — full dossier for one college. Official (Scorecard) fields
+// CollegeDetail.jsx - full dossier for one college. Official (Scorecard) fields
 // on the left, manually-verified admissions fields on the right. ED/EA/RD rates
 // show "Not publicly available" when the college doesn't officially publish them.
 import React, { useEffect, useState } from "react";
@@ -49,7 +49,7 @@ export function CollegeDetail({ collegeId, profile, onClose, onOpenOther, fallba
             <div className="eyebrow" style={{ color: "#e9c987" }}>College dossier</div>
             <h2 style={{ color: "#fff" }}>{displayName}</h2>
             {c && <div className="note" style={{ color: "#b7c6d4", marginTop: 4 }}>
-              {[c.city, c.state].filter(Boolean).join(", ")} · {c.controlType || "—"} · {c.region || ""}
+              {[c.city, c.state].filter(Boolean).join(", ")} · {c.controlType || "-"} · {c.region || ""}
             </div>}
           </div>
           <button className="x" onClick={onClose}>✕</button>
@@ -114,13 +114,13 @@ export function CollegeDetail({ collegeId, profile, onClose, onOpenOther, fallba
                         value={v.rounds ? ([v.rounds.ed && "ED", v.rounds.ea && "EA", v.rounds.rea && "REA", v.rounds.rd && "RD"].filter(Boolean).join(" · ") || null) : null} />
                       <DataField label="ED acceptance rate" level="verified"
                         value={v.edAcceptanceRate != null ? fmtPct(v.edAcceptanceRate) : null}
-                        na="Not publicly available — verify with the college’s admissions office" />
+                        na="Not publicly available - verify with the college’s admissions office" />
                       <DataField label="EA acceptance rate" level="verified"
                         value={v.eaAcceptanceRate != null ? fmtPct(v.eaAcceptanceRate) : null}
-                        na="Not publicly available — verify with the college’s admissions office" />
+                        na="Not publicly available - verify with the college’s admissions office" />
                       <DataField label="RD acceptance rate" level="verified"
                         value={v.rdAcceptanceRate != null ? fmtPct(v.rdAcceptanceRate) : null}
-                        na="Not publicly available — verify with the college’s admissions office" />
+                        na="Not publicly available - verify with the college’s admissions office" />
                       <DataField label="Recommendations" value={v.recommendationRequirements} level="verified" />
                       <DataField label="Essays" value={v.essayRequirements} level="verified" />
                       <DataField label="CSS Profile" value={v.cssProfileRequired} level="verified" />
@@ -247,7 +247,7 @@ export function CollegeDetail({ collegeId, profile, onClose, onOpenOther, fallba
                     <a className="btn ghost sm" href={fixUrl(c.netPriceCalculatorUrl)} target="_blank" rel="noreferrer">Net price calculator ↗</a>
                   )}
                 </div>
-                <div className="note" style={{ marginTop: 8 }}>Applications are typically submitted through the Common App, Coalition App, or the college's own portal — follow the college website link to apply.</div>
+                <div className="note" style={{ marginTop: 8 }}>Applications are typically submitted through the Common App, Coalition App, or the college's own portal - follow the college website link to apply.</div>
               </div>
 
               {profile && <Simulator collegeId={collegeId} profile={profile} />}
@@ -255,7 +255,7 @@ export function CollegeDetail({ collegeId, profile, onClose, onOpenOther, fallba
               {similar.length > 0 && (
                 <div className="card pad">
                   <h3 style={{ marginBottom: 8 }}>Similar colleges</h3>
-                  <p className="note" style={{ marginBottom: 10 }}>Comparable selectivity — worth a look for a balanced list.</p>
+                  <p className="note" style={{ marginBottom: 10 }}>Comparable selectivity - worth a look for a balanced list.</p>
                   <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 8 }}>
                     {similar.map((c) => (
                       <button key={c.id} className="card pad" style={{ textAlign: "left", cursor: "pointer", background: "var(--paper-2)", padding: 10 }} onClick={() => onOpenOther && onOpenOther(c.id)}>
@@ -269,7 +269,7 @@ export function CollegeDetail({ collegeId, profile, onClose, onOpenOther, fallba
 
               <div className="disclaimer">
                 Admissions are holistic and unpredictable; published data describes past classes, not your guaranteed
-                outcome. Costs and aid vary by family — always confirm with each college’s official net price
+                outcome. Costs and aid vary by family - always confirm with each college’s official net price
                 calculator. Fields marked “Data unavailable” are not published in our sources; we don’t estimate them.
               </div>
             </>
@@ -280,7 +280,7 @@ export function CollegeDetail({ collegeId, profile, onClose, onOpenOther, fallba
   );
 }
 
-// SelectionSection — "what this college wants, how it selects, culture fit, and
+// SelectionSection - "what this college wants, how it selects, culture fit, and
 // which major to apply to." All from verified selection profiles; shows an
 // honest empty state when a college has no profile yet.
 const RATING_COLOR = { 4: "var(--reach)", 3: "var(--target)", 2: "var(--muted)", 1: "var(--faint)" };

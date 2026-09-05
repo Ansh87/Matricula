@@ -1,4 +1,4 @@
-// Tracker.jsx — the real process manager. Per-saved-college application status,
+// Tracker.jsx - the real process manager. Per-saved-college application status,
 // deadlines (blank until you enter real dates), student + parent notes, and a
 // CSV export. Persists to the backend DB.
 import React, { useState, useEffect } from "react";
@@ -96,7 +96,7 @@ export function Tracker({ studentId, list, collegeNames, onGo }) {
   };
 
   if (!list.length) {
-    return <div className="empty">Save colleges to your list first — then track applications here.</div>;
+    return <div className="empty">Save colleges to your list first - then track applications here.</div>;
   }
 
   return (
@@ -162,7 +162,7 @@ export function Tracker({ studentId, list, collegeNames, onGo }) {
                         <label className="lbl">{label}</label>
                         {type === "select" ? (
                           <select className="inp" value={r[key] || ""} onChange={(e) => update(cid, key, e.target.value)}>
-                            {opts.map((o) => <option key={o} value={o}>{o || "—"}</option>)}
+                            {opts.map((o) => <option key={o} value={o}>{o || "-"}</option>)}
                           </select>
                         ) : (
                           <input className="inp" type={type} value={r[key] || ""} onChange={(e) => update(cid, key, e.target.value)} />

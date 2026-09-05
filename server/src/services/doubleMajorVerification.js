@@ -1,4 +1,4 @@
-// doubleMajorVerification.js — the "official confirmation" layer for double
+// doubleMajorVerification.js - the "official confirmation" layer for double
 // majors. Everything in scorecard.js's searchMajorCombos() only ever proves
 // that TWO program-area codes exist in College Scorecard's field-of-study
 // data for a college; it can never prove a college's actual double-major /
@@ -46,7 +46,7 @@ export const DOUBLE_MAJOR_VERIFIED_STATUSES = ["Official source verified", "User
 export const DOUBLE_MAJOR_DISPLAY_STATUSES = [
   "Confirmed double-major path",
   "Confirmed with restrictions",
-  "Programs exist — double-major rules not verified",
+  "Programs exist - double-major rules not verified",
   "Second program is not confirmed as an undergraduate major",
   "Needs official verification",
   "Not confirmed",
@@ -116,7 +116,7 @@ export function classifyComboEvidence(secondaryTitle) {
   if (hint !== "Unknown") {
     return { status: "Second program is not confirmed as an undergraduate major", secondaryProgramTypeHint: hint };
   }
-  return { status: "Programs exist — double-major rules not verified", secondaryProgramTypeHint: "Unknown" };
+  return { status: "Programs exist - double-major rules not verified", secondaryProgramTypeHint: "Unknown" };
 }
 
 // ---------------- CRUD (student-scoped; callers force student_id = UID) ----------------

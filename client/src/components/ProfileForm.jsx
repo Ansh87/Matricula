@@ -1,4 +1,4 @@
-// ProfileForm.jsx — collects the inputs the live recommendation engine uses.
+// ProfileForm.jsx - collects the inputs the live recommendation engine uses.
 import React, { useState, useEffect, useRef } from "react";
 import { Documents } from "./Documents.jsx";
 import { api } from "../lib/api.js";
@@ -6,11 +6,11 @@ import { api } from "../lib/api.js";
 const STATES = "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY DC".split(" ");
 // Atomic academic interests only. Composite career TRACKS (e.g. "CS + Finance /
 // Quant") live in the scenario catalog and are selected via the Preferred career
-// track field below and in Matches — never mixed into these atomic chips.
+// track field below and in Matches - never mixed into these atomic chips.
 // The original 24 STEM/business-leaning options are kept exactly as-is (in
 // case anything downstream keys off these exact strings); the rest are
 // additions so every major with real College Scorecard CIP-code backing in
-// services/scorecard.js's MAJOR_CIP_MAP is actually selectable here — before
+// services/scorecard.js's MAJOR_CIP_MAP is actually selectable here - before
 // this, the matching engine already understood majors like Biology,
 // Psychology, or Nursing, but the profile form had no way to pick them.
 const INTERESTS = [
@@ -104,11 +104,11 @@ export function ProfileForm({ initial, onSubmit, studentId, onApplyParsed, onSav
 
       <details className="card pad">
         <summary style={{ cursor: "pointer", fontWeight: 600 }}>
-          📄 Upload transcript, resume &amp; portfolio (optional — speeds this up)
+          📄 Upload transcript, resume &amp; portfolio (optional - speeds this up)
         </summary>
         <div style={{ marginTop: 14 }}>
           <p className="note" style={{ marginBottom: 12 }}>Upload documents or add a portfolio link. If you have a Gemini key set,
-            the app can read them and fill this form for you. Optional — you can also just type everything below.</p>
+            the app can read them and fill this form for you. Optional - you can also just type everything below.</p>
           {applyMsg && (
             <div className="disclaimer" style={{ borderLeftColor: applyMsg.ok ? "var(--safety)" : "var(--reach)", marginBottom: 10 }}>
               {applyMsg.text}
@@ -259,9 +259,9 @@ export function ProfileForm({ initial, onSubmit, studentId, onApplyParsed, onSav
       </div>
 
       <div className="card pad">
-        <label className="lbl">Activities &amp; achievements (one per line — auto-filled if you upload a resume)</label>
+        <label className="lbl">Activities &amp; achievements (one per line - auto-filled if you upload a resume)</label>
         <textarea className="inp" rows={4} value={p.activitiesText || ""} onChange={(e) => set("activitiesText", e.target.value)}
-          placeholder="e.g. Founder, Robotics Club (national award)&#10;Research intern, university lab&#10;Provisional patent — UDIARS&#10;IEEE paper published" />
+          placeholder="e.g. Founder, Robotics Club (national award)&#10;Research intern, university lab&#10;Provisional patent - UDIARS&#10;IEEE paper published" />
         <div className="note" style={{ marginTop: 5 }}>These feed your extracurricular strength, which affects admission chances at holistic colleges.</div>
         {signals && (
           <div className="card pad" style={{ marginTop: 10, background: "var(--paper-2)" }}>
@@ -281,11 +281,11 @@ export function ProfileForm({ initial, onSubmit, studentId, onApplyParsed, onSav
               {signals.hasNationalAward && <span className="pill">National/international award</span>}
               {signals.hasStateAward && <span className="pill">State/regional award</span>}
               {!signals.activityCount && !signals.hasResearch && !signals.hasLeadership && !signals.hasInternship && !signals.hasVolunteer && (
-                <span className="note">Nothing detected yet — add activities above or check the boxes below that apply.</span>
+                <span className="note">Nothing detected yet - add activities above or check the boxes below that apply.</span>
               )}
             </div>
             <div className="note" style={{ marginTop: 8, fontSize: 12 }}>
-              Based on {signals.activityCount} listed activit{signals.activityCount === 1 ? "y" : "ies"} plus the checkboxes below. This is exactly what Match uses — nothing here is invented from your wording alone.
+              Based on {signals.activityCount} listed activit{signals.activityCount === 1 ? "y" : "ies"} plus the checkboxes below. This is exactly what Match uses - nothing here is invented from your wording alone.
             </div>
           </div>
         )}
@@ -294,7 +294,7 @@ export function ProfileForm({ initial, onSubmit, studentId, onApplyParsed, onSav
       <div className="card pad">
         <label className="lbl">Intended major</label>
         <p className="note" style={{ marginTop: 2, marginBottom: 8 }}>
-          Your primary (and optional second) major. These are separate from the strategic career track below —
+          Your primary (and optional second) major. These are separate from the strategic career track below -
           in Matches you can base results on these majors/interests <em>or</em> on a selected career track.
         </p>
         <div className="grid cols-2" style={{ gap: 10 }}>
@@ -318,7 +318,7 @@ export function ProfileForm({ initial, onSubmit, studentId, onApplyParsed, onSav
       <div className="card pad">
         <label className="lbl">Academic interests</label>
         <p className="note" style={{ marginTop: 2, marginBottom: 8 }}>
-          Atomic fields you're interested in (used for context and for Profile-based Matches). Search to find one, click to add — you can select as many as apply.
+          Atomic fields you're interested in (used for context and for Profile-based Matches). Search to find one, click to add - you can select as many as apply.
         </p>
         <InterestPicker options={INTERESTS} selected={p.interests || []} onToggle={(i) => toggle("interests", i)} />
       </div>
@@ -327,7 +327,7 @@ export function ProfileForm({ initial, onSubmit, studentId, onApplyParsed, onSav
         <label className="lbl">Preferred career track / scenario <span className="note" style={{ fontWeight: 400 }}>(optional)</span></label>
         <p className="note" style={{ marginTop: 2, marginBottom: 8 }}>
           Career tracks are strategic <em>combinations</em> of the atomic interests above (e.g. CS + Finance/Quant).
-          This only sets the <strong>default</strong> track in Matches — you can still switch tracks there anytime.
+          This only sets the <strong>default</strong> track in Matches - you can still switch tracks there anytime.
         </p>
         <select className="inp" style={{ maxWidth: 420 }}
           value={p.preferredScenarioId || ""} onChange={(e) => set("preferredScenarioId", e.target.value || null)}>
@@ -374,8 +374,8 @@ export function ProfileForm({ initial, onSubmit, studentId, onApplyParsed, onSav
         <div>
           <label className="lbl">Financial aid interest</label>
           <select className="inp" value={p.aidInterest ? "yes" : "no"} onChange={(e) => set("aidInterest", e.target.value === "yes")}>
-            <option value="yes">Yes — aid/scholarships matter</option>
-            <option value="no">No — not a primary concern</option>
+            <option value="yes">Yes - aid/scholarships matter</option>
+            <option value="no">No - not a primary concern</option>
           </select>
         </div>
       </div>
@@ -484,7 +484,7 @@ export const BLANK_PROFILE = {
   interests: [], careerGoals: [], preferredScenarioId: null, primaryMajor: null, secondaryMajor: null,
 };
 
-// Sample data for demo/testing only — loaded explicitly via a button, never
+// Sample data for demo/testing only - loaded explicitly via a button, never
 // silently pre-filled (a user must never generate matches from fake data).
 export const SAMPLE_PROFILE = {
   ...BLANK_PROFILE,

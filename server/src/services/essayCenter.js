@@ -308,7 +308,7 @@ export const ESSAY_PROMPT_AUTOFILL_PROFILES = [
     sourceUrl: "https://meet.nyu.edu/advice/application-tips/your-guide-to-the-nyu-supplemental-essay/",
     notes: "Sourced from NYU's own official admissions blog (written by an NYU Assistant Director of Admissions), explicitly titled \"2025-26 NYU Supplemental Essay Question\" (published Aug 2025) -- the 2026-27 refresh was not yet published as of this check (July 2026). NYU typically republishes a fresh guide each August, and this exact prompt has a strong track record of reuse, but it is not yet confirmed current. Recheck in August 2026.",
     prompts: [
-      { essayType: "College-specific supplemental essay", promptText: "We are looking for students who want to be bridge builders—students who can connect people, groups, and ideas to span divides, foster understanding, and promote collaboration within a dynamic, interconnected, and vibrant global academic community. We are eager for you to tell us how your experiences have helped you understand what qualities and efforts are needed to bridge divides so that people can better learn and work together. Please consider one or more of the following questions in your essay: Tell us about a time you encountered a perspective different from your own. What did you learn—about yourself, the other person, or the world? Or, tell us about an experience you've had working with others who have different backgrounds or perspectives. What challenges did your group face? Did you overcome them, and if so, how? What role did you try to play in helping people to work together, and what did you learn from your efforts? Or, tell us about someone you've observed who does a particularly good job helping people think or work together. How does this person set the stage for common exploration or work? How do they react when difficulties or dissensions arise?", wordLimit: "250 words or less", required: "Yes" },
+      { essayType: "College-specific supplemental essay", promptText: "We are looking for students who want to be bridge builders-students who can connect people, groups, and ideas to span divides, foster understanding, and promote collaboration within a dynamic, interconnected, and vibrant global academic community. We are eager for you to tell us how your experiences have helped you understand what qualities and efforts are needed to bridge divides so that people can better learn and work together. Please consider one or more of the following questions in your essay: Tell us about a time you encountered a perspective different from your own. What did you learn-about yourself, the other person, or the world? Or, tell us about an experience you've had working with others who have different backgrounds or perspectives. What challenges did your group face? Did you overcome them, and if so, how? What role did you try to play in helping people to work together, and what did you learn from your efforts? Or, tell us about someone you've observed who does a particularly good job helping people think or work together. How does this person set the stage for common exploration or work? How do they react when difficulties or dissensions arise?", wordLimit: "250 words or less", required: "Yes" },
     ],
   },
   {
@@ -399,7 +399,7 @@ export const ESSAY_PROMPT_AUTOFILL_PROFILES = [
     notes: "Read directly from Northwestern's own page, explicitly headed \"Northwestern 2026-27 First-Year Writing Supplements.\" One required essay (optional for QuestBridge applicants); 5 additional optional prompts, of which applicants are encouraged to answer 1-2.",
     prompts: [
       { essayType: "College-specific supplemental essay", promptText: "We want to be sure we're considering your application in the context of your personal experiences: What aspects of your background (your identity, your school setting, your community, your household, etc.) have most shaped how you see yourself engaging in Northwestern's community, be it academically, extracurricularly, culturally, politically, socially, or otherwise?", wordLimit: "300 words or fewer", required: "Yes" },
-      { essayType: "College-specific supplemental essay", promptText: "Painting \"The Rock\" is a tradition at Northwestern that invites all forms of expression—students promote campus events or extracurricular groups, support social or activist causes, show their Wildcat spirit (what we call \"Purple Pride\"), celebrate their culture, and more. What would you paint on The Rock, and why?", wordLimit: "fewer than 200 words -- optional, 1-2 of 5 encouraged", required: "No" },
+      { essayType: "College-specific supplemental essay", promptText: "Painting \"The Rock\" is a tradition at Northwestern that invites all forms of expression-students promote campus events or extracurricular groups, support social or activist causes, show their Wildcat spirit (what we call \"Purple Pride\"), celebrate their culture, and more. What would you paint on The Rock, and why?", wordLimit: "fewer than 200 words -- optional, 1-2 of 5 encouraged", required: "No" },
       { essayType: "College-specific supplemental essay", promptText: "Northwestern fosters a distinctively interdisciplinary culture. We believe discovery and innovation thrive at the intersection of diverse ideas, perspectives, and academic interests. Within this setting, if you could dream up an undergraduate class, research project, or creative effort (a start-up, a design prototype, a performance, etc.), what would it be? Who might be some ideal classmates or collaborators?", wordLimit: "fewer than 200 words -- optional, 1-2 of 5 encouraged", required: "No" },
       { essayType: "College-specific supplemental essay", promptText: "Community and belonging matter at Northwestern. Tell us about one or more communities, networks, or student groups you see yourself connecting with on campus.", wordLimit: "fewer than 200 words -- optional, 1-2 of 5 encouraged", required: "No" },
       { essayType: "College-specific supplemental essay", promptText: "Northwestern's location is special: on the shore of Lake Michigan, steps from downtown Evanston, just a few miles from Chicago. What aspects of our location are most compelling to you, and why?", wordLimit: "fewer than 200 words -- optional, 1-2 of 5 encouraged", required: "No" },
@@ -412,7 +412,7 @@ export const ESSAY_PROMPT_AUTOFILL_PROFILES = [
     sourceUrl: "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
     notes: "JHU's page section is explicitly headed \"2025-2026 Supplemental Essay Prompt,\" and the deadlines table on the same page still lists the PRIOR cycle's dates (ED I Nov 1 2025 / RD Jan 2 2026) despite page metadata showing a June 29, 2026 edit -- strongly suggesting JHU has not yet published 2026-27 content. Shown as the most recently published version; recheck in August 2026 once JHU posts updated dates/essay for the new cycle.",
     prompts: [
-      { essayType: "College-specific supplemental essay", promptText: "Tell us about an important first in your life—big or small—that has shaped you.", wordLimit: "350-word limit", required: "Yes" },
+      { essayType: "College-specific supplemental essay", promptText: "Tell us about an important first in your life-big or small-that has shaped you.", wordLimit: "350-word limit", required: "Yes" },
     ],
   },
   {
@@ -443,7 +443,7 @@ export const ESSAY_PROMPT_AUTOFILL_PROFILES = [
     notes: "Read directly from UT Austin's own essays-and-short-answers page (last modified January 7, 2026). UT requires its own short-answer questions regardless of application platform (ApplyTexas or Common App); the Common App personal essay, where used, satisfies UT's essay requirement separately.",
     prompts: [
       { essayType: "College-specific supplemental essay", promptText: "Why are you interested in the major you indicated as your first-choice major?", wordLimit: "no more than 40 lines, about 250-300 words", required: "Yes" },
-      { essayType: "College-specific supplemental essay", promptText: "Think of all the activities — both in and outside of school — that you have been involved with during high school. Which one are you most proud of and why?", wordLimit: "no more than 40 lines, about 250-300 words", required: "Yes" },
+      { essayType: "College-specific supplemental essay", promptText: "Think of all the activities - both in and outside of school - that you have been involved with during high school. Which one are you most proud of and why?", wordLimit: "no more than 40 lines, about 250-300 words", required: "Yes" },
       { essayType: "College-specific supplemental essay", promptText: "Please share background on events or special circumstances that you feel may have impacted your high school academic performance.", wordLimit: "no more than 40 lines, about 250-300 words", required: "No" },
     ],
   },
@@ -603,7 +603,7 @@ export const ESSAY_PROMPT_AUTOFILL_PROFILES = [
     sourceUrl: "https://www.cmu.edu/admission/admission/admission-consideration",
     notes: "Read directly from CMU's own page (last modified May 2026, tied to the just-concluded Fall 2026 cycle, not yet explicitly confirmed for 2026-27). CMU currently uses a SINGLE universal set of 3 Writing Supplement questions for all applicants regardless of college/school (Engineering, Computer Science, Mellon College of Science, Dietrich, Tepper, etc. all answer the same 3 questions) -- distinct per-school essays were not found on the current official site. One additional essay is required only for School of Drama/Dramaturgy applicants.",
     prompts: [
-      { essayType: "College-specific supplemental essay", promptText: "Most students choose their intended major or area of study based on a passion or inspiration that's developed over time — what passion or inspiration led you to choose this area of study?", wordLimit: "300 words max", required: "Yes" },
+      { essayType: "College-specific supplemental essay", promptText: "Most students choose their intended major or area of study based on a passion or inspiration that's developed over time - what passion or inspiration led you to choose this area of study?", wordLimit: "300 words max", required: "Yes" },
       { essayType: "College-specific supplemental essay", promptText: "Many students pursue college for a specific degree, career opportunity or personal goal. Whichever it may be, learning will be critical to achieve your ultimate goal. As you think ahead to the process of learning during your college years, how will you define a successful college experience?", wordLimit: "300 words max", required: "Yes" },
       { essayType: "College-specific supplemental essay", promptText: "Consider your application as a whole. What do you personally want to emphasize about your application for the admission committee's consideration? Highlight something that's important to you or something you haven't had a chance to share. Tell us, don't show us (no websites please).", wordLimit: "300 words max", required: "Yes" },
       { essayType: "Major / program-specific essay", promptText: "Why are you interested in studying dramaturgy, and what experience do you bring to the area of study?", wordLimit: "less than 750 words -- School of Drama/Dramaturgy applicants only", required: "No" },
@@ -645,7 +645,7 @@ export const ESSAY_PROMPT_AUTOFILL_PROFILES = [
     notes: "Read directly from Stanford's own page, \"Updated on October 1, 2025\" (2025-26 cycle) -- Stanford's own page states the application and \"Stanford Questions\" become available in early August each year, so 2026-27 content was not yet published as of this check. Stanford also requires 5 additional short-answer questions (50 words each) beyond the 3 essays below, but their exact current wording could not be verified from the official page in this pass (only their existence and word limit were confirmed) -- do not rely on third-party paraphrases for those; recheck once the 2026-27 Stanford Questions go live in August.",
     prompts: [
       { essayType: "College-specific supplemental essay", promptText: "The Stanford community is deeply curious and driven to learn in and out of the classroom. Reflect on an idea or experience that makes you genuinely excited about learning.", wordLimit: "100-250 words", required: "Yes" },
-      { essayType: "College-specific supplemental essay", promptText: "Virtually all of Stanford's undergraduates live on campus. Write a note to your future roommate that reveals something about you or that will help your roommate—and us—get to know you better.", wordLimit: "100-250 words", required: "Yes" },
+      { essayType: "College-specific supplemental essay", promptText: "Virtually all of Stanford's undergraduates live on campus. Write a note to your future roommate that reveals something about you or that will help your roommate-and us-get to know you better.", wordLimit: "100-250 words", required: "Yes" },
       { essayType: "College-specific supplemental essay", promptText: "Please describe what aspects of your life experiences, interests and character would help you make a distinctive contribution as an undergraduate to Stanford University.", wordLimit: "100-250 words", required: "Yes" },
     ],
   },
@@ -1120,7 +1120,7 @@ export function extractEssayPromptsFromHtml(html, url) {
   }
 
   // De-dupe near-identical candidates on this one page (repeated nav/footer
-  // text before removal, etc.) — never de-dupes across pages here; that
+  // text before removal, etc.) - never de-dupes across pages here; that
   // happens against the DB in findExistingPrompt.
   const seen = new Set();
   const unique = [];
@@ -1187,7 +1187,7 @@ export async function findEssayPrompts(studentId, { collegeId, collegeName, doma
         resolvedFrom = "college_scorecard";
       }
       if (found?.college?.name && !resolvedCollegeName) resolvedCollegeName = found.college.name;
-    } catch { /* Scorecard lookup failed — proceed without a resolved domain */ }
+    } catch { /* Scorecard lookup failed - proceed without a resolved domain */ }
   }
 
   if (!cleanDomain) {
@@ -1289,7 +1289,7 @@ export async function findEssayPrompts(studentId, { collegeId, collegeName, doma
     domain: cleanDomain, resolvedFrom, pagesFetched, promptsFound, robotsBlocked, offDomainSkipped, pdfSkipped,
     maxPages: CRAWL_MAX_PAGES, maxDepth: CRAWL_MAX_DEPTH, prompts: created, likelyJsRendered,
     notice: promptsFound > 0
-      ? "Prompts found automatically — always verify exact wording and word limits on the official application portal before finalizing an essay."
+      ? "Prompts found automatically - always verify exact wording and word limits on the official application portal before finalizing an essay."
       : likelyJsRendered
         ? `This college's essay/application pages appear to require JavaScript to display their content, so they can't be read automatically. Check the official page yourself: https://${cleanDomain}/`
         : "Essay prompts not verified yet. Check the official application portal.",
@@ -1311,17 +1311,17 @@ export const ESSAY_TRACK_STRATEGY = [
     trackId: "cs_ai_ds",
     trackName: "CS + AI / Data Science",
     strongThemes: ["Curiosity about how systems learn from data", "A specific problem you tried to model or predict", "Tension between technical capability and responsible use of AI"],
-    evidenceToUse: ["A real ML/data project, even a small one — what you built, what broke, what you learned from the failure", "Competitions (hackathons, Kaggle, science fair) framed around the decision points, not just the result", "Coursework or self-study that shows sustained curiosity, not just a single class"],
+    evidenceToUse: ["A real ML/data project, even a small one - what you built, what broke, what you learned from the failure", "Competitions (hackathons, Kaggle, science fair) framed around the decision points, not just the result", "Coursework or self-study that shows sustained curiosity, not just a single class"],
     activitiesToMention: ["Independent or club-based ML/data projects", "Research or shadowing with a professor/mentor", "Teaching or explaining a technical concept to someone else (shows communication, not just skill)"],
-    risksToAvoid: ["Listing tools/frameworks like a resume instead of telling a story", "Claiming an AI project 'changed the world' — scale honestly", "Ignoring failure or ambiguity; admissions readers value what you learned when something didn't work"],
-    reflectionQuestions: ["What's a moment your model or analysis was wrong, and what did that teach you?", "What real question were you actually trying to answer — not just 'build an ML model'?", "Where do you sit on the line between what AI can do and what it should do?"],
+    risksToAvoid: ["Listing tools/frameworks like a resume instead of telling a story", "Claiming an AI project 'changed the world' - scale honestly", "Ignoring failure or ambiguity; admissions readers value what you learned when something didn't work"],
+    reflectionQuestions: ["What's a moment your model or analysis was wrong, and what did that teach you?", "What real question were you actually trying to answer - not just 'build an ML model'?", "Where do you sit on the line between what AI can do and what it should do?"],
     possibleOutline: ["Open on a specific, small moment (a bug, a surprising result, a dataset quirk)", "Zoom out to the problem you were really trying to solve", "Show the thinking/iteration, not just the finished product", "Close on what it revealed about how you think or what you want to keep exploring"],
   },
   {
     trackId: "cs_finance_quant",
     trackName: "CS + Finance / FinTech / Quant",
     strongThemes: ["Where numbers meet real decisions with consequences", "A market, economic, or personal-finance question you couldn't let go of", "Building a model and discovering its limits"],
-    evidenceToUse: ["A backtest, valuation model, or economics research project — focus on the reasoning, not just the return", "Investment club, case competitions, or independent market research", "Any experience where you had to explain a quantitative idea to a non-technical audience"],
+    evidenceToUse: ["A backtest, valuation model, or economics research project - focus on the reasoning, not just the return", "Investment club, case competitions, or independent market research", "Any experience where you had to explain a quantitative idea to a non-technical audience"],
     activitiesToMention: ["Investment/finance clubs or competitions", "Independent research using public financial/economic data", "Internships or shadowing in a finance-adjacent role, even informal"],
     risksToAvoid: ["Sounding purely profit-motivated without a personal 'why'", "Overstating market predictions as if they were guaranteed", "Jargon-heavy writing that a general reader can't follow"],
     reflectionQuestions: ["What's a financial or economic decision (yours, your family's, or in the news) that first hooked your interest?", "What did a model get wrong, and what did that teach you about risk?", "How do you think about the human side of markets, not just the math?"],
@@ -1331,9 +1331,9 @@ export const ESSAY_TRACK_STRATEGY = [
     trackId: "cs_cyber_security",
     trackName: "CS + Cybersecurity",
     strongThemes: ["Thinking like both an attacker and a defender", "Trust, risk, and the human side of security failures", "A specific vulnerability, CTF challenge, or system you tried to break or protect"],
-    evidenceToUse: ["CTF write-ups or a security lab project — walk through your reasoning, not just the final flag", "A secure-coding or networking project", "A moment you noticed a security or privacy problem in something ordinary (an app, a school system)"],
+    evidenceToUse: ["CTF write-ups or a security lab project - walk through your reasoning, not just the final flag", "A secure-coding or networking project", "A moment you noticed a security or privacy problem in something ordinary (an app, a school system)"],
     activitiesToMention: ["CTF teams or cybersecurity clubs", "Independent security research or responsible-disclosure experience (if any)", "Networking/systems coursework or self-study"],
-    risksToAvoid: ["Anything that could read as bragging about unauthorized access — always frame within legal/ethical bounds", "Pure technical play-by-play with no reflection on why it mattered", "Overclaiming expertise you don't yet have"],
+    risksToAvoid: ["Anything that could read as bragging about unauthorized access - always frame within legal/ethical bounds", "Pure technical play-by-play with no reflection on why it mattered", "Overclaiming expertise you don't yet have"],
     reflectionQuestions: ["What's a moment you thought like an attacker to become a better defender?", "Why does trust in systems matter to you personally, not just abstractly?", "What's a security problem you noticed in everyday life that most people don't think about?"],
     possibleOutline: ["Open on a specific challenge or vulnerability you investigated", "Show your reasoning process, including dead ends", "Connect it to a broader idea about trust, risk, or responsibility", "Close on what kind of protector/builder you want to become"],
   },
@@ -1341,7 +1341,7 @@ export const ESSAY_TRACK_STRATEGY = [
     trackId: "eecs_ai_systems",
     trackName: "EECS / Computer Engineering + AI Systems",
     strongThemes: ["Where hardware and software meet", "Building something physical that also has to 'think'", "The gap between a clean idea and a messy, real circuit/board"],
-    evidenceToUse: ["An embedded systems, robotics, or hardware+ML project — describe the debugging, not just the demo", "Competitions (robotics, maker fairs) framed around a specific technical decision", "Moments where a physical constraint forced a creative software solution, or vice versa"],
+    evidenceToUse: ["An embedded systems, robotics, or hardware+ML project - describe the debugging, not just the demo", "Competitions (robotics, maker fairs) framed around a specific technical decision", "Moments where a physical constraint forced a creative software solution, or vice versa"],
     activitiesToMention: ["Robotics teams or maker/hardware clubs", "Embedded systems or circuits projects (school or independent)", "Any project pairing hardware with applied ML"],
     risksToAvoid: ["Treating hardware and software as separate stories instead of one integrated idea", "Overloading with technical specs instead of narrative", "Skipping the failure/debugging process, which is often the most interesting part"],
     reflectionQuestions: ["What's a moment a physical constraint changed how you thought about the software (or vice versa)?", "What does it feel like when a system you built actually works for the first time?", "What unsolved hardware+AI problem do you want to keep working on?"],
@@ -1350,8 +1350,8 @@ export const ESSAY_TRACK_STRATEGY = [
   {
     trackId: "engineering_robotics_aerospace",
     trackName: "Engineering / Robotics / Aerospace",
-    strongThemes: ["Designing something that has to work in the physical world, not just on paper", "Iteration — prototype, fail, redesign", "A specific mechanical, controls, or systems problem you wrestled with"],
-    evidenceToUse: ["A robotics build, CAD project, or controls/autonomy project — focus on design decisions and trade-offs", "Competitions (FIRST Robotics, aerospace/design competitions) told through one specific moment, not the whole season", "A failure (a part that broke, a system that didn't balance) and what you changed"],
+    strongThemes: ["Designing something that has to work in the physical world, not just on paper", "Iteration - prototype, fail, redesign", "A specific mechanical, controls, or systems problem you wrestled with"],
+    evidenceToUse: ["A robotics build, CAD project, or controls/autonomy project - focus on design decisions and trade-offs", "Competitions (FIRST Robotics, aerospace/design competitions) told through one specific moment, not the whole season", "A failure (a part that broke, a system that didn't balance) and what you changed"],
     activitiesToMention: ["Robotics or engineering clubs/competitions", "Independent CAD/build projects", "Internships, camps, or mentorships in engineering settings"],
     risksToAvoid: ["Team-story essays that never mention your individual contribution", "Listing every competition instead of going deep on one moment", "Technical detail with no personal reflection"],
     reflectionQuestions: ["What's a design decision you made that didn't work, and what did you change?", "What does 'good engineering' mean to you, beyond just making something work?", "What real-world problem do you want your engineering to eventually solve?"],
@@ -1361,7 +1361,7 @@ export const ESSAY_TRACK_STRATEGY = [
     trackId: "applied_physics_quantum",
     trackName: "Applied Physics / Quantum",
     strongThemes: ["Wrestling with an idea most people find counterintuitive", "The gap between elegant theory and messy experiment/simulation", "Sustained curiosity about a fundamental question"],
-    evidenceToUse: ["A simulation, research placement, or independent study project — describe the specific question you investigated", "A moment a physics concept genuinely reframed how you see something ordinary", "Olympiad, research, or lab experience told through one real moment, not a full CV list"],
+    evidenceToUse: ["A simulation, research placement, or independent study project - describe the specific question you investigated", "A moment a physics concept genuinely reframed how you see something ordinary", "Olympiad, research, or lab experience told through one real moment, not a full CV list"],
     activitiesToMention: ["Physics research or lab placements (school-based or external)", "Physics/math competitions", "Independent study or simulation projects"],
     risksToAvoid: ["Trying to explain quantum mechanics to prove expertise instead of telling a personal story", "Overly abstract writing with no concrete anchor", "Name-dropping advanced concepts without showing genuine understanding"],
     reflectionQuestions: ["What's a physics idea that took you a long time to really understand, and what changed when it clicked?", "Where did theory and your actual experiment/simulation disagree, and what did you do?", "What question about how the universe works do you most want to keep chasing?"],
@@ -1371,7 +1371,7 @@ export const ESSAY_TRACK_STRATEGY = [
     trackId: "business_data_leadership",
     trackName: "Business / Leadership",
     strongThemes: ["A real decision you had to make with incomplete information", "Leading (or failing to lead) a team through a specific problem", "Where data, people, and strategy intersect"],
-    evidenceToUse: ["A club, business project, or leadership role — focus on one hard decision, not a title list", "A market/business analysis project told through the reasoning process", "A moment you had to persuade, negotiate, or manage disagreement"],
+    evidenceToUse: ["A club, business project, or leadership role - focus on one hard decision, not a title list", "A market/business analysis project told through the reasoning process", "A moment you had to persuade, negotiate, or manage disagreement"],
     activitiesToMention: ["Leadership roles (with a specific accomplishment, not just the title)", "Business/investment clubs or competitions", "Entrepreneurial projects, even small or informal ones"],
     risksToAvoid: ["Resume-style listing of titles and awards instead of one grounded story", "Vague claims like 'I'm a natural leader' without a specific moment as evidence", "Taking full credit for team accomplishments"],
     reflectionQuestions: ["What's a decision you got wrong as a leader, and what did you learn?", "What does leadership look like when nobody's watching or when it's not going well?", "What kind of impact do you want your work to have on people, not just numbers?"],
@@ -1381,18 +1381,18 @@ export const ESSAY_TRACK_STRATEGY = [
     trackId: "human_rights_digital_ethics",
     trackName: "Human Rights / Digital Ethics",
     strongThemes: ["A moment technology's impact on people became personal or concrete to you", "Tension between innovation and harm, access and exclusion", "Advocacy or research grounded in a specific case, not abstract principle"],
-    evidenceToUse: ["A research project, essay, or advocacy effort on a digital-rights or ethics topic — anchor it in one real case or person", "Debate, Model UN, journalism, or policy work told through a specific argument you developed", "A moment you changed your own mind after encountering a counterargument"],
+    evidenceToUse: ["A research project, essay, or advocacy effort on a digital-rights or ethics topic - anchor it in one real case or person", "Debate, Model UN, journalism, or policy work told through a specific argument you developed", "A moment you changed your own mind after encountering a counterargument"],
     activitiesToMention: ["Human rights, policy, or ethics-focused clubs and research", "Journalism or writing that engages with a real ethical dilemma", "Community or advocacy work connected to technology's effects on people"],
     risksToAvoid: ["Broad statements about 'changing the world' without a concrete anchor", "One-sided arguments that never acknowledge complexity or trade-offs", "Performative activism language instead of genuine, specific engagement"],
-    reflectionQuestions: ["What's a specific case where technology helped or harmed a real person or community, that you can't stop thinking about?", "Where do you sit on a genuine trade-off (privacy vs. safety, innovation vs. access) — and why?", "What would you actually want to change, and what's one concrete step toward it?"],
+    reflectionQuestions: ["What's a specific case where technology helped or harmed a real person or community, that you can't stop thinking about?", "Where do you sit on a genuine trade-off (privacy vs. safety, innovation vs. access) - and why?", "What would you actually want to change, and what's one concrete step toward it?"],
     possibleOutline: ["Open on a specific case, person, or moment, not an abstract topic", "Show your thinking evolve, including a real counterargument you took seriously", "Explain what you did (research, advocacy, writing) in response", "Close on what you still want to understand or do next"],
   },
   {
     trackId: "undecided_stem",
     trackName: "Undecided STEM",
     strongThemes: ["Genuine curiosity that spans more than one field, told honestly", "A specific project or question that pulled several interests together", "Comfort with not having a single, fixed answer yet"],
-    evidenceToUse: ["Two or three real STEM experiences that share a common thread (a way of thinking, a type of problem) — name the thread explicitly", "A project that combined disciplines (e.g. biology + coding, physics + design)", "A moment of choosing to explore rather than specialize too early, and why"],
-    activitiesToMention: ["Any STEM clubs, research, or projects — but chosen for what they reveal about how you think, not to look broad for its own sake", "Coursework or self-study that shows range with intent, not scattershot involvement"],
+    evidenceToUse: ["Two or three real STEM experiences that share a common thread (a way of thinking, a type of problem) - name the thread explicitly", "A project that combined disciplines (e.g. biology + coding, physics + design)", "A moment of choosing to explore rather than specialize too early, and why"],
+    activitiesToMention: ["Any STEM clubs, research, or projects - but chosen for what they reveal about how you think, not to look broad for its own sake", "Coursework or self-study that shows range with intent, not scattershot involvement"],
     risksToAvoid: ["Listing unrelated activities with no connecting idea", "Sounding directionless rather than genuinely exploratory", "Apologizing for being undecided instead of owning it as a real approach"],
     reflectionQuestions: ["What's the common thread across the different things you're curious about?", "What's a specific moment two different interests collided in one project?", "What do you hope to discover in college that will help you decide, and why does that excite you rather than worry you?"],
     possibleOutline: ["Open on a specific project or moment that sits at the intersection of your interests", "Name the connecting thread explicitly", "Show evidence across more than one area", "Close on what you want college to help you figure out, and why that's exciting rather than a gap"],
@@ -1413,10 +1413,10 @@ export function getTrackStrategy(trackId) {
 // themselves, in their own voice, consistent with each college's AI-use
 // policy.
 export const SAMPLE_STRUCTURES = {
-  disclaimer: "These are generic outline shapes and short fragment examples for brainstorming only — not full essays, and not copied from any real student's work. The final essay must be written by the student, in the student's own voice, and must follow each college's specific policy on AI use in applications.",
+  disclaimer: "These are generic outline shapes and short fragment examples for brainstorming only - not full essays, and not copied from any real student's work. The final essay must be written by the student, in the student's own voice, and must follow each college's specific policy on AI use in applications.",
   openingApproaches: [
-    { name: "In-scene opening", description: "Drop the reader into one specific, small moment — mid-action — rather than summarizing your whole background first.", strongFragment: "The soldering iron slipped, and the smell of burnt plastic told me before I looked down that I'd just ruined three hours of work.", weakFragment: "Ever since I was young, I have always been passionate about engineering and technology." },
-    { name: "Honest-question opening", description: "Open with the real, specific question you were wrestling with — not a rhetorical or generic one.", strongFragment: "Why did the model predict rain with 90% confidence on the one day it stayed sunny?", weakFragment: "Have you ever wondered how technology can change the world?" },
+    { name: "In-scene opening", description: "Drop the reader into one specific, small moment - mid-action - rather than summarizing your whole background first.", strongFragment: "The soldering iron slipped, and the smell of burnt plastic told me before I looked down that I'd just ruined three hours of work.", weakFragment: "Ever since I was young, I have always been passionate about engineering and technology." },
+    { name: "Honest-question opening", description: "Open with the real, specific question you were wrestling with - not a rhetorical or generic one.", strongFragment: "Why did the model predict rain with 90% confidence on the one day it stayed sunny?", weakFragment: "Have you ever wondered how technology can change the world?" },
     { name: "Small-detail opening", description: "Start with one concrete, sensory detail that anchors the story before zooming out.", strongFragment: "Four sticky notes, all in my handwriting, all disagreeing with each other.", weakFragment: "I am a hardworking and dedicated student who loves to learn." },
   ],
   outlineShapes: [
@@ -1427,14 +1427,14 @@ export const SAMPLE_STRUCTURES = {
   revisionChecklist: [
     "Could this sentence have been written by any applicant, or only by me?",
     "Is there at least one specific, concrete detail (a number, a place, a name, a smell, an exact quote) in the opening paragraph?",
-    "Does the essay show a moment of difficulty, failure, or uncertainty — not just success?",
+    "Does the essay show a moment of difficulty, failure, or uncertainty - not just success?",
     "Does the last paragraph say something new, or does it just repeat the introduction?",
-    "Read it aloud — does it sound like how the student actually talks and thinks?",
+    "Read it aloud - does it sound like how the student actually talks and thinks?",
   ],
   authenticityChecklist: [
     "The student can explain, in their own words, why every sentence is there.",
     "No fact, achievement, or story detail was invented or exaggerated.",
-    "The essay was written by the student, with AI (if used at all) limited to brainstorming/feedback in a way consistent with each college's specific AI-use policy — never used to generate the submitted text itself.",
+    "The essay was written by the student, with AI (if used at all) limited to brainstorming/feedback in a way consistent with each college's specific AI-use policy - never used to generate the submitted text itself.",
     "A trusted adult who knows the student well would say 'this sounds like them.'",
   ],
 };

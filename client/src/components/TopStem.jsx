@@ -1,4 +1,4 @@
-// TopStem.jsx — curated Top-30 STEM colleges, enriched with the student's
+// TopStem.jsx - curated Top-30 STEM colleges, enriched with the student's
 // estimated fit (category + culture fit) and live official outcome data.
 import React, { useState, useEffect } from "react";
 import { api } from "../lib/api.js";
@@ -21,7 +21,7 @@ export function TopStem({ profile, onOpen, savedIds, onToggleSave }) {
         <div>
           <div className="eyebrow">Ranked list</div>
           <h1>Top STEM colleges</h1>
-          <p className="lead">The strongest undergraduate CS, engineering, and science programs — with your
+          <p className="lead">The strongest undergraduate CS, engineering, and science programs - with your
             estimated fit and live outcome data from College Scorecard on each.</p>
         </div>
         <div className="row" style={{ gap: 6 }}>
@@ -32,7 +32,7 @@ export function TopStem({ profile, onOpen, savedIds, onToggleSave }) {
       </div>
 
       <div className="disclaimer">
-        STEM strength here is an <strong>editorial ranking</strong> of program reputation and outcomes — not an
+        STEM strength here is an <strong>editorial ranking</strong> of program reputation and outcomes - not an
         official government ranking. Admit rate, cost, earnings, and graduation data are live from College Scorecard.
       </div>
 

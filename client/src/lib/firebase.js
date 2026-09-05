@@ -1,5 +1,5 @@
-// firebase.js — client Firebase setup (identity only). All values come from
-// Vite build-time env vars (VITE_*). These are NOT secrets — Firebase web config
+// firebase.js - client Firebase setup (identity only). All values come from
+// Vite build-time env vars (VITE_*). These are NOT secrets - Firebase web config
 // is public by design; the service account (server-only) is what stays private.
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";

@@ -1,4 +1,4 @@
-// entryOverride.js — small helper for the new grouped navigation (Explore /
+// entryOverride.js - small helper for the new grouped navigation (Explore /
 // Plan / Apply subtabs). Several subtabs point at a page that ALREADY has its
 // own internal tab/mode switch (e.g. Majors.jsx's Single/Double major toggle,
 // DecisionPlan.jsx's Final List / Course Plans / Timeline & Tasks switch).

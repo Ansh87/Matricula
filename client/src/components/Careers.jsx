@@ -1,4 +1,4 @@
-// Careers.jsx — major → BLS occupations. Median pay + projected growth are
+// Careers.jsx - major → BLS occupations. Median pay + projected growth are
 // official BLS; AI-impact / grad-school notes are labeled Estimated.
 import React, { useEffect, useState } from "react";
 import { api } from "../lib/api.js";

@@ -1,4 +1,4 @@
-// Login.jsx — sign-in / create-account / Google / Guest, shown when signed out.
+// Login.jsx - sign-in / create-account / Google / Guest, shown when signed out.
 import React, { useState } from "react";
 import { useAuth } from "./AuthProvider.jsx";
 import matriculaIcon from "../assets/matricula-icon.png";
@@ -13,11 +13,11 @@ export function Login() {
 
   const friendly = (code) => {
     if (/invalid-credential|wrong-password|user-not-found/.test(code)) return "Email or password is incorrect.";
-    if (/email-already-in-use/.test(code)) return "An account with this email already exists — try signing in.";
+    if (/email-already-in-use/.test(code)) return "An account with this email already exists - try signing in.";
     if (/weak-password/.test(code)) return "Password should be at least 6 characters.";
     if (/invalid-email/.test(code)) return "That doesn't look like a valid email.";
     if (/popup-closed-by-user/.test(code)) return "Google sign-in was cancelled.";
-    if (/operation-not-allowed|admin-restricted-operation/.test(code)) return "Guest sign-in isn't turned on for this app yet — enable \"Anonymous\" in Firebase Authentication settings.";
+    if (/operation-not-allowed|admin-restricted-operation/.test(code)) return "Guest sign-in isn't turned on for this app yet - enable \"Anonymous\" in Firebase Authentication settings.";
     return "Something went wrong. Please try again.";
   };
 
@@ -105,7 +105,7 @@ export function Login() {
           Continue as Guest
         </button>
         <p className="note" style={{ fontSize: 11, textAlign: "center", marginTop: -6 }}>
-          For trying the app out. Your data is saved to a guest account and isn't linked to an email — use Sign in or Google if you want to keep access to it later.
+          For trying the app out. Your data is saved to a guest account and isn't linked to an email - use Sign in or Google if you want to keep access to it later.
         </p>
       </div>
     </div>

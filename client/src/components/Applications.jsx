@@ -1,4 +1,4 @@
-// Applications.jsx — everything you have to *do* and *pay for*, in one tab:
+// Applications.jsx - everything you have to *do* and *pay for*, in one tab:
 //   College Applications  -> deadlines, status, tasks
 //   Financial Aid & Scholarships -> FAFSA/CSS planner + scholarship tracker
 import React, { useState } from "react";

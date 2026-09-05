@@ -1,4 +1,4 @@
-// verified.js — manually verified, CDS/official-website-sourced admissions fields.
+// verified.js - manually verified, CDS/official-website-sourced admissions fields.
 // These are the fields NOT available from Scorecard (ED/EA/RD options & rates,
 // testing policy, deadlines, CSS requirement, essay/rec requirements).
 //

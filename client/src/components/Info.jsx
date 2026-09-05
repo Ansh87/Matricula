@@ -1,4 +1,4 @@
-// Info.jsx — reference material: Careers (BLS data), Career Planner (future-safe
+// Info.jsx - reference material: Careers (BLS data), Career Planner (future-safe
 // tracks), and About (how it works).
 import React, { useState } from "react";
 import { Careers } from "./Careers.jsx";

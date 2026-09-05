@@ -1,4 +1,4 @@
-// selection.js — reads verified selection profiles and computes a culture/fit
+// selection.js - reads verified selection profiles and computes a culture/fit
 // analysis for a given student. "What they want / how they select / major
 // strategy / culture fit" all flow from here. Nothing is invented: if a college
 // has no verified selection profile, we say so rather than guessing.
@@ -43,7 +43,7 @@ export function getSelection(collegeId) {
 }
 
 // Culture / selection fit: compares the student's own strengths against the
-// factors THIS college actually weights most. Honest and explainable — it tells
+// factors THIS college actually weights most. Honest and explainable - it tells
 // the student where they're aligned and where they're light, per the college's
 // stated priorities. Returns null if no verified profile exists.
 export function cultureFit(profile, sel) {
@@ -103,7 +103,7 @@ function buildSummary(score, aligned, gaps, sel) {
   else bits.push(`This college weights things where your current profile is lighter.`);
   if (aligned.length) bits.push(`Strengths for them: ${aligned.join(", ")}.`);
   if (gaps.length) bits.push(`Where to strengthen: ${gaps.join(", ")}.`);
-  bits.push("This is an estimate from the college's stated priorities, not a prediction — admissions are holistic.");
+  bits.push("This is an estimate from the college's stated priorities, not a prediction - admissions are holistic.");
   return bits.join(" ");
 }
 

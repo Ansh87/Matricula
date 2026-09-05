@@ -1,4 +1,4 @@
-// advisor.js — the AI college advisor. When a Gemini key is configured, it
+// advisor.js - the AI college advisor. When a Gemini key is configured, it
 // answers using the student's real profile + their scored college list as
 // grounding, following the spec's guardrails (no guarantees, cite data,
 // separate fact from estimate, recommend counselor review). Without a key, it

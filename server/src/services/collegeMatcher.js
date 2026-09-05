@@ -1,4 +1,4 @@
-// collegeMatcher.js — Import College List: turns whatever a family typed or
+// collegeMatcher.js - Import College List: turns whatever a family typed or
 // pasted (short names, nicknames, abbreviations, misspellings) into official
 // College Scorecard records, honestly. Two layers, always in this order:
 //   1. A curated alias/nickname/common-misspelling table (ALIASES below) --
@@ -24,7 +24,7 @@ export function normalizeName(s) {
     .toLowerCase()
     .replace(/&/g, " and ")
     .replace(/[.'’]/g, "")
-    .replace(/[-–—]/g, " ")
+    .replace(/[-–-]/g, " ")
     .replace(/[^a-z0-9 ]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
@@ -395,7 +395,7 @@ async function matchOneNameFreeform(originalName, verify) {
   }
   if (top.sim >= 0.7 && (!second || top.sim - second.sim >= 0.12)) {
     return { originalName, confidence: CONFIDENCE.MEDIUM, tier: "live-suggested", matchedName: top.name, collegeId: top.id, city: top.city, state: top.state, controlType: top.controlType, corrected: normalizeName(top.name) !== normalizeName(originalName), correctedFrom: originalName,
-      note: `Best guess for "${originalName}" — please confirm this is the right college.` };
+      note: `Best guess for "${originalName}" - please confirm this is the right college.` };
   }
   if (top.sim >= 0.45) {
     const options = ranked.slice(0, 5).map((r) => ({ officialName: r.name, collegeId: r.id, city: r.city, state: r.state, controlType: r.controlType, similarity: r.sim }));

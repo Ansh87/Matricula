@@ -1,4 +1,4 @@
-// majorStrategy.js — recommends majors that fit the STUDENT (not just a career
+// majorStrategy.js - recommends majors that fit the STUDENT (not just a career
 // lookup). Uses interests, career goals, and academic strengths to rank a
 // curated set of majors, each with why-it-fits, related careers, grad-school
 // signal, and BLS-backed outlook. Nothing invented: outlook/pay come from the
@@ -8,16 +8,16 @@ import { majorToCareers } from "./bls.js";
 // Curated majors with the signals we match against. gradSchool: whether the
 // field typically needs grad school for full career access.
 const MAJORS = [
-  { name: "Computer Science", tags: ["math","ai","cs","problem-solving","tech","logic"], goals: ["High salary potential","Startup/entrepreneurship","Research opportunities"], gradSchool: false, blurb: "Software, algorithms, and systems — highest-demand tech path with strong pay straight out of undergrad." },
+  { name: "Computer Science", tags: ["math","ai","cs","problem-solving","tech","logic"], goals: ["High salary potential","Startup/entrepreneurship","Research opportunities"], gradSchool: false, blurb: "Software, algorithms, and systems - highest-demand tech path with strong pay straight out of undergrad." },
   { name: "Artificial Intelligence", tags: ["ai","math","cs","research","data"], goals: ["Research opportunities","High salary potential"], gradSchool: true, blurb: "Machine learning and intelligent systems. Cutting-edge roles often favor a master's or PhD." },
   { name: "Data Science", tags: ["math","data","cs","statistics","business"], goals: ["High salary potential","Stable career"], gradSchool: false, blurb: "Statistics + programming + domain insight. Broad demand across every industry." },
-  { name: "Computer Engineering", tags: ["cs","hardware","ee","math","tech"], goals: ["High salary potential","Stable career"], gradSchool: false, blurb: "Bridges CS and electrical engineering — chips, embedded systems, robotics." },
+  { name: "Computer Engineering", tags: ["cs","hardware","ee","math","tech"], goals: ["High salary potential","Stable career"], gradSchool: false, blurb: "Bridges CS and electrical engineering - chips, embedded systems, robotics." },
   { name: "Electrical Engineering", tags: ["ee","hardware","math","physics"], goals: ["Stable career","Research opportunities"], gradSchool: false, blurb: "Circuits, signals, power, and devices. Versatile and stable engineering path." },
   { name: "Finance", tags: ["business","finance","math","economics"], goals: ["High salary potential","Startup/entrepreneurship"], gradSchool: false, blurb: "Markets, valuation, and capital. High earning ceiling; strong internships matter." },
   { name: "Economics", tags: ["economics","math","business","policy","analysis"], goals: ["High salary potential","Graduate school","Impact/public service"], gradSchool: false, blurb: "Incentives, markets, and data. Flexible foundation for finance, policy, law, or grad school." },
-  { name: "Business Analytics", tags: ["business","data","statistics","tech"], goals: ["High salary potential","Stable career"], gradSchool: false, blurb: "Business decisions driven by data — a practical blend of analytics and management." },
+  { name: "Business Analytics", tags: ["business","data","statistics","tech"], goals: ["High salary potential","Stable career"], gradSchool: false, blurb: "Business decisions driven by data - a practical blend of analytics and management." },
   { name: "Biomedical Engineering", tags: ["biology","engineering","health","research","math"], goals: ["Research opportunities","Impact/public service"], gradSchool: true, blurb: "Engineering for medicine and healthcare. Many roles and advancement favor grad school." },
-  { name: "Mechanical Engineering", tags: ["engineering","physics","math","hardware"], goals: ["Stable career"], gradSchool: false, blurb: "Design and build physical systems — broad, stable, hands-on engineering." },
+  { name: "Mechanical Engineering", tags: ["engineering","physics","math","hardware"], goals: ["Stable career"], gradSchool: false, blurb: "Design and build physical systems - broad, stable, hands-on engineering." },
   { name: "Public Policy", tags: ["policy","economics","analysis","impact","writing"], goals: ["Impact/public service","Graduate school"], gradSchool: true, blurb: "Data-informed policy and governance. Advancement often needs a master's (MPP/MPA)." },
   { name: "Mathematics", tags: ["math","logic","research","statistics"], goals: ["Research opportunities","Graduate school","High salary potential"], gradSchool: true, blurb: "The foundation for quant, data, and research fields. Very flexible; grad school for research roles." },
 ];

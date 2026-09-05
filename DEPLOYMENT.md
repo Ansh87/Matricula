@@ -4,24 +4,24 @@
 
 This app is **same-origin by design**:
 
-- The client calls **relative** `/api/...` paths — there is no `VITE_API_BASE_URL`.
+- The client calls **relative** `/api/...` paths - there is no `VITE_API_BASE_URL`.
 - In development, `client/vite.config.js` proxies `/api` → `http://localhost:4000`.
 - In production, the Express server serves the built client (`client/dist`) from the
   same origin, so `/api/...` resolves to itself.
 
 Do not add an API base URL unless you split the client and server onto different
-domains — doing so would add CORS complexity for no benefit.
+domains - doing so would add CORS complexity for no benefit.
 
 ---
 
-## 1. Firebase setup (required — do this first)
+## 1. Firebase setup (required - do this first)
 
 ### Enable sign-in providers
 Firebase Console → **Authentication** → **Sign-in method** → enable:
 - **Email/Password**
 - **Google**
 
-### Authorized domains (REQUIRED — sign-in fails without this)
+### Authorized domains (REQUIRED - sign-in fails without this)
 Firebase Console → **Authentication** → **Settings** → **Authorized domains** → add:
 
 ```
@@ -29,10 +29,10 @@ localhost
 matricula-production.up.railway.app
 ```
 
-(Use whatever your actual Railway domain is — renaming the app in code does not change your live Railway service URL. If your existing deployment is still at `collegegene-navigator.up.railway.app`, keep that domain authorized in Firebase; only rename the Railway service yourself if you want the URL to change too.)
+(Use whatever your actual Railway domain is - renaming the app in code does not change your live Railway service URL. If your existing deployment is still at `collegegene-navigator.up.railway.app`, keep that domain authorized in Firebase; only rename the Railway service yourself if you want the URL to change too.)
 
 `localhost` is usually present by default. The Railway domain **must be added
-manually** — otherwise Google sign-in fails with an "unauthorized domain" error.
+manually** - otherwise Google sign-in fails with an "unauthorized domain" error.
 
 ### Service account (server secret)
 Firebase Console → **Project settings** → **Service accounts** →
@@ -72,7 +72,7 @@ cd server && npm install && npm run dev
 cd client && npm install && npm run dev
 ```
 
-Vite reads env vars only at startup — **restart after editing `.env`**.
+Vite reads env vars only at startup - **restart after editing `.env`**.
 
 ### Optional: run without Firebase
 ```env
@@ -88,7 +88,7 @@ This bypasses auth locally with a fixed dev user. It is **hard-disabled when
 
 ### Variables (Railway → your service → Variables)
 
-**Build-time (client)** — Vite bakes these into the bundle at build:
+**Build-time (client)** - Vite bakes these into the bundle at build:
 ```env
 VITE_FIREBASE_API_KEY=...
 VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
@@ -115,11 +115,11 @@ UPLOAD_DIR=/data/uploads
 e.g. `/data/collegegene-navigator.db` -- renaming it points the app at a new,
 empty database.)
 
-Railway sets `PORT` automatically — do not override it.
+Railway sets `PORT` automatically - do not override it.
 
 ### Persistent volume (REQUIRED for user data)
 
-Railway's filesystem is **ephemeral** — it is wiped on every redeploy and restart.
+Railway's filesystem is **ephemeral** - it is wiped on every redeploy and restart.
 Without a volume, all profiles, saved lists, applications, and uploaded documents
 are lost each deploy.
 
@@ -149,7 +149,7 @@ The server has no Firebase Admin credentials. Set `FIREBASE_SERVICE_ACCOUNT_JSON
 and restart. 503 = server not configured; 401 = missing/invalid token.
 
 **"AI profile build is not enabled because GEMINI_API_KEY is missing"**
-Informational only — uploads still work; only AI auto-fill is off. Add
+Informational only - uploads still work; only AI auto-fill is off. Add
 `GEMINI_API_KEY` to enable it.
 
 **Login screen says "Authentication isn't configured yet"**

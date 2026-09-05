@@ -1,15 +1,15 @@
-// stem.js — STEM-strength ratings for a curated set of colleges, used to power a
+// stem.js - STEM-strength ratings for a curated set of colleges, used to power a
 // "Top STEM colleges" ranking. Ratings reflect widely-recognized strength of
 // undergraduate STEM (CS/engineering/science) programs based on reputation,
 // research, and outcomes. These are editorial rankings, clearly labeled as such
-// — NOT an official government dataset. Live outcome data (earnings, grad rate)
+// - NOT an official government dataset. Live outcome data (earnings, grad rate)
 // still comes from College Scorecard and is shown alongside.
 //
 // score: 0-100 STEM strength (editorial). specialties: notable STEM areas.
 //
 // NOTE (cleanup pass): this list previously had ~14 exact-duplicate rows (the
 // same college_id listed twice, sometimes with a different score) plus one
-// real data bug — Purdue appeared under two DIFFERENT ids (243780 and
+// real data bug - Purdue appeared under two DIFFERENT ids (243780 and
 // 240727); 243780 is Purdue's actual IPEDS/College Scorecard UNITID, so the
 // 240727 row was simply wrong and has been removed. Deduped down to 38
 // distinct colleges, then expanded with 12 more real, verified colleges to
@@ -33,7 +33,7 @@
 //     UCSB id is 110705.
 //   - "Arizona State University" was tagged 104179 (that's actually
 //     University of Arizona, a different school). Real ASU id is 104151.
-// (Purdue, business.js, and finance.js had similar errors — see comments in
+// (Purdue, business.js, and finance.js had similar errors - see comments in
 // those files.)
 
 const S = (id, name, score, tier, specialties) => ({ id, name, score, tier, specialties });

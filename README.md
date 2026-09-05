@@ -1,4 +1,4 @@
-# CollegeGene Navigator — live-data edition
+# Matricula — live-data edition
 
 A college, major, career, and admissions planning app for high school students and
 their families. Unlike a demo, it runs on **official data**:
@@ -25,7 +25,7 @@ API keys live only on the server. The browser talks solely to the app's own
 
 ## Second-generation features: Programs + Decision Plan
 
-This app adds two new tabs on top of the original CollegeGene AI base:
+This app adds two new tabs on top of the original single-page planner:
 
 **Programs** (Program Discovery) finds and organizes real college opportunities beyond
 just majors -- minors, concentrations, certificates, honors/scholars/bridge programs,
@@ -107,7 +107,7 @@ Set these in `server/.env` (copy from `server/.env.example`):
 | `PORT` | Optional | Server port (default 4000). |
 | `CACHE_TTL_MS` | Optional | Live-response cache lifetime (default 24h). |
 | `STALE_AFTER_MS` | Optional | Age after which cached data is flagged stale (default 7d). |
-| `DB_PATH` | Optional | SQLite file path (default `./collegegene-navigator.db`). On Railway, set to a mounted volume path, e.g. `/data/collegegene-navigator.db` (see DEPLOYMENT.md). |
+| `DB_PATH` | Optional | SQLite file path (default `./matricula.db`). On Railway, set to a mounted volume path, e.g. `/data/matricula.db` for a brand-new deploy -- but if you're redeploying an EXISTING Railway project, leave `DB_PATH` at whatever it's already set to (e.g. `/data/collegegene-navigator.db`) so you don't orphan your real saved data (see DEPLOYMENT.md). |
 
 ### Getting API keys
 
@@ -180,9 +180,12 @@ cd server && npm start
 - Run `npm run import` once after first deploy (or as a release step).
 - **Railway specifically:** the filesystem is ephemeral and is wiped on every
   redeploy/restart. Add a persistent Volume mounted at `/data`, then set
-  `DB_PATH=/data/collegegene-navigator.db` and `UPLOAD_DIR=/data/uploads` so
+  `DB_PATH=/data/matricula.db` and `UPLOAD_DIR=/data/uploads` (new deploy) so
   profiles, saved lists, Programs & Opportunities records, and Decision Plans
-  survive deploys. Full walkthrough (including Firebase setup) in `DEPLOYMENT.md`.
+  survive deploys. **Redeploying an existing project?** Do not change `DB_PATH`
+  from whatever it's already set to -- changing it points the app at a new,
+  empty database and makes your existing saved data appear to vanish. Full
+  walkthrough (including Firebase setup) in `DEPLOYMENT.md`.
 
 **Split hosting:** deploy `server/` as the API and host `client/dist` on any static
 host; set the client's `/api` calls to your API origin (add a rewrite/proxy, or

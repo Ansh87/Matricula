@@ -91,7 +91,7 @@ export function Tracker({ studentId, list, collegeNames, onGo }) {
     const blob = new Blob([lines.join("\n")], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url; a.download = "collegegene-application-tracker.csv"; a.click();
+    a.href = url; a.download = "matricula-application-tracker.csv"; a.click();
     URL.revokeObjectURL(url);
   };
 

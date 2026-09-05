@@ -1,4 +1,4 @@
-# Deploying CollegeGene Navigator
+# Deploying Matricula
 
 ## Architecture note (read first)
 
@@ -26,8 +26,10 @@ Firebase Console → **Authentication** → **Settings** → **Authorized domain
 
 ```
 localhost
-collegegene-production.up.railway.app
+matricula-production.up.railway.app
 ```
+
+(Use whatever your actual Railway domain is — renaming the app in code does not change your live Railway service URL. If your existing deployment is still at `collegegene-navigator.up.railway.app`, keep that domain authorized in Firebase; only rename the Railway service yourself if you want the URL to change too.)
 
 `localhost` is usually present by default. The Railway domain **must be added
 manually** — otherwise Google sign-in fails with an "unauthorized domain" error.
@@ -106,9 +108,12 @@ NODE_ENV=production
 
 **Persistence (see below)**:
 ```env
-DB_PATH=/data/collegegene-navigator.db
+DB_PATH=/data/matricula.db
 UPLOAD_DIR=/data/uploads
 ```
+(Redeploying an existing project? Keep `DB_PATH` exactly as it's already set --
+e.g. `/data/collegegene-navigator.db` -- renaming it points the app at a new,
+empty database.)
 
 Railway sets `PORT` automatically — do not override it.
 
@@ -121,8 +126,10 @@ are lost each deploy.
 Railway → service → **Settings** → **Volumes** → **Add Volume** →
 mount path: `/data`
 
-Then set `DB_PATH=/data/collegegene-navigator.db` and `UPLOAD_DIR=/data/uploads` so the
-database and uploads live on the volume.
+Then set `DB_PATH=/data/matricula.db` and `UPLOAD_DIR=/data/uploads` so the
+database and uploads live on the volume. If this is an existing deployment that
+already has `DB_PATH` set to something else (e.g. `/data/collegegene-navigator.db`),
+leave it alone -- that's where your real saved data already lives.
 
 ### Build/start
 `railway.json` sets these explicitly:

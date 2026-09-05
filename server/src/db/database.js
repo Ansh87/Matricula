@@ -8,7 +8,7 @@ import { seedCoursePlans } from "./coursePlans.js";
 import { seedApplicationPlatforms } from "./applicationPlatforms.js";
 
 // Ensure the database's parent directory exists. This matters when DB_PATH points
-// at a mounted persistent volume (e.g. /data/collegegene.db on Railway) whose
+// at a mounted persistent volume (e.g. /data/matricula.db on Railway) whose
 // directory must exist before the file can be opened.
 const dbDir = path.dirname(path.resolve(config.dbPath));
 fs.mkdirSync(dbDir, { recursive: true });
@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS college_selection_profiles (
 );
 
 -- ============================================================================
--- CollegeGene Navigator (second-generation) tables below this line.
+-- Matricula (second-generation) tables below this line.
 -- Every row that holds family/student-entered or student-facing data is keyed
 -- by student_id = the Firebase UID (see middleware/firebaseAuth.js). There is
 -- no shared "local-student" row in this app's tables outside local dev bypass

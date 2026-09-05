@@ -1,9 +1,10 @@
-// Login.jsx — sign-in / create-account / Google, shown when signed out.
+// Login.jsx — sign-in / create-account / Google / Guest, shown when signed out.
 import React, { useState } from "react";
 import { useAuth } from "./AuthProvider.jsx";
+import matriculaIcon from "../assets/matricula-icon.png";
 
 export function Login() {
-  const { signInEmail, signUpEmail, signInGoogle, configured } = useAuth();
+  const { signInEmail, signUpEmail, signInGoogle, signInGuest, configured } = useAuth();
   const [mode, setMode] = useState("signin"); // "signin" | "signup"
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,6 +17,7 @@ export function Login() {
     if (/weak-password/.test(code)) return "Password should be at least 6 characters.";
     if (/invalid-email/.test(code)) return "That doesn't look like a valid email.";
     if (/popup-closed-by-user/.test(code)) return "Google sign-in was cancelled.";
+    if (/operation-not-allowed|admin-restricted-operation/.test(code)) return "Guest sign-in isn't turned on for this app yet — enable \"Anonymous\" in Firebase Authentication settings.";
     return "Something went wrong. Please try again.";
   };
 
@@ -36,12 +38,20 @@ export function Login() {
     finally { setBusy(false); }
   };
 
+  const guest = async () => {
+    setErr(null); setBusy(true);
+    try { await signInGuest(); }
+    catch (e2) { setErr(friendly(String(e2.code || e2.message || ""))); }
+    finally { setBusy(false); }
+  };
+
   return (
     <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: 20 }}>
       <div className="card pad stack" style={{ maxWidth: 400, width: "100%", gap: 14 }}>
         <div style={{ textAlign: "center" }}>
+          <img src={matriculaIcon} alt="" height="56" style={{ display: "block", margin: "0 auto 4px", width: "auto" }} />
           <div className="eyebrow">Welcome to</div>
-          <h1 style={{ margin: "2px 0" }}>CollegeGene Navigator</h1>
+          <h1 style={{ margin: "2px 0" }}>Matricula</h1>
           <p className="note">Sign in to continue</p>
         </div>
 
@@ -90,6 +100,13 @@ export function Login() {
         <button className="btn ghost" type="button" onClick={google} disabled={!configured || busy}>
           Continue with Google
         </button>
+
+        <button className="btn ghost" type="button" onClick={guest} disabled={!configured || busy}>
+          Continue as Guest
+        </button>
+        <p className="note" style={{ fontSize: 11, textAlign: "center", marginTop: -6 }}>
+          For trying the app out. Your data is saved to a guest account and isn't linked to an email — use Sign in or Google if you want to keep access to it later.
+        </p>
       </div>
     </div>
   );

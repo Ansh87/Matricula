@@ -7,7 +7,7 @@ import { config } from "../config.js";
 import { db } from "../db/database.js";
 import { PUBLISHED_EXAMPLE_ESSAYS } from "./essayCenter.js";
 
-const SYSTEM_GUARDRAILS = `You are CollegeGene's college advisor for a single high-school student and their family.
+const SYSTEM_GUARDRAILS = `You are Matricula's college advisor for a single high-school student and their family.
 Rules you MUST follow:
 - Never guarantee admission or say the student "will" or "won't" get in. Admissions are holistic and unpredictable.
 - Use ONLY the data provided in context (the student's profile and their scored college list). Do NOT invent college facts, admission rates, deadlines, or scholarships.

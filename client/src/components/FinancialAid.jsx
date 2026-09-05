@@ -127,7 +127,7 @@ function Tracker({ studentId }) {
   return (
     <div className="stack">
       <div className="row spread wrap">
-        <p className="note">Track scholarships you find (merit, state, private, STEM, local, first-gen, employer, etc.). CollegeGene doesn't search a scholarship database — those aren't freely available and would go stale — so this keeps <em>your</em> real finds organized.</p>
+        <p className="note">Track scholarships you find (merit, state, private, STEM, local, first-gen, employer, etc.). Matricula doesn't search a scholarship database — those aren't freely available and would go stale — so this keeps <em>your</em> real finds organized.</p>
         <div className="row" style={{ gap: 8 }}>
           {rows.length > 0 && <button className="btn ghost sm" onClick={exportCsv}>Export CSV</button>}
           <button className="btn amber sm" onClick={() => setEditing({ ...BLANK })}>+ Add scholarship</button>

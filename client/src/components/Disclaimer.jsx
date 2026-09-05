@@ -12,7 +12,7 @@ export function Disclaimer() {
       </div>
 
       <div className="disclaimer">
-        <strong>AI &amp; essay policy.</strong> CollegeGene Navigator helps with brainstorming, outlining, prompt
+        <strong>AI &amp; essay policy.</strong> Matricula helps with brainstorming, outlining, prompt
         tracking, story mapping, and revision planning. It never generates a finished essay for submission and never
         presents any AI-written text as ready to submit. The student must write the final essay in their own voice
         and follow each college's own AI-use policy -- these vary by school and change over time, so check the
@@ -20,7 +20,7 @@ export function Disclaimer() {
       </div>
 
       <div className="disclaimer">
-        <strong>Disclaimer.</strong> CollegeGene Navigator is a planning aid, not a counseling service or an
+        <strong>Disclaimer.</strong> Matricula is a planning aid, not a counseling service or an
         admissions office. Admissions are holistic, competitive, and unpredictable, and these estimates are not
         guarantees. College costs, aid, deadlines, scholarship availability, program offerings, and career outcomes
         vary and change over time. Always confirm information with each college's official website, net price

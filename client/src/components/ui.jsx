@@ -144,7 +144,7 @@ export function ClearSearchButton({ onClear, label = "Clear search" }) {
 export function LegalDisclaimer() {
   return (
     <div className="disclaimer">
-      <strong>How to read this tool.</strong> CollegeGene Navigator is a planning aid built by a student, not a
+      <strong>How to read this tool.</strong> Matricula is a planning aid built by a student, not a
       counseling service or an admissions office. College facts come from the U.S. Department of Education
       College Scorecard; career figures from the U.S. Bureau of Labor Statistics; admissions details from each
       college’s official site or Common Data Set, each labeled with its source and review date. Fit scores and

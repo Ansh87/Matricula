@@ -184,7 +184,7 @@ export async function fetchUrlText(url) {
   if (!/^https?:$/.test(target.protocol)) return { ok: false, reason: "Only http/https links are supported." };
 
   try {
-    const res = await fetch(target.href, { redirect: "follow", headers: { "User-Agent": "CollegeGene/1.0" } });
+    const res = await fetch(target.href, { redirect: "follow", headers: { "User-Agent": "Matricula/1.0" } });
     if (!res.ok) return { ok: false, reason: `Couldn't load the page (HTTP ${res.status}).` };
     const html = await res.text();
 

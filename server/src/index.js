@@ -77,12 +77,12 @@ app.use(express.static(clientDist));
 app.get("*", (req, res, next) => {
   if (req.path.startsWith("/api/")) return next();
   res.sendFile(path.join(clientDist, "index.html"), (err) => {
-    if (err) res.status(200).send("CollegeGene API is running. Build the client (cd client && npm run build) to serve the UI.");
+    if (err) res.status(200).send("Matricula API is running. Build the client (cd client && npm run build) to serve the UI.");
   });
 });
 
 app.listen(config.port, () => {
-  console.log(`CollegeGene server on http://localhost:${config.port}`);
+  console.log(`Matricula server on http://localhost:${config.port}`);
   console.log("Data sources: College Scorecard (live), BLS OOH (snapshot/live), verified profiles (DB).");
   console.log("Key status:", keyStatus(authStatus()));
 });

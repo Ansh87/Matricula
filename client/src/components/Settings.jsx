@@ -151,7 +151,7 @@ export function Settings({ user, studentId, onSignOut, onGo }) {
         <h3>Account</h3>
         {user ? (
           <>
-            <p className="note">Signed in as <strong>{user.email || user.displayName || "user"}</strong>.</p>
+            <p className="note">Signed in as <strong>{user.email || user.displayName || (user.isAnonymous ? "Guest" : "user")}</strong>{user.isAnonymous && " (guest account -- sign in with email or Google to keep access to this data later)"}.</p>
             <button className="btn ghost" style={{ alignSelf: "flex-start" }} onClick={onSignOut}>Sign out</button>
           </>
         ) : (
@@ -206,9 +206,9 @@ export function Settings({ user, studentId, onSignOut, onGo }) {
       {/* 5. Privacy */}
       <div className="card pad stack">
         <h3>Privacy</h3>
-        <p className="note">CollegeGene Navigator uses your signed-in account to keep your profile, saved colleges,
+        <p className="note">Matricula uses your signed-in account to keep your profile, saved colleges,
           and planning records separate from other users.</p>
-        <p className="note">CollegeGene Navigator can help with brainstorming, outlining, prompt tracking, and
+        <p className="note">Matricula can help with brainstorming, outlining, prompt tracking, and
           revision planning. The student must write final essays in their own voice and follow each college's
           AI-use policy.</p>
       </div>

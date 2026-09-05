@@ -1,7 +1,7 @@
 {
-  "name": "collegegene-navigator-server",
+  "name": "matricula-server",
   "version": "1.0.0",
-  "description": "CollegeGene Navigator backend - live official college data (College Scorecard, BLS) with key protection, caching, and verified-data overrides.",
+  "description": "Matricula backend - live official college data (College Scorecard, BLS) with key protection, caching, and verified-data overrides.",
   "type": "module",
   "main": "src/index.js",
   "engines": {

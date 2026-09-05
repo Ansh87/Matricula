@@ -6,7 +6,7 @@ import { Spinner } from "./ui.jsx";
 
 function downloadReport(s, profile) {
   const lines = [];
-  lines.push("CollegeGene Navigator — Application Strategy Report");
+  lines.push("Matricula — Application Strategy Report");
   lines.push(new Date().toLocaleDateString());
   if (profile.name) lines.push(`Student: ${profile.name}`);
   lines.push("");
@@ -27,7 +27,7 @@ function downloadReport(s, profile) {
   lines.push(s.disclaimer);
   const blob = new Blob([lines.join("\n")], { type: "text/plain" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a"); a.href = url; a.download = "collegegene-strategy-report.txt"; a.click();
+  const a = document.createElement("a"); a.href = url; a.download = "matricula-strategy-report.txt"; a.click();
   URL.revokeObjectURL(url);
 }
 

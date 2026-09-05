@@ -1,8 +1,8 @@
 {
-  "name": "collegegene-navigator",
+  "name": "matricula",
   "version": "1.0.0",
   "private": true,
-  "description": "CollegeGene Navigator — live-data college, major, career, and admissions planning for high school students. Official data from College Scorecard + BLS, key-safe backend, verified-data overrides.",
+  "description": "Matricula — live-data college, major, career, and admissions planning for high school students. Official data from College Scorecard + BLS, key-safe backend, verified-data overrides.",
   "scripts": {
     "install:all": "cd server && npm install --include=dev && cd ../client && npm install --include=dev",
     "import": "cd server && npm run import:verified",

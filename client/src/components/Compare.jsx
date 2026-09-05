@@ -88,7 +88,7 @@ export function Compare({ saved, profile }) {
     push("Culture fit", (id) => rows[id]?.fit?.cultureFit?.score);
     const blob = new Blob([lines.join("\n")], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a"); a.href = url; a.download = "collegegene-comparison.csv"; a.click();
+    const a = document.createElement("a"); a.href = url; a.download = "matricula-comparison.csv"; a.click();
     URL.revokeObjectURL(url);
   };
 

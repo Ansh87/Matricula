@@ -39,7 +39,7 @@ export const config = {
 
   uploadDir: process.env.UPLOAD_DIR || "./uploads",
 
-  dbPath: process.env.DB_PATH || "./collegegene-navigator.db",
+  dbPath: process.env.DB_PATH || "./matricula.db",
 
   // Firebase Admin — identity verification only. Prefer a single JSON blob
   // (easiest on Railway); fall back to the three discrete fields. NONE of this

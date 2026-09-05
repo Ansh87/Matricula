@@ -42,7 +42,7 @@ essaysRouter.get("/:id/meta", (_req, res) => {
     cycleTypes: CYCLE_TYPES, previousYearWarning: PREVIOUS_YEAR_PROMPT_WARNING, notVerifiedNotice: PROMPTS_NOT_VERIFIED_NOTICE,
     promptStatuses: PROMPT_STATUSES, sourceTypes: PROMPT_SOURCE_TYPES,
     platformsWithSharedPrompts: Object.keys(PLATFORM_PROMPT_SETS),
-    aiUseDisclaimer: "CollegeGene Navigator helps with brainstorming, outlining, prompt tracking, and revision planning. The student must write the final essay in their own voice and follow each college's AI-use policy.",
+    aiUseDisclaimer: "Matricula helps with brainstorming, outlining, prompt tracking, and revision planning. The student must write the final essay in their own voice and follow each college's AI-use policy.",
   });
 });
 

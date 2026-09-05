@@ -2,6 +2,7 @@
 // and persists the student's list to the backend DB.
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { api } from "./lib/api.js";
+import matriculaIcon from "./assets/matricula-icon.png";
 import { ProfileForm, BLANK_PROFILE } from "./components/ProfileForm.jsx";
 import { Results } from "./components/Results.jsx";
 import { CollegeDetail } from "./components/CollegeDetail.jsx";
@@ -52,12 +53,7 @@ import { useAuth } from "./auth/AuthProvider.jsx";
 const FALLBACK_STUDENT_ID = "local-student"; // used only when auth is unconfigured (dev)
 
 function Logo() {
-  return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M6 3c4 3 8 3 12 0M6 21c4-3 8-3 12 0M6 3c0 6 12 12 12 18M18 3C18 9 6 15 6 21"
-        stroke="#e9c987" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  );
+  return <img src={matriculaIcon} alt="Matricula" height="30" style={{ display: "block", width: "auto" }} />;
 }
 
 // Grouped top navigation (UX/navigation cleanup -- the old flat 16-item nav
@@ -403,7 +399,7 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
           <div className="row spread" style={{ width: "100%", alignItems: "center" }}>
             <div className="brand" role="button" onClick={() => setView("landing")} style={{ cursor: "pointer" }}>
               <Logo />
-              <span>CollegeGene Navigator
+              <span>Matricula
                 <small className="brand-desc-desktop">A College, Program, Course, and Application Strategy Platform</small>
                 <small className="brand-desc-mobile">College Planning Hub</small>
               </span>
@@ -421,7 +417,7 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
           {user && (
             <div className="user-menu" style={{ marginLeft: "auto" }}>
               <span className="user-email">
-                Signed in as {user.email || user.displayName || "user"}
+                Signed in as {user.email || user.displayName || (user.isAnonymous ? "Guest" : "user")}
               </span>
               <button className="btn sm ghost" onClick={() => signOut().catch(() => {})}>Sign out</button>
             </div>
@@ -519,7 +515,7 @@ function Landing({ onStart, onAbout }) {
       <div className="banner">
         <div className="eyebrow">Built for the real thing</div>
         <h1 style={{ maxWidth: 18 + "ch", marginBottom: 10 }}>College planning on official data, not guesswork.</h1>
-        <p className="lead">CollegeGene Navigator matches you to real U.S. colleges using federal College Scorecard data,
+        <p className="lead">Matricula matches you to real U.S. colleges using federal College Scorecard data,
           maps majors to Bureau of Labor Statistics career outcomes, and helps your family track every deadline --
           with the source and date shown on every number.</p>
         <div className="row" style={{ marginTop: 18, gap: 10 }}>

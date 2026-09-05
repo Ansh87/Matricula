@@ -46,8 +46,8 @@ export function About({ onGo }) {
       {/* 1. Hero summary */}
       <div className="banner">
         <div className="eyebrow">More</div>
-        <h1>About CollegeGene Navigator</h1>
-        <p className="lead">CollegeGene Navigator helps families build a smarter college list, compare programs,
+        <h1>About Matricula</h1>
+        <p className="lead">Matricula helps families build a smarter college list, compare programs,
           track applications, manage essays, verify deadlines, review costs, and organize final decisions in one
           place.</p>
       </div>
@@ -226,7 +226,7 @@ export function About({ onGo }) {
 
       {/* 5. Data and verification note */}
       <div className="disclaimer">
-        CollegeGene Navigator uses official and public data where available, including College Scorecard and
+        Matricula uses official and public data where available, including College Scorecard and
         college websites. College requirements, deadlines, essay prompts, costs, and program rules can change.
         Always verify final information using official college sources and application portals.
         {onGo && <> <button className="link" onClick={go("disclaimer")}>Read the full disclaimer →</button></>}

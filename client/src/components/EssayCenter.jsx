@@ -481,7 +481,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
       </div>
 
       <div className="disclaimer">
-        {meta.aiUseDisclaimer || "CollegeGene Navigator helps with brainstorming, outlining, prompt tracking, and revision planning. The student must write the final essay in their own voice and follow each college's AI-use policy."}
+        {meta.aiUseDisclaimer || "Matricula helps with brainstorming, outlining, prompt tracking, and revision planning. The student must write the final essay in their own voice and follow each college's AI-use policy."}
         {" "}This tool never writes or generates a final essay, and never auto-submits anything.
       </div>
 

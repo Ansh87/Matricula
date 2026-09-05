@@ -1,5 +1,5 @@
 ========================================================================
-  CollegeGene Navigator — QUICK START
+  Matricula — QUICK START
 ========================================================================
 
 ------------------------------------------------------------------------
@@ -21,7 +21,7 @@ STEP 1 — Open a terminal IN the project folder
 Unzip the download, then in your terminal "cd" into the folder that
 contains this file. It should contain: server/  client/  README.md
 
-    cd path/to/collegegene-ai
+    cd path/to/matricula
 
 (Tip: on macOS you can type "cd " then drag the folder into the terminal.)
 
@@ -44,7 +44,7 @@ What each does:
 ------------------------------------------------------------------------
 STEP 3 — Open the app
 ------------------------------------------------------------------------
-When the terminal says "CollegeGene server on http://localhost:4000",
+When the terminal says "Matricula server on http://localhost:4000",
 open that address in your browser:
 
     http://localhost:4000
@@ -128,7 +128,7 @@ IF SOMETHING BREAKS
     -> Install Node LTS from https://nodejs.org and reopen the terminal.
 
 * "npm run install:all" errors
-    -> Make sure you're in the collegegene-ai folder (STEP 1). You should
+    -> Make sure you're in the matricula folder (STEP 1). You should
        see server/ and client/ when you run:  ls   (mac/linux)  or  dir  (windows)
 
 * Port 4000 already in use
@@ -161,7 +161,7 @@ IF SOMETHING BREAKS
 WHERE YOUR DATA LIVES
 ------------------------------------------------------------------------
 Your profile, saved college list, and application tracker are saved in a
-database file inside the "server" folder (collegegene.db) — on your own
+database file inside the "server" folder (matricula.db) — on your own
 computer. Nothing leaves your machine when running locally.
 
 
@@ -171,7 +171,7 @@ NEXT: PUTTING IT ONLINE (Railway) — when you're ready
 Once it works locally, deploying to Railway makes it reachable from your
 phone or any computer. The short version:
 
-  1. Push the collegegene-ai folder to a GitHub repo.
+  1. Push the matricula folder to a GitHub repo.
      (The included .gitignore already prevents committing your .env key.)
   2. On railway.app, create a new project -> "Deploy from GitHub repo".
   3. Set the commands:
@@ -181,7 +181,10 @@ phone or any computer. The short version:
   5. IMPORTANT — add a persistent Volume so your saved data survives
      restarts:
        - Attach a Volume, mount it at:  /data
-       - Add an environment variable:   DB_PATH = /data/collegegene.db
+       - Add an environment variable:   DB_PATH = /data/matricula.db
+         (If you're redeploying an EXISTING Railway project that already has
+         DB_PATH set to something else, e.g. /data/collegegene-navigator.db,
+         leave it as-is -- that's where your real saved data already lives.)
   6. Run the one-time data import (Railway shell, or add it to the build):
        npm run import
   7. Railway gives you a public URL — open it from anywhere.

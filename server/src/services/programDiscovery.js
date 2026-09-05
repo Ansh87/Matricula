@@ -27,7 +27,7 @@ import crypto from "node:crypto";
 import { db, cacheGet, cacheSet } from "../db/database.js";
 import { getPrograms, getCollegeById } from "./scorecard.js";
 
-const USER_AGENT = "CollegeGeneNavigatorBot/1.0 (+family college-planning research tool; conservative bounded crawl)";
+const USER_AGENT = "MatriculaBot/1.0 (+family college-planning research tool; conservative bounded crawl)";
 const FETCH_TIMEOUT_MS = 10000;
 const CRAWL_MAX_PAGES = 40;
 const CRAWL_MAX_DEPTH = 2;
@@ -125,7 +125,7 @@ async function isAllowedByRobots(url) {
           const [keyRaw, ...rest] = line.split(":");
           const key = (keyRaw || "").trim().toLowerCase();
           const val = rest.join(":").trim();
-          if (key === "user-agent") applies = val === "*" || /collegegene/i.test(val);
+          if (key === "user-agent") applies = val === "*" || /matricula/i.test(val);
           else if (key === "disallow" && applies && val) rules.push(val);
         }
       }

@@ -97,6 +97,9 @@ body {
 /* The global .btn.ghost uses a dark ink color meant for light backgrounds, which
    renders nearly invisible on the dark topbar. Scope a high-contrast variant. */
 .topbar .user-menu { display: flex; align-items: center; gap: 10px; }
+/* Mobile-first-row sign-out control (see App.jsx) -- hidden on desktop,
+   where sign-out already lives in .user-menu on the nav row instead. */
+.topbar .user-menu-mobile { display: none; }
 .topbar .user-menu .user-email {
   font-size: 11.5px; color: #b8cee0; white-space: nowrap;
 }
@@ -247,9 +250,13 @@ table.t tr:hover td { background: #fffaf0; }
 .empty { text-align: center; padding: 40px 20px; color: var(--muted); }
 .pill { font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: 6px; background: var(--paper-2); color: var(--muted); }
 
-/* College search autocomplete (Essay Prompt Dashboard "Choose a College" and
-   anywhere else CollegeAutocomplete is reused). */
-.college-autocomplete { position: relative; }
+/* Shared type-ahead autocomplete (colleges and majors both use this same
+   look via the useAutocompleteSearch hook in ui.jsx -- CollegeAutocomplete,
+   MajorAutocomplete). Used on Essay's "Choose a College", Browse Colleges,
+   Explorer's Single/Double-Major Planner, and the Profile's Intended Major
+   fields. .college-autocomplete* names are kept for backward compatibility
+   (existing markup/tests may still reference them). */
+.college-autocomplete, .major-autocomplete { position: relative; }
 .college-autocomplete-results {
   position: absolute; z-index: 20; top: calc(100% + 4px); left: 0; right: 0;
   background: var(--card); border: 1px solid var(--line-2); border-radius: var(--radius);
@@ -261,6 +268,9 @@ table.t tr:hover td { background: #fffaf0; }
   cursor: pointer; font-family: inherit; font-size: 13.5px; color: var(--text);
 }
 .college-autocomplete-item:hover, .college-autocomplete-item:focus { background: var(--paper-2); }
+/* Keyboard-navigated (Up/Down arrow) highlight -- same visual as hover so
+   keyboard and mouse selection are indistinguishable. */
+.college-autocomplete-item.highlighted { background: var(--target-b, #eef4fb); }
 .college-autocomplete-selected {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   background: var(--paper-2); border: 1px solid var(--line-2); border-radius: var(--radius);
@@ -277,6 +287,15 @@ table.t tr:hover td { background: #fffaf0; }
 @media (max-width: 820px) {
   h1 { font-size: 27px; }
   .topbar-inner { flex-wrap: wrap; gap: 10px; }
+  /* Row 1 (brand + mobile sign-out) must stay on one line -- the generic
+     `.row { flex-wrap: wrap }` mobile rule further down would otherwise let
+     the sign-out button drop to its own line once space is tight. Brand
+     shrinks first (min-width:0, wraps its own text) so the button never
+     gets pushed off-screen or clipped. */
+  .topbar .row.spread { flex-wrap: nowrap; }
+  .topbar .brand { min-width: 0; flex: 1 1 auto; overflow: hidden; }
+  .topbar .brand span, .topbar .brand small { overflow-wrap: anywhere; }
+  .topbar .user-menu-mobile { flex-shrink: 0; }
   /* Shorter tagline on mobile; full description stays on desktop. */
   .brand-desc-desktop { display: none; }
   .brand-desc-mobile { display: block; }
@@ -306,9 +325,25 @@ table.t tr:hover td { background: #fffaf0; }
      overflow (by design) so swiping reveals Apply/More, and keeps the
      active item's highlight fully legible. */
   .nav.nav-row button { flex: 0 0 auto; }
-  /* Hide the signed-in-as / sign out controls to save header space; the same
-     account info and sign-out action are still available in Settings. */
+  /* The "Signed in as..." + sign-out row moves up to the first row (see
+     .user-menu-mobile below) so it stays visible without stretching the
+     header; the full nav-row version is hidden here to avoid showing it
+     twice. Account email text is dropped on mobile (kept in Settings) so
+     the compact Sign out button always has room on the far right. */
   .topbar .user-menu { display: none; }
+  .topbar .user-menu-mobile {
+    display: flex; align-items: center; flex: 0 0 auto; margin-left: 10px;
+  }
+  .topbar .user-menu-mobile .btn,
+  .topbar .user-menu-mobile .btn.ghost {
+    background: rgba(255,255,255,.10);
+    border: 1px solid rgba(255,255,255,.35);
+    color: #ffffff;
+    font-weight: 600;
+    padding: 6px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
   /* Subtab row still fits on one scrollable line -- no crowding, just scroll. */
   .subnav { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 12px; }
   .cols-2, .cols-3 { grid-template-columns: 1fr !important; }

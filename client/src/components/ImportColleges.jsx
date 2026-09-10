@@ -4,9 +4,9 @@
 // steps: input -> review -> summary. Every college added here is scored with
 // the exact same profile-scoring the rest of the app uses -- nothing here is
 // a new formula.
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { api } from "../lib/api.js";
-import { Spinner, InlineSpinner, SuccessNote, RestoredNote } from "./ui.jsx";
+import { Spinner, InlineSpinner, SuccessNote, RestoredNote, useAutocompleteSearch } from "./ui.jsx";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
 
 const CONFIDENCE_COLOR = {
@@ -17,35 +17,48 @@ const CONFIDENCE_COLOR = {
   "No match": "var(--reach-b)",
 };
 
+// Live 2-character debounced search (useAutocompleteSearch, same engine as
+// CollegeAutocomplete/MajorAutocomplete elsewhere), reusing the exact same
+// /api/colleges/search endpoint. Kept as its own small component instead of
+// the shared CollegeAutocomplete because onPick needs the FULL matched
+// college record (id, name, city, state, controlType) to correct the import
+// row below -- CollegeAutocomplete's onChange only returns {collegeId,
+// collegeName}, which isn't enough here.
 function ManualSearch({ onPick, onCancel }) {
-  const [q, setQ] = useState("");
-  const [results, setResults] = useState(null);
-  const [busy, setBusy] = useState(false);
-  const run = async () => {
-    if (!q.trim() || busy) return;
-    setBusy(true);
-    try { const r = await api.searchColleges({ name: q.trim() }); setResults(r.results || []); }
-    catch { setResults([]); }
-    finally { setBusy(false); }
-  };
+  const search = useCallback((q) => api.searchColleges({ name: q }).then((r) => r.results || []), []);
+  const { query, results, loading, error, open, setOpen, searchedOnce, highlight, onQueryChange, onKeyDown } =
+    useAutocompleteSearch(search, { minChars: 2, debounceMs: 350 });
+
   return (
     <div className="card pad" style={{ marginTop: 6, background: "var(--paper)" }}>
       <div className="row wrap" style={{ gap: 6 }}>
-        <input className="inp" style={{ flex: 1, minWidth: 160 }} value={q} placeholder="Search official college name…"
-          onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => e.key === "Enter" && run()} />
-        <button className="btn ghost sm" onClick={run} disabled={busy}>{busy ? "Searching…" : "Search"}</button>
+        <input className="inp" style={{ flex: 1, minWidth: 160 }} value={query}
+          placeholder="Search official college name (2+ letters)..."
+          onChange={(e) => onQueryChange(e.target.value)}
+          onFocus={() => setOpen(true)}
+          onBlur={() => setTimeout(() => setOpen(false), 150)}
+          onKeyDown={(e) => onKeyDown(e, { onSelect: onPick })}
+          role="combobox" aria-expanded={open} aria-autocomplete="list" autoFocus />
         <button className="btn ghost sm" onClick={onCancel}>Cancel</button>
       </div>
-      {results && (
-        results.length ? (
-          <div className="stack" style={{ gap: 4, marginTop: 8 }}>
-            {results.slice(0, 8).map((c) => (
-              <button key={c.id} className="link" style={{ textAlign: "left" }} onClick={() => onPick(c)}>
-                {c.name} - {[c.city, c.state].filter(Boolean).join(", ")}
-              </button>
-            ))}
-          </div>
-        ) : <div className="note" style={{ marginTop: 6 }}>No official colleges found for that search.</div>
+      {loading && <div className="note" style={{ marginTop: 6 }}><InlineSpinner />Searching...</div>}
+      {open && !loading && error && (
+        <div className="note" style={{ marginTop: 6, color: "var(--reach)" }}>{error}</div>
+      )}
+      {open && !loading && !error && searchedOnce && results.length === 0 && query.trim().length >= 2 && (
+        <div className="note" style={{ marginTop: 6 }}>No official colleges found for that search.</div>
+      )}
+      {open && !loading && results.length > 0 && (
+        <div className="stack" style={{ gap: 2, marginTop: 8 }}>
+          {results.slice(0, 8).map((c, i) => (
+            <button key={c.id} type="button" className="link" style={{
+              textAlign: "left", padding: "3px 6px", borderRadius: 6,
+              background: i === highlight ? "var(--paper-2)" : "transparent",
+            }} onMouseDown={(ev) => ev.preventDefault()} onClick={() => onPick(c)}>
+              {c.name} - {[c.city, c.state].filter(Boolean).join(", ")}
+            </button>
+          ))}
+        </div>
       )}
     </div>
   );

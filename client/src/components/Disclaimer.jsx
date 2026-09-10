@@ -20,12 +20,18 @@ export function Disclaimer() {
       </div>
 
       <div className="disclaimer">
-        <strong>Disclaimer.</strong> Matricula is a planning aid, not a counseling service or an
-        admissions office. Admissions are holistic, competitive, and unpredictable, and these estimates are not
-        guarantees. College costs, aid, deadlines, scholarship availability, program offerings, and career outcomes
-        vary and change over time. Always confirm information with each college's official website, net price
-        calculator, admissions and financial-aid offices, FAFSA/CSS Profile, and a qualified school counselor before
-        making decisions.
+        <strong>Disclaimer:</strong> Matricula is an educational planning tool, not a counseling service or
+        admissions office. Admissions are holistic and unpredictable, and Matricula's estimates are not guarantees.
+        College costs, financial aid, deadlines, scholarships, programs, policies, and career outcomes can change
+        over time. Always verify important information with official college sources, admissions and
+        financial-aid offices, net price calculators, FAFSA/CSS Profile resources, and your school counselor
+        before making decisions.
+      </div>
+
+      <div className="disclaimer">
+        Matricula was developed by high school student Ansh Saini as an independent educational technology
+        project to help students explore college, major, career, and application-planning options using
+        data-driven tools.
       </div>
     </div>
   );

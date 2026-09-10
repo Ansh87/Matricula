@@ -2,7 +2,7 @@
 // signal, and outlook.
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { api } from "../lib/api.js";
-import { Spinner, InlineSpinner, SourceBadge, SuccessNote, RestoredNote, ClearSearchButton, fmtUSD, fmtPct } from "./ui.jsx";
+import { Spinner, InlineSpinner, SourceBadge, SuccessNote, RestoredNote, ClearSearchButton, MajorAutocomplete, fmtUSD, fmtPct } from "./ui.jsx";
 import { US_STATES } from "../lib/states.js";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
 import { useEntryOverride } from "../lib/entryOverride.js";
@@ -247,12 +247,16 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
             special permission -- always confirm the actual policy with the college's advising office or catalog.
           </div>
         )}
-        <div className="row wrap" style={{ gap: 8, marginTop: 8 }}>
-          <input className="inp" style={{ flex: 1, minWidth: 180 }} value={majorQuery} placeholder="Major 1 (e.g. Computer Science)"
-            onChange={(e) => setMajorQuery(e.target.value)} onKeyDown={(e) => e.key === "Enter" && runSearch()} />
+        <div className="row wrap" style={{ gap: 8, marginTop: 8, alignItems: "flex-start" }}>
+          <div style={{ flex: 1, minWidth: 180 }}>
+            <MajorAutocomplete value={majorQuery} placeholder={comboMode ? "Primary major (e.g. Computer Science)" : "Major (e.g. Computer Science)"}
+              onChange={setMajorQuery} onEnter={runSearch} />
+          </div>
           {comboMode && (
-            <input className="inp" style={{ flex: 1, minWidth: 180 }} value={major2Query} placeholder="Major 2 (e.g. Finance)"
-              onChange={(e) => setMajor2Query(e.target.value)} onKeyDown={(e) => e.key === "Enter" && runSearch()} />
+            <div style={{ flex: 1, minWidth: 180 }}>
+              <MajorAutocomplete value={major2Query} placeholder="Second major (e.g. Finance)"
+                onChange={setMajor2Query} onEnter={runSearch} />
+            </div>
           )}
           <input className="inp" style={{ width: 90 }} value={stateFilter} placeholder="State" maxLength={2}
             onChange={(e) => setStateFilter(e.target.value.toUpperCase())} onKeyDown={(e) => e.key === "Enter" && runSearch()} />
@@ -260,6 +264,15 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
             {searchingMajor ? <><InlineSpinner />Searching…</> : "Search"}
           </button>
         </div>
+        {/* Selecting the same major on both sides isn't a meaningful double-major
+            search (no college "offers both" a field and itself) -- an inline
+            warning rather than a hard block, since the two fields stay fully
+            independent text inputs and the family may still be mid-edit. */}
+        {comboMode && majorQuery.trim() && major2Query.trim() && majorQuery.trim().toLowerCase() === major2Query.trim().toLowerCase() && (
+          <div className="note" style={{ marginTop: 6, color: "var(--reach)" }}>
+            Primary and second major are the same - choose two different fields to search a double-major combination.
+          </div>
+        )}
         <div className="row wrap" style={{ gap: 6, marginTop: 8, alignItems: "center" }}>
           <span className="note" style={{ fontWeight: 600 }}>State:</span>
           <select className="inp" style={{ width: "auto" }} value={stateFilter} onChange={(e) => setStateFilter(e.target.value)}>

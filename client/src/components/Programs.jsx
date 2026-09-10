@@ -11,7 +11,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { api } from "../lib/api.js";
 import { auth, firebaseConfigured } from "../lib/firebase.js";
-import { SourceBadge, InlineSpinner, RestoredNote } from "./ui.jsx";
+import { SourceBadge, InlineSpinner, RestoredNote, useAutocompleteSearch } from "./ui.jsx";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
 
 const SOURCE_TYPES = [
@@ -79,7 +79,6 @@ const BLANK_MANUAL = {
 
 export function Programs({ studentId, profile }) {
   const [collegeQuery, setCollegeQuery] = useState("");
-  const [collegeResults, setCollegeResults] = useState([]);
   const [selectedCollege, setSelectedCollege] = useState(null); // { id, name }
   const [busy, setBusy] = useState(false);
   const [actionMsg, setActionMsg] = useState(null);
@@ -144,15 +143,20 @@ export function Programs({ studentId, profile }) {
 
   useEffect(() => { loadPrograms(); }, [loadPrograms]);
 
-  const searchColleges = async () => {
-    if (!collegeQuery.trim()) return;
-    setBusy(true);
-    try {
-      const r = await api.browseColleges({ name: collegeQuery, page: 0, perPage: 10 });
-      setCollegeResults(r.colleges || r.results || []);
-    } catch (e) {
-      setActionMsg({ ok: false, text: `College search failed: ${e.message}` });
-    } finally { setBusy(false); }
+  // Live 2-character debounced search (useAutocompleteSearch -- the same
+  // engine behind CollegeAutocomplete/MajorAutocomplete/Browse Colleges'
+  // quick-jump), reusing the same canonical /api/colleges/search endpoint
+  // instead of the separate browseColleges list endpoint this used to call.
+  const collegeSearch = useCallback((q) => api.searchColleges({ name: q }).then((r) => r.results || []), []);
+  const {
+    results: collegeSuggestions, loading: collegeSearchLoading, open: collegeSuggestOpen, setOpen: setCollegeSuggestOpen,
+    highlight: collegeHighlight, onQueryChange: onCollegeQueryChange, onKeyDown: onCollegeKeyDown,
+  } = useAutocompleteSearch(collegeSearch, { minChars: 2, debounceMs: 350 });
+
+  const pickCollege = (c) => {
+    setSelectedCollege({ id: c.id, name: c.name });
+    setCollegeQuery(c.name);
+    setCollegeSuggestOpen(false);
   };
 
   const researchCollege = async () => {
@@ -322,25 +326,34 @@ export function Programs({ studentId, profile }) {
 
       <div className="card pad">
         <h3>1. Pick a college</h3>
-        <div className="row wrap" style={{ gap: 8, marginTop: 8 }}>
-          <input className="inp" style={{ maxWidth: 320 }} placeholder="Search colleges by name..."
-            value={collegeQuery} onChange={(e) => setCollegeQuery(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter") searchColleges(); }} />
-          <button className="btn ghost" disabled={busy} onClick={searchColleges}>Search</button>
+        <div className="row wrap" style={{ gap: 8, marginTop: 8, alignItems: "flex-start" }}>
+          <div className="college-autocomplete" style={{ minWidth: 260 }}
+            onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setTimeout(() => setCollegeSuggestOpen(false), 150); }}>
+            <input className="inp" style={{ width: 320 }} placeholder="Search colleges by name..."
+              value={collegeQuery}
+              onChange={(e) => { setCollegeQuery(e.target.value); onCollegeQueryChange(e.target.value); }}
+              onFocus={() => collegeQuery.trim().length >= 2 && setCollegeSuggestOpen(true)}
+              onKeyDown={(e) => onCollegeKeyDown(e, { onSelect: pickCollege })}
+              role="combobox" aria-expanded={collegeSuggestOpen} aria-autocomplete="list" />
+            {collegeSearchLoading && <div style={{ marginTop: 4 }}><InlineSpinner /></div>}
+            {collegeSuggestOpen && !collegeSearchLoading && collegeSuggestions.length > 0 && (
+              <div className="college-autocomplete-results">
+                {collegeSuggestions.map((c, i) => (
+                  <button type="button" key={c.id}
+                    className={`college-autocomplete-item${i === collegeHighlight ? " highlighted" : ""}`}
+                    onMouseDown={(ev) => ev.preventDefault()} onClick={() => pickCollege(c)}>
+                    <strong>{c.name}</strong>
+                    <span className="note">{[c.city, c.state].filter(Boolean).join(", ")}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           {selectedCollege && (
             <span className="cat Target">Selected: {selectedCollege.name} <button className="link" onClick={() => setSelectedCollege(null)}>clear</button></span>
           )}
         </div>
         <RestoredNote restoredFrom={restoredFrom} />
-        {collegeResults.length > 0 && !selectedCollege && (
-          <div className="row wrap" style={{ gap: 6, marginTop: 10 }}>
-            {collegeResults.map((c) => (
-              <button key={c.id} className="btn sm ghost" onClick={() => { setSelectedCollege({ id: c.id, name: c.name }); setCollegeResults([]); }}>
-                {c.name}{c.state ? ` (${c.state})` : ""}
-              </button>
-            ))}
-          </div>
-        )}
       </div>
 
       <div className="card pad" style={{ borderColor: "var(--amber)" }}>

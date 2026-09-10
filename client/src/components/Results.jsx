@@ -1,7 +1,7 @@
 // Results.jsx - live recommendations. Each card shows official data with source
 // badges, an estimated category, and a control to save to the student's list.
-import React, { useState, useMemo } from "react";
-import { CategoryTag, Meter, SourceBadge, fmtUSD, fmtPct } from "./ui.jsx";
+import React, { useState, useMemo, useCallback } from "react";
+import { CategoryTag, Meter, SourceBadge, fmtUSD, fmtPct, useAutocompleteSearch } from "./ui.jsx";
 import { api } from "../lib/api.js";
 
 const US_STATES = "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY DC".split(" ");
@@ -141,23 +141,19 @@ export function Results({ recs, meta, savedIds, onOpen, onToggleSave, onRefilter
   const [cat, setCat] = useState(initialCat);
   const [sort, setSort] = useState("overall");
   const [topN, setTopN] = useState(30); // default cap for performance; "All" available
-  const [search, setSearch] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [searching, setSearching] = useState(false);
+  // Live 2-character debounced search (useAutocompleteSearch -- the same
+  // engine behind CollegeAutocomplete/MajorAutocomplete elsewhere), reusing
+  // the same canonical /api/colleges/search endpoint this used to call from
+  // a manual "click Search" button.
+  const manualCollegeSearch = useCallback((q) => api.searchColleges({ name: q }).then((r) => r.results || []), []);
+  const {
+    query: search, results: searchResults, loading: searching, error: searchError, searchedOnce: searchedOnceManual,
+    onQueryChange: onManualSearchChange,
+  } = useAutocompleteSearch(manualCollegeSearch, { minChars: 2, debounceMs: 350 });
   const [fState, setFState] = useState("");
   const [fType, setFType] = useState("all");
   const [showWeights, setShowWeights] = useState(false);
   const [weights, setWeights] = useState({ academic: 30, career: 22, financial: 18, outcome: 18, ec: 12 });
-
-  const doSearch = async () => {
-    if (!search.trim()) return;
-    setSearching(true);
-    try {
-      const r = await api.searchColleges({ name: search.trim() });
-      setSearchResults(r.results || []);
-    } catch { setSearchResults([]); }
-    finally { setSearching(false); }
-  };
 
   const filtered = useMemo(() => {
     let r = [...safeRecs];
@@ -285,11 +281,16 @@ export function Results({ recs, meta, savedIds, onOpen, onToggleSave, onRefilter
           This is a lookup tool for any U.S. college - separate from your personalized matches above.
         </div>
         <div className="row" style={{ gap: 8 }}>
-          <input className="inp" value={search} onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && doSearch()} placeholder="e.g. Boston University, Purdue, Rice" />
-          <button className="btn primary" onClick={doSearch} disabled={searching}>Search</button>
+          <input className="inp" value={search} onChange={(e) => onManualSearchChange(e.target.value)}
+            placeholder="e.g. Boston University, Purdue, Rice (2+ letters searches automatically)" />
         </div>
-        {searching && <div className="note" style={{ marginTop: 8 }}>Searching…</div>}
+        {searching && <div className="note" style={{ marginTop: 8 }}>Searching...</div>}
+        {!searching && searchError && (
+          <div className="note" style={{ marginTop: 8, color: "var(--reach)" }}>{searchError}</div>
+        )}
+        {!searching && !searchError && searchedOnceManual && searchResults.length === 0 && search.trim().length >= 2 && (
+          <div className="note" style={{ marginTop: 8 }}>No colleges found for that search.</div>
+        )}
         {searchResults.length > 0 && (
           <div className="stack" style={{ marginTop: 12 }}>
             {searchResults.map((c) => (

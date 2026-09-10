@@ -1,9 +1,9 @@
 // BrowseColleges.jsx - search/explore the full U.S. database. Works WITHOUT
 // running Matches. Not a personalized recommendation list.
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { api } from "../lib/api.js";
 import { TopList } from "./TopList.jsx";
-import { Spinner, SourceBadge, fmtUSD, fmtPct, RestoredNote, ClearSearchButton } from "./ui.jsx";
+import { Spinner, SourceBadge, fmtUSD, fmtPct, RestoredNote, ClearSearchButton, useAutocompleteSearch } from "./ui.jsx";
 import { US_STATES } from "../lib/states.js";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
 
@@ -85,6 +85,27 @@ function AllColleges({ profile, onOpen, savedIds, onToggleSave, studentId }) {
     if (r.searched !== undefined) setSearched(r.searched);
   });
 
+  // Quick-jump suggestions: a type-ahead dropdown layered on top of the name
+  // box below, reusing the exact same /api/colleges/search endpoint (and the
+  // shared useAutocompleteSearch hook -- see EssayCenter's CollegeAutocomplete
+  // and Explorer's MajorAutocomplete for the other two places this hook
+  // powers) so results are the same College Scorecard-backed college IDs as
+  // everywhere else. Purely additive: the existing name+filters+Search
+  // button+paginated results list below is completely unchanged, so a family
+  // that prefers "type a name, hit Search, browse the list" loses nothing.
+  // Picking a suggestion just jumps straight to that college's detail page.
+  const suggestSearch = useCallback((q) => api.searchColleges({ name: q }).then((r) => r.results || []), []);
+  const {
+    results: suggestions, loading: suggestLoading, open: suggestOpen, setOpen: setSuggestOpen,
+    highlight: suggestHighlight, onQueryChange: onSuggestQueryChange, onKeyDown: onSuggestKeyDown,
+  } = useAutocompleteSearch(suggestSearch, { minChars: 2, debounceMs: 350 });
+
+  const selectSuggestion = (c) => {
+    setName(c.name);
+    setSuggestOpen(false);
+    onOpen(c.id); // existing college-details navigation, unchanged
+  };
+
   const run = async (nextPage = 0, append = false) => {
     setLoading(true); setErr(null);
     try {
@@ -108,9 +129,32 @@ function AllColleges({ profile, onOpen, savedIds, onToggleSave, studentId }) {
     <div className="stack">
       <div className="card pad">
         <label className="lbl">Search any U.S. college</label>
-        <div className="row wrap" style={{ gap: 8, marginTop: 6 }}>
-          <input className="inp" style={{ flex: 1, minWidth: 200 }} value={name} placeholder="College name - e.g. Rutgers, Purdue"
-            onChange={(e) => setName(e.target.value)} onKeyDown={(e) => e.key === "Enter" && run(0)} />
+        <div className="row wrap" style={{ gap: 8, marginTop: 6, alignItems: "flex-start" }}>
+          <div className="college-autocomplete" style={{ flex: 1, minWidth: 200 }}
+            onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setTimeout(() => setSuggestOpen(false), 150); }}>
+            <input className="inp" style={{ width: "100%" }} value={name} placeholder="College name - e.g. Rutgers, Purdue"
+              onChange={(e) => { setName(e.target.value); onSuggestQueryChange(e.target.value); }}
+              onFocus={() => name.trim().length >= 2 && setSuggestOpen(true)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !(suggestOpen && suggestions.length > 0 && suggestHighlight >= 0)) { run(0); return; }
+                onSuggestKeyDown(e, { onSelect: selectSuggestion });
+              }}
+              role="combobox" aria-expanded={suggestOpen} aria-autocomplete="list" />
+            {suggestLoading && <div style={{ marginTop: 4 }}><Spinner label="Searching colleges..." /></div>}
+            {suggestOpen && !suggestLoading && suggestions.length > 0 && (
+              <div className="college-autocomplete-results">
+                {suggestions.map((c, i) => (
+                  <button type="button" key={c.id}
+                    className={`college-autocomplete-item${i === suggestHighlight ? " highlighted" : ""}`}
+                    onMouseDown={(ev) => ev.preventDefault()}
+                    onClick={() => selectSuggestion(c)}>
+                    <strong>{c.name}</strong>
+                    <span className="note">{[c.city, c.state].filter(Boolean).join(", ")}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           <select className="inp" style={{ width: "auto" }} value={stateFilter} onChange={(e) => setStateFilter(e.target.value)}>
             <option value="">All states</option>
             {US_STATES.map(([code, n]) => <option key={code} value={code}>{n}</option>)}

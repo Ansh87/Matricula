@@ -404,6 +404,16 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
                 <small className="brand-desc-mobile">College Planning Hub</small>
               </span>
             </div>
+            {/* Mobile-only sign-out control, kept on the same first row as the
+                brand so it's never hidden or scrolled off-screen on phones.
+                Hidden on desktop (that layout keeps sign-out on the nav row,
+                see .user-menu below); .topbar .user-menu-mobile in styles.css
+                is the sole place that toggles which one is visible. */}
+            {user && (
+              <div className="user-menu-mobile">
+                <button className="btn sm ghost" onClick={() => signOut().catch(() => {})}>Sign out</button>
+              </div>
+            )}
           </div>
 
           {/* Nav + sign-in/out share one row on desktop (space-between keeps nav

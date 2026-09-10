@@ -2,28 +2,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Documents } from "./Documents.jsx";
 import { api } from "../lib/api.js";
+import { ALL_MAJORS } from "../lib/majors.js";
+import { MajorAutocomplete } from "./ui.jsx";
 
 const STATES = "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY DC".split(" ");
 // Atomic academic interests only. Composite career TRACKS (e.g. "CS + Finance /
 // Quant") live in the scenario catalog and are selected via the Preferred career
 // track field below and in Matches - never mixed into these atomic chips.
-// The original 24 STEM/business-leaning options are kept exactly as-is (in
-// case anything downstream keys off these exact strings); the rest are
-// additions so every major with real College Scorecard CIP-code backing in
-// services/scorecard.js's MAJOR_CIP_MAP is actually selectable here - before
-// this, the matching engine already understood majors like Biology,
-// Psychology, or Nursing, but the profile form had no way to pick them.
-const INTERESTS = [
-  "Computer Science","Artificial Intelligence","Data Science","Cybersecurity","Electrical Engineering",
-  "Computer Engineering","Aerospace Engineering","Mechanical Engineering","Chemical Engineering",
-  "Industrial Engineering","Operations Research","Biomedical Engineering","Materials Science / Materials Engineering",
-  "Environmental Engineering","Energy Systems","Finance","Economics","Business Analytics","Mathematics",
-  "Statistics","Physics","Applied Physics","Engineering Physics","Business / Product Strategy",
-  // Additional majors (CIP-backed in MAJOR_CIP_MAP) not previously selectable:
-  "Data Analytics","Information Technology","Software Engineering","Civil Engineering","Accounting",
-  "Business (General)","Management","Marketing","Chemistry","Biology","Biochemistry","Neuroscience",
-  "Public Policy","Political Science","Psychology","Nursing","Public Health","English","History","Philosophy",
-];
+// The full list (every major with real College Scorecard CIP-code backing in
+// services/scorecard.js's MAJOR_CIP_MAP) now lives in lib/majors.js so the
+// Intended Major fields below, this interests picker, and Explorer's
+// Single/Double-Major Planner all share exactly one canonical list instead of
+// three drifting copies. Contents are unchanged from the original array.
+const INTERESTS = ALL_MAJORS;
 const GOALS = ["High salary potential","Research opportunities","Startup/entrepreneurship","Graduate school","Stable career","Work-life balance","Impact/public service"];
 
 // Required to generate a college match. Documents are optional but used if given.
@@ -300,17 +291,13 @@ export function ProfileForm({ initial, onSubmit, studentId, onApplyParsed, onSav
         <div className="grid cols-2" style={{ gap: 10 }}>
           <div>
             <div className="k" style={{ fontSize: 12 }}>Primary intended major</div>
-            <select className="inp" value={p.primaryMajor || ""} onChange={(e) => set("primaryMajor", e.target.value || null)}>
-              <option value="">Select primary major</option>
-              {INTERESTS.map((i) => <option key={i} value={i}>{i}</option>)}
-            </select>
+            <MajorAutocomplete value={p.primaryMajor || ""} placeholder="Search majors (e.g. Computer Science)..."
+              onChange={(v) => set("primaryMajor", v || null)} />
           </div>
           <div>
             <div className="k" style={{ fontSize: 12 }}>Optional second major / minor</div>
-            <select className="inp" value={p.secondaryMajor || ""} onChange={(e) => set("secondaryMajor", e.target.value || null)}>
-              <option value="">None</option>
-              {INTERESTS.map((i) => <option key={i} value={i}>{i}</option>)}
-            </select>
+            <MajorAutocomplete value={p.secondaryMajor || ""} placeholder="Search majors, or leave blank..."
+              onChange={(v) => set("secondaryMajor", v || null)} />
           </div>
         </div>
       </div>

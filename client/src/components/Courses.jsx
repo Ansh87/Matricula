@@ -1,7 +1,7 @@
 // Courses.jsx - type a college name, see its undergraduate & engineering
 // programs (live from College Scorecard) plus verified major combinations /
 // dual-degrees for seeded colleges.
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { api } from "../lib/api.js";
 import { SourceBadge, Spinner, ErrorNote, RestoredNote, ClearSearchButton } from "./ui.jsx";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
@@ -29,11 +29,12 @@ export function Courses({ onOpen, studentId, profile, initialTrackId }) {
 
   // Issue 1: keep the searched college name, results, picked college, and
   // its loaded programs on screen across navigation/refresh/logout-login.
+  const justRestoredRef = useRef(false);
   const coursesSnapshot = { tab, q, results, selected, programs };
   const { restoredFrom, clear: clearCoursesPersisted } = usePersistedSearch(studentId, "courses", coursesSnapshot, (r) => {
     if (!r) return;
     if (!initialTrackId && r.tab) setTab(r.tab);
-    if (r.q !== undefined) setQ(r.q);
+    if (r.q !== undefined) { justRestoredRef.current = true; setQ(r.q); }
     if (r.results !== undefined) setResults(r.results);
     if (r.selected !== undefined) setSelected(r.selected);
     if (r.programs !== undefined) setPrograms(r.programs);
@@ -43,16 +44,37 @@ export function Courses({ onOpen, studentId, profile, initialTrackId }) {
     clearCoursesPersisted();
   };
 
+  // Race-guarded so an auto-search fired by the debounce below (or a fast
+  // double Enter/click) can never let a slower, earlier response overwrite
+  // a newer one.
+  const searchIdRef = useRef(0);
   const search = async () => {
     if (!q.trim()) return;
+    const myId = ++searchIdRef.current;
     setSearching(true); setErr(null); setResults([]); setPrograms(null); setSelected(null);
     try {
       const r = await api.searchColleges({ name: q.trim() });
+      if (searchIdRef.current !== myId) return; // superseded by a newer search
       setResults(r.results || []);
       if (!r.results?.length) setErr({ message: "No colleges found with that name. Try a shorter or different spelling." });
-    } catch (e) { setErr(e); }
-    finally { setSearching(false); }
+    } catch (e) { if (searchIdRef.current === myId) setErr(e); }
+    finally { if (searchIdRef.current === myId) setSearching(false); }
   };
+
+  // Auto-search once 2+ characters are typed, debounced ~350ms -- the same
+  // standard every other search field in the app now follows -- layered on
+  // top of the existing manual Search button/Enter key below (both keep
+  // working exactly as before). Skips the one q-change caused by restoring
+  // a previous session's search so restoring never re-runs/re-fetches it.
+  useEffect(() => {
+    if (justRestoredRef.current) { justRestoredRef.current = false; return; }
+    if (selected) return; // already viewing a college's programs -- don't re-search behind it
+    const trimmed = q.trim();
+    if (trimmed.length < 2) return;
+    const t = setTimeout(() => { search(); }, 350);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [q]);
 
   const pick = async (c) => {
     setSelected(c); setPrograms(null); setLoading(true); setErr(null);

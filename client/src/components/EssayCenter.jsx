@@ -11,7 +11,7 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { api } from "../lib/api.js";
 import { auth, firebaseConfigured } from "../lib/firebase.js";
-import { SourceBadge, InlineSpinner, Spinner, SuccessNote, RestoredNote } from "./ui.jsx";
+import { SourceBadge, InlineSpinner, Spinner, SuccessNote, RestoredNote, CollegeAutocomplete } from "./ui.jsx";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
 
 async function authHeader() {
@@ -52,33 +52,31 @@ function Sub({ tabs, value, onChange }) {
 }
 
 // Unified college picker (Part B): saved colleges, Decision Plan colleges, or
-// type a college name that isn't saved anywhere yet. `options` is a deduped
-// list of {collegeId, collegeName}. Selecting "Type a college name..." reveals
-// a text box; the resulting value is always {collegeId, collegeName} (collegeId
-// null for a manually-typed name -- essay_prompts already supports a
-// college_name-only row, same as every other manual-entry flow in this app).
+// a real debounced search across every college in the app's canonical
+// database (CollegeAutocomplete, in ui.jsx -- the same /api/colleges/search
+// endpoint Explorer's Browse Colleges page uses). The quick-pick dropdown of
+// already-saved/Decision-Plan colleges is offered above the search box purely
+// as a shortcut (most families reach for a college they've already saved),
+// and disappears once anything is selected; CollegeAutocomplete itself then
+// shows the single "Selected college" state regardless of which path was
+// used to pick it. `value` is always either null or {collegeId, collegeName}
+// (collegeId null for a manually-confirmed name -- essay_prompts already
+// supports a college_name-only row, same as every other manual-entry flow).
 function CollegeSelect({ options, value, onChange, placeholder }) {
-  const [manualText, setManualText] = useState(value && !value.collegeId ? value.collegeName || "" : "");
-  const isManual = !!value && !value.collegeId && !!value.collegeName;
-  const selectValue = isManual ? "__manual__" : (value?.collegeId || "");
   return (
-    <div className="stack" style={{ gap: 6 }}>
-      <select className="inp" value={selectValue} onChange={(e) => {
-        const v = e.target.value;
-        if (v === "__manual__") { onChange({ collegeId: null, collegeName: manualText }); return; }
-        if (!v) { onChange(null); return; }
-        const opt = options.find((o) => o.collegeId === v);
-        onChange(opt ? { collegeId: opt.collegeId, collegeName: opt.collegeName } : null);
-      }}>
-        <option value="">{placeholder || "Choose a college..."}</option>
-        {options.map((o) => <option key={o.collegeId} value={o.collegeId}>{o.collegeName}</option>)}
-        <option value="__manual__">Type a college name...</option>
-      </select>
-      {isManual && (
-        <input className="inp" placeholder="College name" value={manualText}
-          onChange={(e) => setManualText(e.target.value)}
-          onBlur={() => onChange({ collegeId: null, collegeName: manualText.trim() })} />
+    <div className="stack" style={{ gap: 8 }}>
+      {!value && options && options.length > 0 && (
+        <select className="inp" defaultValue="" onChange={(e) => {
+          const v = e.target.value;
+          if (!v) return;
+          const opt = options.find((o) => o.collegeId === v);
+          if (opt) onChange({ collegeId: opt.collegeId, collegeName: opt.collegeName });
+        }}>
+          <option value="">Choose from your saved colleges / Decision Plan...</option>
+          {options.map((o) => <option key={o.collegeId} value={o.collegeId}>{o.collegeName}</option>)}
+        </select>
       )}
+      <CollegeAutocomplete value={value} onChange={onChange} placeholder={placeholder || "Search colleges..."} />
     </div>
   );
 }

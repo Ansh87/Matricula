@@ -59,7 +59,11 @@ body {
 }
 .topbar-inner { max-width: 1180px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 22px; }
 .topbar-stack { flex-direction: column; align-items: flex-start; gap: 12px; }
-.nav-row { margin-left: 0 !important; width: 100%; border-top: 1px solid rgba(255,255,255,.08); padding-top: 10px; }
+/* width:100% intentionally removed (desktop-only effect -- mobile's own
+   .nav.nav-row override below sets its own width via higher specificity
+   regardless): nav now shares its row with the sign-in/out controls instead
+   of stretching to the full row width, so both fit on one line. */
+.nav-row { margin-left: 0 !important; border-top: 1px solid rgba(255,255,255,.08); padding-top: 10px; }
 .brand { display: flex; align-items: center; gap: 11px; font-family: var(--serif); font-weight: 600; font-size: 19px; letter-spacing: .2px; color: #fff; }
 /* NOTE: display is intentionally NOT set here -- `.brand-desc-desktop` /
    `.brand-desc-mobile` below own `display` so their specificity (equal to
@@ -241,6 +245,26 @@ table.t tr:hover td { background: #fffaf0; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .empty { text-align: center; padding: 40px 20px; color: var(--muted); }
 .pill { font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: 6px; background: var(--paper-2); color: var(--muted); }
+
+/* College search autocomplete (Essay Prompt Dashboard "Choose a College" and
+   anywhere else CollegeAutocomplete is reused). */
+.college-autocomplete { position: relative; }
+.college-autocomplete-results {
+  position: absolute; z-index: 20; top: calc(100% + 4px); left: 0; right: 0;
+  background: var(--card); border: 1px solid var(--line-2); border-radius: var(--radius);
+  box-shadow: var(--shadow); max-height: 260px; overflow-y: auto; padding: 4px;
+}
+.college-autocomplete-item {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 1px; width: 100%;
+  text-align: left; background: none; border: 0; border-radius: 7px; padding: 8px 10px;
+  cursor: pointer; font-family: inherit; font-size: 13.5px; color: var(--text);
+}
+.college-autocomplete-item:hover, .college-autocomplete-item:focus { background: var(--paper-2); }
+.college-autocomplete-selected {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: var(--paper-2); border: 1px solid var(--line-2); border-radius: var(--radius);
+  padding: 10px 14px;
+}
 .link { color: #2c5c8a; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; background: none; border: 0; font-size: inherit; padding: 0; font-family: inherit; }
 
 .modal-bg { position: fixed; inset: 0; background: rgba(16,26,38,.55); display: flex; align-items: flex-start; justify-content: center; padding: 40px 16px; z-index: 50; overflow-y: auto; }

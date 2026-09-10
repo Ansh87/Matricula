@@ -406,22 +406,30 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
             </div>
           </div>
 
-          <nav className="nav nav-row">
-            {SECTIONS.map((sec) => (
-              <button key={sec.key} className={currentGroupKey === sec.key ? "active" : ""} onClick={() => openTopLevel(sec)}>
-                {sec.label}
-              </button>
-            ))}
-          </nav>
+          {/* Nav + sign-in/out share one row on desktop (space-between keeps nav
+              left-aligned and the user-menu pinned to the far right) instead of
+              stacking as two separate rows -- mobile is unaffected: its own
+              media-query override on .nav.nav-row below still fully controls
+              width/scrolling there, and .topbar .user-menu is already
+              display:none on mobile regardless of this wrapper. */}
+          <div className="row spread" style={{ width: "100%" }}>
+            <nav className="nav nav-row">
+              {SECTIONS.map((sec) => (
+                <button key={sec.key} className={currentGroupKey === sec.key ? "active" : ""} onClick={() => openTopLevel(sec)}>
+                  {sec.label}
+                </button>
+              ))}
+            </nav>
 
-          {user && (
-            <div className="user-menu" style={{ marginLeft: "auto" }}>
-              <span className="user-email">
-                Signed in as {user.email || user.displayName || (user.isAnonymous ? "Guest" : "user")}
-              </span>
-              <button className="btn sm ghost" onClick={() => signOut().catch(() => {})}>Sign out</button>
-            </div>
-          )}
+            {user && (
+              <div className="user-menu">
+                <span className="user-email">
+                  Signed in as {user.email || user.displayName || (user.isAnonymous ? "Guest" : "user")}
+                </span>
+                <button className="btn sm ghost" onClick={() => signOut().catch(() => {})}>Sign out</button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 

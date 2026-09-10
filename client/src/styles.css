@@ -229,10 +229,11 @@ table.t tr:hover td { background: #fffaf0; }
 /* ---------- disclaimers / notes ---------- */
 .note { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
 .disclaimer { border-left: 3px solid var(--amber); background: #fbf6ea; padding: 12px 14px; border-radius: 0 8px 8px 0; font-size: 12.5px; color: #5d5333; line-height: 1.55; }
-.banner { background: var(--ink-900); color: #dbe6ef; border-radius: var(--radius); padding: 22px 24px; }
+.banner { background: var(--ink-900); color: #dbe6ef; border-radius: var(--radius); padding: 18px 24px; }
+.hero-content { max-width: 780px; }
 .banner .eyebrow { color: #e9c987; }
-.banner h1 { color: #fff; }
-.banner .lead { color: #b7c6d4; }
+.banner h1 { color: #fff; font-size: 42px; margin: 6px 0 0; max-width: 20ch; }
+.banner .lead { color: #b7c6d4; margin: 10px 0 0; }
 
 /* ---------- misc ---------- */
 .kpis { display: grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap: 12px; }
@@ -311,7 +312,9 @@ table.t tr:hover td { background: #fffaf0; }
   /* Subtab row still fits on one scrollable line -- no crowding, just scroll. */
   .subnav { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 12px; }
   .cols-2, .cols-3 { grid-template-columns: 1fr !important; }
-  .banner { padding: 18px; }
+  .banner { padding: 16px 18px; }
+  .banner h1 { font-size: 30px; }
+  .banner .row { flex-wrap: wrap; }
 
   /* ---------- Site-wide mobile overflow guard ----------
      Root cause of the recurring "page shifted / content cut off on the

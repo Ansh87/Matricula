@@ -521,14 +521,15 @@ function Landing({ onStart, onAbout }) {
   return (
     <div className="stack">
       <div className="banner">
-        <div className="eyebrow">Built for the real thing</div>
-        <h1 style={{ maxWidth: 18 + "ch", marginBottom: 10 }}>College planning on official data, not guesswork.</h1>
-        <p className="lead">Matricula matches you to real U.S. colleges using federal College Scorecard data,
-          maps majors to Bureau of Labor Statistics career outcomes, and helps your family track every deadline --
-          with the source and date shown on every number.</p>
-        <div className="row" style={{ marginTop: 18, gap: 10 }}>
-          <button className="btn amber" onClick={onStart}>Start your profile -&gt;</button>
-          <button className="btn ghost" onClick={onAbout} style={{ color: "#dbe6ef", borderColor: "#3a5670" }}>How it works</button>
+        <div className="hero-content">
+          <div className="eyebrow">College planning, grounded in data</div>
+          <h1>College planning, backed by real data.</h1>
+          <p className="lead">Find colleges that fit your profile, explore majors and career outcomes, and manage
+            your application plan - using trusted U.S. education and labor data.</p>
+          <div className="row" style={{ marginTop: 14, gap: 14 }}>
+            <button className="btn amber" onClick={onStart}>Start your profile -&gt;</button>
+            <button className="btn ghost" onClick={onAbout} style={{ color: "#dbe6ef", borderColor: "#3a5670" }}>How it works</button>
+          </div>
         </div>
       </div>
 

@@ -9,7 +9,8 @@
 # never uses build minutes on normal pushes. The Railway website is not
 # affected by this file at all.
 #
-# Required GitHub secrets (Settings -> Secrets and variables -> Actions),
+# Required GitHub Actions secrets OR variables (Settings -> Secrets and
+# variables -> Actions; either tab works),
 # same values as the Railway variables:
 #   VITE_FIREBASE_API_KEY, VITE_FIREBASE_AUTH_DOMAIN, VITE_FIREBASE_PROJECT_ID,
 #   VITE_FIREBASE_STORAGE_BUCKET, VITE_FIREBASE_MESSAGING_SENDER_ID, VITE_FIREBASE_APP_ID
@@ -39,17 +40,27 @@ jobs:
 
       - name: Write client/.env from GitHub secrets
         env:
-          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
-          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
-          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
-          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
-          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
-          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY || vars.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN || vars.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID || vars.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET || vars.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID || vars.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID || vars.VITE_FIREBASE_APP_ID }}
         run: |
           if [ -z "$VITE_FIREBASE_API_KEY" ] || [ -z "$VITE_FIREBASE_APP_ID" ]; then
-            echo "::error::Firebase secrets are missing. Add the VITE_FIREBASE_* secrets in GitHub repo Settings -> Secrets and variables -> Actions."
+            echo "::error::Firebase values are missing. Add the VITE_FIREBASE_* secrets or variables in GitHub repo Settings -> Secrets and variables -> Actions."
             exit 1
           fi
+          # Firebase web config values never contain quotes, backslashes or
+          # spaces, so strip any that were pasted in by accident.
+          clean() { printf '%s' "$1" | tr -d '"\\\047 \r\n\t'; }
+          VITE_FIREBASE_API_KEY=$(clean "$VITE_FIREBASE_API_KEY")
+          VITE_FIREBASE_AUTH_DOMAIN=$(clean "$VITE_FIREBASE_AUTH_DOMAIN")
+          VITE_FIREBASE_PROJECT_ID=$(clean "$VITE_FIREBASE_PROJECT_ID")
+          VITE_FIREBASE_STORAGE_BUCKET=$(clean "$VITE_FIREBASE_STORAGE_BUCKET")
+          VITE_FIREBASE_MESSAGING_SENDER_ID=$(clean "$VITE_FIREBASE_MESSAGING_SENDER_ID")
+          VITE_FIREBASE_APP_ID=$(clean "$VITE_FIREBASE_APP_ID")
+          echo "Firebase project: $VITE_FIREBASE_PROJECT_ID"
           {
             echo "VITE_FIREBASE_API_KEY=$VITE_FIREBASE_API_KEY"
             echo "VITE_FIREBASE_AUTH_DOMAIN=$VITE_FIREBASE_AUTH_DOMAIN"

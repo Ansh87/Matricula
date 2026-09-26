@@ -256,7 +256,7 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
     if (csvBusy) return; // prevent duplicate clicks
     setCsvBusy(true); setCsvErr(null);
     try {
-      const r = await fetch(`/api/decision-plan/${studentId}/export.csv`, { headers: await authHeader() });
+      const r = await fetch(api.decisionPlanExportUrl(studentId), { headers: await authHeader() });
       if (!r.ok) throw new Error(`Download failed (${r.status})`);
       const blob = await r.blob();
       const url = URL.createObjectURL(blob);

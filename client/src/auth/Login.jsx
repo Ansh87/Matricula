@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useAuth } from "./AuthProvider.jsx";
 import matriculaIcon from "../assets/matricula-icon.png";
+import { isNative } from "../lib/platform.js";
 
 export function Login() {
   const { signInEmail, signUpEmail, signInGoogle, signInGuest, configured } = useAuth();
@@ -97,9 +98,14 @@ export function Login() {
           <div style={{ flex: 1, height: 1, background: "var(--line)" }} />
         </div>
 
-        <button className="btn ghost" type="button" onClick={google} disabled={!configured || busy}>
-          Continue with Google
-        </button>
+        {/* Google sign-in uses a browser popup, which the iOS app's WebView
+            can't open. It stays on the website; the iOS app offers Email and
+            Guest instead of showing a button that wouldn't work. */}
+        {!isNative && (
+          <button className="btn ghost" type="button" onClick={google} disabled={!configured || busy}>
+            Continue with Google
+          </button>
+        )}
 
         <button className="btn ghost" type="button" onClick={guest} disabled={!configured || busy}>
           Continue as Guest

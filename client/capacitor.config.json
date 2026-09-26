@@ -1,0 +1,9 @@
+{
+  "appId": "com.anshsaini.matricula",
+  "appName": "Matricula",
+  "webDir": "dist",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#f5f1e8"
+  }
+}

@@ -2,7 +2,8 @@
 // Vite build-time env vars (VITE_*). These are NOT secrets - Firebase web config
 // is public by design; the service account (server-only) is what stays private.
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, initializeAuth, indexedDBLocalPersistence, GoogleAuthProvider } from "firebase/auth";
+import { isNative } from "./platform.js";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -23,7 +24,15 @@ let app = null;
 let auth = null;
 if (firebaseConfigured) {
   app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
+  // Website: unchanged (getAuth, with popup support for Google sign-in).
+  // Native iOS app: getAuth() pulls in the browser popup/redirect resolver,
+  // which is known to stall inside Capacitor's iOS WebView (auth state never
+  // resolves). initializeAuth with IndexedDB persistence avoids that and still
+  // keeps the user signed in between launches. Email and Guest sign-in work
+  // this way; Google popup sign-in is hidden in the native app (Login.jsx).
+  auth = isNative
+    ? initializeAuth(app, { persistence: indexedDBLocalPersistence })
+    : getAuth(app);
 }
 
 export { app, auth };

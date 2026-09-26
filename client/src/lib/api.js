@@ -1,10 +1,22 @@
 // api.js -- the browser's only channel to data. Everything goes through our own
 // /api/* routes; no external API keys ever touch the client.
 import { auth, firebaseConfigured } from "./firebase.js";
+import { isNative, NATIVE_API_BASE_URL } from "./platform.js";
 
-// Attach the current user's Firebase ID token to every same-origin /api request.
+// apiUrl: the single place an "/api/..." path becomes a real URL.
+//  - Website (Railway): stays a relative path -> same-origin, no CORS, unchanged.
+//  - Native iOS app: the frontend is bundled inside the app (capacitor://localhost),
+//    so relative paths would hit the app bundle, not the server. Prefix the
+//    Railway backend instead. The server already allows cross-origin requests.
+export function apiUrl(path) {
+  if (!isNative || /^https?:\/\//i.test(path)) return path;
+  return `${NATIVE_API_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
+}
+
+// Attach the current user's Firebase ID token to every /api request.
 // Firebase refreshes/caches the token internally; we never store it ourselves.
-async function afetch(url, options = {}) {
+async function afetch(path, options = {}) {
+  const url = apiUrl(path);
   const opts = { ...options };
   opts.headers = { ...(options.headers || {}) };
   try {
@@ -156,7 +168,7 @@ export const api = {
       method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data),
     }).then(j),
   deleteScholarship: (id, sid) => afetch(`/api/students/${id}/scholarships/${sid}`, { method: "DELETE" }).then(j),
-  scholarshipsExportCsvUrl: (id) => `/api/students/${id}/scholarships/export.csv`,
+  scholarshipsExportCsvUrl: (id) => apiUrl(`/api/students/${id}/scholarships/export.csv`),
   collegesByMajor: (major, state, { control, deep } = {}) => {
     const q = new URLSearchParams({ major });
     if (state) q.set("state", state);
@@ -243,7 +255,7 @@ export const api = {
     afetch(`/api/programs/${id}/research`, {
       method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
     }).then(j),
-  programsExportCsvUrl: (id) => `/api/programs/${id}/export.csv`,
+  programsExportCsvUrl: (id) => apiUrl(`/api/programs/${id}/export.csv`),
 
   // ---------------- Decision Plan ----------------
   decisionPlanOptions: (id) => afetch(`/api/decision-plan/${id}/options`).then(j),
@@ -285,12 +297,12 @@ export const api = {
     }).then(j),
   deleteDecisionTask: (id, taskId) =>
     afetch(`/api/decision-plan/${id}/tasks/${taskId}`, { method: "DELETE" }).then(j),
-  decisionPlanExportUrl: (id) => `/api/decision-plan/${id}/export.csv`,
+  decisionPlanExportUrl: (id) => apiUrl(`/api/decision-plan/${id}/export.csv`),
   decisionPlanSummary: (id) => afetch(`/api/decision-plan/${id}/summary`).then(j),
   decisionPlanEssayStatus: (id) => afetch(`/api/decision-plan/${id}/essay-status`).then(j),
   verificationCenter: (id) => afetch(`/api/decision-plan/${id}/verification-center`).then(j),
-  verificationCenterExportCsvUrl: (id) => `/api/decision-plan/${id}/verification-center/export.csv`,
-  decisionPlanTasksExportUrl: (id) => `/api/decision-plan/${id}/tasks/export.csv`,
+  verificationCenterExportCsvUrl: (id) => apiUrl(`/api/decision-plan/${id}/verification-center/export.csv`),
+  decisionPlanTasksExportUrl: (id) => apiUrl(`/api/decision-plan/${id}/tasks/export.csv`),
 
   // ---------------- Application Pathways ----------------
   pathwaysPlatforms: (id) => afetch(`/api/application-pathways/${id}/platforms`).then(j),
@@ -312,7 +324,7 @@ export const api = {
     afetch(`/api/application-pathways/${id}/platform-suggestion?collegeName=${encodeURIComponent(collegeName || "")}${state ? `&state=${encodeURIComponent(state)}` : ""}`).then(j),
   routePlanner: (id) => afetch(`/api/application-pathways/${id}/route-planner`).then(j),
   regionSummary: (id) => afetch(`/api/application-pathways/${id}/region-summary`).then(j),
-  pathwaysExportCsvUrl: (id) => `/api/application-pathways/${id}/export.csv`,
+  pathwaysExportCsvUrl: (id) => apiUrl(`/api/application-pathways/${id}/export.csv`),
 
   // ---------------- Essay Center ----------------
   essayMeta: (id) => afetch(`/api/essays/${id}/meta`).then(j),
@@ -353,7 +365,7 @@ export const api = {
   deleteStoryBankEntry: (id, storyId) =>
     afetch(`/api/essays/${id}/story-bank/${storyId}`, { method: "DELETE" }).then(j),
   essayWorkloadSummary: (id) => afetch(`/api/essays/${id}/workload-summary`).then(j),
-  essayExportCsvUrl: (id) => `/api/essays/${id}/export.csv`,
+  essayExportCsvUrl: (id) => apiUrl(`/api/essays/${id}/export.csv`),
   essayPromptsOverview: (id, collegeId, collegeName) => afetch(`/api/essays/${id}/prompts/overview?${collegeId ? `collegeId=${encodeURIComponent(collegeId)}` : `collegeName=${encodeURIComponent(collegeName || "")}`}`).then(j),
   essayCollegeOptions: (id) => afetch(`/api/essays/${id}/college-options`).then(j),
   essayStoryMatches: (id, promptId) => afetch(`/api/essays/${id}/prompts/${promptId}/story-matches`).then(j),
@@ -386,7 +398,7 @@ export const api = {
     afetch(`/api/application-timeline/${id}/conflicts${collegeId ? `?collegeId=${encodeURIComponent(collegeId)}` : ""}`).then(j),
   timelineDecisionPlanSummary: (id) => afetch(`/api/application-timeline/${id}/decision-plan-summary`).then(j),
   timelineJourneySummary: (id) => afetch(`/api/application-timeline/${id}/journey-summary`).then(j),
-  timelineExportCsvUrl: (id) => `/api/application-timeline/${id}/export.csv`,
+  timelineExportCsvUrl: (id) => apiUrl(`/api/application-timeline/${id}/export.csv`),
   timelineAutofillPreview: (id, collegeName) =>
     afetch(`/api/application-timeline/${id}/autofill-preview?collegeName=${encodeURIComponent(collegeName || "")}`).then(j),
   autofillTimelineEvents: (id, body) =>

@@ -451,3 +451,81 @@ table.t tr:hover td { background: #fffaf0; }
 
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 :focus-visible { outline: 2px solid #d9b262; outline-offset: 2px; }
+
+/* ---------- Matricula subscription UI (only rendered in the iOS app) ---------- */
+.matricula-badge {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  font-weight: 600; color: #6b4a10; background: var(--amber-b); border: 1px solid #e3c98f;
+  border-radius: 999px; padding: 2px 8px; white-space: nowrap;
+}
+.premium-gate { border-color: #e3c98f; }
+.premium-points { margin: 10px 0 6px; padding-left: 18px; font-size: 13.5px; line-height: 1.6; color: var(--text); }
+.plan-compare { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.plan-compare th, .plan-compare td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line-2, #e5e5e5); }
+.plan-compare th { font-family: var(--mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.plan-compare td:not(:first-child), .plan-compare th:not(:first-child) { text-align: center; }
+.rc-notice {
+  position: fixed; left: 16px; right: 16px; bottom: calc(76px + env(safe-area-inset-bottom)); z-index: 60;
+  max-width: 520px; margin: 0 auto; background: var(--ink-900); color: #fff; border-radius: 10px;
+  padding: 12px 14px; font-size: 13.5px; box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+/* ---------- Native iOS app (Capacitor) ----------
+   Everything below is scoped to html.native-ios, which main.jsx adds ONLY
+   inside the iOS app. The Railway website never gets this class, so none of
+   these rules affect it. */
+.native-ios body { -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
+/* Notch / Dynamic Island + rounded corners. */
+.native-ios .topbar { padding-top: env(safe-area-inset-top); }
+.native-ios .topbar-inner {
+  padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right));
+  padding-top: 8px; padding-bottom: 8px;
+}
+/* The 7-button top nav is replaced by the bottom tab bar in the app. */
+.native-ios .topbar .nav.nav-row { display: none !important; }
+.native-ios .container {
+  padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right));
+  padding-bottom: calc(88px + env(safe-area-inset-bottom));
+}
+.native-tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  display: flex; justify-content: space-around;
+  background: rgba(16,26,38,.97); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-top: 1px solid #0c1620;
+  padding: 6px max(6px, env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
+}
+.native-tabbar button {
+  flex: 1 1 0; min-width: 0; min-height: 50px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  background: none; border: 0; color: #8fa3b5; cursor: pointer;
+  font-family: var(--sans); font-size: 10.5px; font-weight: 500; letter-spacing: .2px;
+}
+.native-tabbar button.active { color: #e9c987; }
+.native-tabbar button:active { opacity: .7; }
+/* Subtab row (Plan/Apply/More sections): taller tap targets. */
+.native-ios .subnav button { min-height: 36px; }
+/* Comfortable touch targets without redesigning buttons. */
+.native-ios .btn { min-height: 40px; }
+.native-ios .btn.sm { min-height: 34px; }
+.native-ios .chip { min-height: 32px; display: inline-flex; align-items: center; }
+/* 16px inputs stop iOS from auto-zooming the page when a field is focused. */
+.native-ios input.inp, .native-ios select.inp, .native-ios textarea.inp { font-size: 16px; }
+/* College detail + other modals clear the notch and home indicator. */
+.native-ios .modal-bg {
+  padding-top: calc(16px + env(safe-area-inset-top));
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  padding-left: max(10px, env(safe-area-inset-left)); padding-right: max(10px, env(safe-area-inset-right));
+}
+.login-screen { padding: 20px; }
+.native-ios .login-screen {
+  padding-top: calc(20px + env(safe-area-inset-top));
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+}
+.header-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.sub-pill {
+  font-family: var(--sans); font-size: 12px; font-weight: 600; white-space: nowrap; cursor: pointer;
+  border-radius: 999px; padding: 6px 11px; min-height: 30px;
+  background: #d9b262; color: #2a1e07; border: 1px solid #d9b262;
+}
+.sub-pill.on { background: transparent; color: #e9c987; border-color: rgba(233,201,135,.55); }
+.native-ios.keyboard-open .native-tabbar { display: none; }

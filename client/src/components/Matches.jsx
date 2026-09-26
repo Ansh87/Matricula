@@ -5,9 +5,16 @@ import { api } from "../lib/api.js";
 import { MatchCard } from "./MatchCard.jsx";
 import { Spinner, ErrorNote, RestoredNote } from "./ui.jsx";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
+import { useSubscription } from "../subscription/SubscriptionProvider.jsx";
+import { UnlockMatriculaButton, MatriculaBadge } from "../subscription/PremiumGate.jsx";
 
 const SIZES = [10, 20, 30];
 const CATS = ["Reach", "Target", "Safety"];
+// iOS app, free tier: "Personalized Matches - LIMITED" on the paywall means
+// the first few results of whatever list the family built. The matching and
+// scoring are identical for everyone; only how many results are displayed
+// changes. On the website nothing is limited (hasPremiumAccess is always true).
+const FREE_MATCH_PREVIEW = 5;
 
 export function Matches({
   profile, recs, loading, err, savedIds, onOpen, onToggleSave,
@@ -224,6 +231,9 @@ export function Matches({
     [balanced, cat, control, stateFilter]);
 
   const shown = tab === "balanced" ? balancedList : bestFit;
+  const { hasPremiumAccess } = useSubscription();
+  const visibleMatches = hasPremiumAccess ? shown : shown.slice(0, FREE_MATCH_PREVIEW);
+  const lockedMatchCount = shown.length - visibleMatches.length;
 
   const counts = useMemo(() => {
     const c = { Reach: 0, Target: 0, Safety: 0, value: 0 };
@@ -443,7 +453,7 @@ export function Matches({
       )}
 
       <div className="grid cols-2">
-        {shown.map((s) => (
+        {visibleMatches.map((s) => (
           <MatchCard key={s.college.id} scored={s} saved={savedIds.has(s.college.id)}
             onOpen={onOpen} onToggleSave={onToggleSave}
             decisionItem={decisionItemsByCollege[s.college.id] || null}
@@ -451,6 +461,17 @@ export function Matches({
             profile={profile} />
         ))}
       </div>
+
+      {lockedMatchCount > 0 && (
+        <div className="card pad premium-gate">
+          <div className="row spread" style={{ alignItems: "flex-start" }}>
+            <strong style={{ fontSize: 15 }}>{lockedMatchCount} more personalized match{lockedMatchCount === 1 ? "" : "es"}</strong>
+            <MatriculaBadge />
+          </div>
+          <p className="note" style={{ marginTop: 6 }}>Unlock Matricula to view your full personalized matches.</p>
+          <div style={{ marginTop: 10 }}><UnlockMatriculaButton ifNeeded /></div>
+        </div>
+      )}
 
       {!shown.length && !balLoading && (
         <div className="empty">No colleges match these filters. Try widening the category, type, or state.</div>

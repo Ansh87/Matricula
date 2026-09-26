@@ -47,7 +47,7 @@ export function Login() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: 20 }}>
+    <div className="login-screen" style={{ minHeight: "100vh", display: "grid", placeItems: "center" }}>
       <div className="card pad stack" style={{ maxWidth: 400, width: "100%", gap: 14 }}>
         <div style={{ textAlign: "center" }}>
           <img src={matriculaIcon} alt="" height="56" style={{ display: "block", margin: "0 auto 4px", width: "auto" }} />

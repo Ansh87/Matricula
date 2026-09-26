@@ -10,6 +10,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { auth, googleProvider, firebaseConfigured } from "../lib/firebase.js";
+import { isNative } from "../lib/platform.js";
 
 const AuthContext = createContext(null);
 
@@ -20,7 +21,9 @@ const AuthContext = createContext(null);
 // own AUTH_DEV_BYPASS is on). NEVER set this in a real deployment - it must be
 // paired with the server also being in dev bypass, or requests will simply
 // 401 against a real Firebase-protected server.
-const DEV_BYPASS = import.meta.env.VITE_AUTH_DEV_BYPASS === "true";
+// Never active in the native iOS app: the app always talks to the real
+// Railway backend, which requires a real Firebase sign-in.
+const DEV_BYPASS = import.meta.env.VITE_AUTH_DEV_BYPASS === "true" && !isNative;
 const DEV_USER = { uid: "dev-local-user", email: "dev@localhost", displayName: "Local Dev (no Firebase)" };
 
 export function AuthProvider({ children }) {

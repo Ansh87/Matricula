@@ -49,6 +49,10 @@ function profileSignature(p) {
 }
 import { Spinner, ErrorNote, SourceBadge } from "./components/ui.jsx";
 import { useAuth } from "./auth/AuthProvider.jsx";
+import { isNativeIOS } from "./lib/platform.js";
+import { Subscription } from "./components/Subscription.jsx";
+import { PremiumGate } from "./subscription/PremiumGate.jsx";
+import { useSubscription } from "./subscription/SubscriptionProvider.jsx";
 
 const FALLBACK_STUDENT_ID = "local-student"; // used only when auth is unconfigured (dev)
 
@@ -134,6 +138,47 @@ const SECTIONS = [
   },
 ];
 
+// Native iOS app only: a 5-tab bottom bar (Home / Explore / Plan / Apply /
+// More) instead of 7 top-level buttons. Same pages, same view keys, same
+// subtab rows -- Profile and My List just live under More, next to the new
+// "Matricula" subscription page. The website keeps SECTIONS exactly as-is.
+const NATIVE_SECTIONS = [
+  { key: "dashboard", label: "Home", view: "dashboard", icon: "home" },
+  { ...SECTIONS.find((s) => s.key === "explore"), icon: "explore" },
+  { ...SECTIONS.find((s) => s.key === "plan"), icon: "plan" },
+  { ...SECTIONS.find((s) => s.key === "apply"), icon: "apply" },
+  {
+    key: "more", label: "More", icon: "more",
+    subtabs: [
+      { key: "subscription", label: "Matricula", view: "subscription" },
+      { key: "profile", label: "Profile", view: "profile" },
+      { key: "saved", label: "My List", view: "saved" },
+      ...SECTIONS.find((s) => s.key === "more").subtabs,
+    ],
+  },
+];
+const NAV_SECTIONS = isNativeIOS ? NATIVE_SECTIONS : SECTIONS;
+
+function HeaderSubscriptionPill({ onOpen }) {
+  const { isSubscriber, isLoading } = useSubscription();
+  if (isLoading) return null;
+  return (
+    <button type="button" className={`sub-pill ${isSubscriber ? "on" : ""}`} onClick={onOpen}>
+      {isSubscriber ? "Matricula Active" : "Unlock"}
+    </button>
+  );
+}
+
+// Simple line icons for the native tab bar (original, generic shapes).
+function TabIcon({ name }) {
+  const common = { width: 22, height: 22, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": true };
+  if (name === "home") return <svg {...common}><path d="M3 11l9-7 9 7" /><path d="M5 10v10h14V10" /></svg>;
+  if (name === "explore") return <svg {...common}><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>;
+  if (name === "plan") return <svg {...common}><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M8 3v4M16 3v4M4 10h16" /></svg>;
+  if (name === "apply") return <svg {...common}><path d="M6 3h9l4 4v14H6z" /><path d="M14 3v5h5M9 13h7M9 17h5" /></svg>;
+  return <svg {...common}><circle cx="5" cy="12" r="1.3" /><circle cx="12" cy="12" r="1.3" /><circle cx="19" cy="12" r="1.3" /></svg>;
+}
+
 // view -> group key (top-level highlight), and view -> the subtab that
 // should highlight by default when that view is reached WITHOUT going
 // through a subtab click (e.g. an internal "Open Essay Center ->" button
@@ -141,13 +186,15 @@ const SECTIONS = [
 // views shared by more than one subtab.
 const VIEW_TO_GROUP = {};
 const VIEW_TO_DEFAULT_SUBKEY = {};
-SECTIONS.forEach((sec) => {
+NAV_SECTIONS.forEach((sec) => {
   if (sec.view) VIEW_TO_GROUP[sec.view] = sec.key;
   (sec.subtabs || []).forEach((st) => {
     if (!(st.view in VIEW_TO_GROUP)) VIEW_TO_GROUP[st.view] = sec.key;
     if (!(st.view in VIEW_TO_DEFAULT_SUBKEY)) VIEW_TO_DEFAULT_SUBKEY[st.view] = st.key;
   });
 });
+// Native app: the welcome/landing screen counts as "Home" in the tab bar.
+if (isNativeIOS) VIEW_TO_GROUP.landing = "dashboard";
 
 export default function App() {
   const { user, signOut } = useAuth();
@@ -409,11 +456,16 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
                 Hidden on desktop (that layout keeps sign-out on the nav row,
                 see .user-menu below); .topbar .user-menu-mobile in styles.css
                 is the sole place that toggles which one is visible. */}
-            {user && (
-              <div className="user-menu-mobile">
-                <button className="btn sm ghost" onClick={() => signOut().catch(() => {})}>Sign out</button>
-              </div>
-            )}
+            <div className="header-actions">
+              {/* iOS app only: compact subscription status (Matricula Active /
+                  Unlock). Opens More -> Matricula. Never shown on the website. */}
+              {isNativeIOS && user && <HeaderSubscriptionPill onOpen={() => goTo("subscription")} />}
+              {user && (
+                <div className="user-menu-mobile">
+                  <button className="btn sm ghost" onClick={() => signOut().catch(() => {})}>Sign out</button>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Nav + sign-in/out share one row on desktop (space-between keeps nav
@@ -424,7 +476,7 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
               display:none on mobile regardless of this wrapper. */}
           <div className="row spread" style={{ width: "100%" }}>
             <nav className="nav nav-row">
-              {SECTIONS.map((sec) => (
+              {NAV_SECTIONS.map((sec) => (
                 <button key={sec.key} className={currentGroupKey === sec.key ? "active" : ""} onClick={() => openTopLevel(sec)}>
                   {sec.label}
                 </button>
@@ -444,11 +496,11 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
       </header>
 
       <main className="container">
-        {currentGroupKey && SECTIONS.find((s) => s.key === currentGroupKey)?.subtabs && (
+        {currentGroupKey && NAV_SECTIONS.find((s) => s.key === currentGroupKey)?.subtabs && (
           <nav className="nav subnav">
-            {SECTIONS.find((s) => s.key === currentGroupKey).subtabs.map((st) => (
+            {NAV_SECTIONS.find((s) => s.key === currentGroupKey).subtabs.map((st) => (
               <button key={st.key}
-                className={(activeSub[currentGroupKey] || SECTIONS.find((s) => s.key === currentGroupKey).subtabs[0].key) === st.key ? "active" : ""}
+                className={(activeSub[currentGroupKey] || NAV_SECTIONS.find((s) => s.key === currentGroupKey).subtabs[0].key) === st.key ? "active" : ""}
                 onClick={() => openSection(currentGroupKey, st)}>
                 {st.label}
               </button>
@@ -496,27 +548,59 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
           {view === "programs" && <Programs studentId={STUDENT_ID} profile={profile} saved={saved} />}
           {view === "decisionPlan" && <DecisionPlan studentId={STUDENT_ID} profile={profile} saved={saved} collegeNames={collegeNames} onGo={goTo}
             entrySub={decisionPlanEntry.sub} entryNonce={decisionPlanEntry.nonce} />}
-          {view === "applicationPathways" && <ApplicationPathways studentId={STUDENT_ID} saved={saved} collegeNames={collegeNames} onGo={goTo} focusCollegeId={view === "applicationPathways" ? focusCollegeId : null}
-            focusSection={pathwaysEntry.section} focusSectionNonce={pathwaysEntry.nonce} />}
-          {view === "essays" && <EssayCenter studentId={STUDENT_ID} saved={saved} collegeNames={collegeNames} onGo={goTo} focusCollegeId={view === "essays" ? focusCollegeId : null} />}
+          {/* Premium (Matricula) features in the iOS app: Application & Essay
+              Planning, Planning Timeline, AI-Powered Planning. PremiumGate is a
+              pass-through on the website, so Railway behaves exactly as before. */}
+          {view === "applicationPathways" && (
+            <PremiumGate feature="apply">
+              <ApplicationPathways studentId={STUDENT_ID} saved={saved} collegeNames={collegeNames} onGo={goTo} focusCollegeId={view === "applicationPathways" ? focusCollegeId : null}
+                focusSection={pathwaysEntry.section} focusSectionNonce={pathwaysEntry.nonce} />
+            </PremiumGate>
+          )}
+          {view === "essays" && (
+            <PremiumGate feature="apply">
+              <EssayCenter studentId={STUDENT_ID} saved={saved} collegeNames={collegeNames} onGo={goTo} focusCollegeId={view === "essays" ? focusCollegeId : null} />
+            </PremiumGate>
+          )}
 
-          {view === "applications" && <Applications studentId={STUDENT_ID} list={saved} collegeNames={collegeNames} profile={profile} onGo={setView} />}
+          {view === "applications" && (
+            <PremiumGate feature="apply">
+              <Applications studentId={STUDENT_ID} list={saved} collegeNames={collegeNames} profile={profile} onGo={setView} />
+            </PremiumGate>
+          )}
           {view === "financialAid" && <FinancialAid studentId={STUDENT_ID} profile={profile} initialTab="planner" />}
           {view === "scholarships" && <FinancialAid studentId={STUDENT_ID} profile={profile} initialTab="scholarships" />}
           {view === "portalTracker" && <PortalTracker onGo={goTo} />}
           {view === "careerPlanner" && <CareerPlanner />}
           {view === "careersBLS" && <Careers profileInterests={profile.interests} />}
           {view === "settings" && <Settings user={user} studentId={STUDENT_ID} onSignOut={() => signOut().catch(() => {})} onGo={goTo} />}
-          {view === "advisor" && <Advisor profile={profile} recs={recs} onRunMatches={(trackId) => {
+          {view === "subscription" && <Subscription onGo={goTo} />}
+          {view === "advisor" && <PremiumGate feature="ai"><Advisor profile={profile} recs={recs} onRunMatches={(trackId) => {
             setAdvisorTrackId(trackId);
             // Run/re-run recommendations if none are loaded yet or the profile is
             // stale; runRecommend already switches to the Matches view. Otherwise
             // just open Matches (data is current). No scoring change.
             if (!recs.length || profileStale) runRecommend(profile);
             else setView("matches");
-          }} onViewCoursePlan={(trackId) => { setCourseTrackId(trackId); setView("courses"); }} />}
+          }} onViewCoursePlan={(trackId) => { setCourseTrackId(trackId); setView("courses"); }} /></PremiumGate>}
         </ErrorBoundary>
       </main>
+
+      {/* Native iOS app only: bottom tab bar (Home / Explore / Plan / Apply /
+          More). The website keeps its existing top navigation. */}
+      {isNativeIOS && (
+        <nav className="native-tabbar" aria-label="Main">
+          {NAV_SECTIONS.map((sec) => (
+            <button key={sec.key} type="button"
+              className={(currentGroupKey || (view === "landing" ? "dashboard" : null)) === sec.key ? "active" : ""}
+              aria-current={currentGroupKey === sec.key ? "page" : undefined}
+              onClick={() => { openTopLevel(sec); window.scrollTo(0, 0); }}>
+              <TabIcon name={sec.icon} />
+              <span>{sec.label}</span>
+            </button>
+          ))}
+        </nav>
+      )}
 
       {detailId && (
         <ErrorBoundary resetKey={detailId}>

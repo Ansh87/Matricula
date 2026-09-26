@@ -9,6 +9,7 @@ import { api } from "../lib/api.js";
 import { auth, firebaseConfigured } from "../lib/firebase.js";
 import { SetupPlanningButton, InlineSpinner, RestoredNote } from "./ui.jsx";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
+import { PremiumGate } from "../subscription/PremiumGate.jsx";
 import { useEntryOverride } from "../lib/entryOverride.js";
 
 const CATEGORY_OPTS = ["", "Dream / Lottery", "Reach", "Target", "Safety", "Financial Safety", "In-state Anchor"];
@@ -611,7 +612,13 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
       )}
 
       {sub === "course" && <CoursePlans studentId={studentId} profile={profile} />}
-      {sub === "tasks" && <Tasks studentId={studentId} items={items} />}
+      {/* Planning Timeline is a Matricula (premium) feature in the iOS app; on
+          the website PremiumGate always renders the content unchanged. */}
+      {sub === "tasks" && (
+        <PremiumGate feature="timeline">
+          <Tasks studentId={studentId} items={items} />
+        </PremiumGate>
+      )}
     </div>
   );
 }

@@ -497,6 +497,10 @@ table.t tr:hover td { background: #fffaf0; }
 }
 /* The 7-button top nav is replaced by the bottom tab bar in the app. */
 .native-ios .topbar .nav.nav-row { display: none !important; }
+/* Settings already has its own entry under More in the app's tab bar, so the
+   header gear would be a second route to the same page and crowds the
+   iPhone header next to the Unlock pill and Sign out. Website unchanged. */
+.native-ios .topbar .gear-btn { display: none; }
 .native-ios .container {
   padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right));
   padding-bottom: calc(88px + env(safe-area-inset-bottom));

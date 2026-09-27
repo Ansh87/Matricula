@@ -256,7 +256,7 @@ export function Programs({ studentId, profile }) {
   const clearDiscovered = async () => {
     const scopedToCollege = selectedCollege && !listAllColleges ? selectedCollege : null;
     const label = scopedToCollege ? `all discovered programs for ${scopedToCollege.name}` : "all discovered programs across every college";
-    if (!window.confirm(`Remove ${label}? This can't be undone. Programs already added to your Decision Plan are not affected.`)) return;
+    if (!window.confirm(`Remove ${label}? This can't be undone. Colleges on your list are not affected.`)) return;
     setBusy(true);
     try {
       const r = await api.clearDiscoveredPrograms(studentId, scopedToCollege?.id);
@@ -265,19 +265,6 @@ export function Programs({ studentId, profile }) {
     } catch (e) {
       setActionMsg({ ok: false, text: `Could not clear: ${e.message}` });
     } finally { setBusy(false); }
-  };
-
-  const saveToDecisionPlan = async (p) => {
-    try {
-      await api.addDecisionItem(studentId, {
-        collegeId: p.college_id, collegeName: p.college_name, programId: p.program_id, programName: p.program_name,
-        programVerificationStatus: p.verification_status, careerTrack: profile?.primaryMajor || null,
-        actionNeeded: p.action_needed || null,
-      });
-      setSavedMsg({ ok: true, text: `Saved "${p.program_name}" at ${p.college_name || "this college"} to your Decision Plan.` });
-    } catch (e) {
-      setSavedMsg({ ok: false, text: `Could not save to Decision Plan: ${e.message}` });
-    }
   };
 
   const [csvBusy, setCsvBusy] = useState(false);
@@ -303,7 +290,7 @@ export function Programs({ studentId, profile }) {
     <div className="stack">
       <div className="row spread wrap">
         <div>
-          <div className="eyebrow">Programs &amp; Opportunities</div>
+          <div className="eyebrow">Minors, honors, research and certificates</div>
           <h1>Programs &amp; Opportunities</h1>
           <p className="lead">
             Find real majors, minors, concentrations, certificates, honors/scholars/bridge programs, research
@@ -319,11 +306,6 @@ export function Programs({ studentId, profile }) {
         </div>
       </div>
 
-      <div className="disclaimer">
-        Program discovery may be incomplete. Some official pages block automated access, or a program simply
-        isn't described in a crawlable page. Do not treat any record below as confirmed until its status is
-        "Official source verified" or "User verified." Always verify final decisions on official college websites.
-      </div>
 
       <div className="card pad">
         <h3>1. Pick a college</h3>
@@ -577,7 +559,6 @@ export function Programs({ studentId, profile }) {
                       <select className="inp" style={{ maxWidth: 240 }} value={p.verification_status} onChange={(e) => setStatus(p.program_id, e.target.value)}>
                         {statuses.map((s) => <option key={s} value={s}>{s}</option>)}
                       </select>
-                      <button className="btn sm amber" onClick={() => saveToDecisionPlan(p)}>Add to Decision Plan</button>
                       <button className="btn sm ghost" onClick={() => removeProgram(p.program_id)}>Delete</button>
                     </div>
                   </div>

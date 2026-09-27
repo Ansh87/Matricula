@@ -55,7 +55,7 @@ export function Advisor({ profile, recs, onRunMatches, onViewCoursePlan }) {
   return (
     <div className="stack" style={{ maxWidth: 760 }}>
       <div>
-        <div className="eyebrow">Advisor</div>
+        <div className="eyebrow">Grounded in your profile and saved list</div>
         <h1>Talk through your list</h1>
         <p className="lead">A planning aid - not your school counselor or a college’s admissions office.</p>
       </div>

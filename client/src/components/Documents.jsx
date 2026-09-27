@@ -114,7 +114,7 @@ export function Documents({ studentId, onApplyParsed, embedded }) {
     <div className="stack">
       {!embedded && (
         <div>
-          <div className="eyebrow">Documents</div>
+          <div className="eyebrow">Read locally, never auto-submitted</div>
           <h1>Upload transcript, resume &amp; portfolio</h1>
           <p className="lead">Upload your documents so the app can help build your profile. Files stay on your
             own computer; text is read locally so you can confirm it.</p>

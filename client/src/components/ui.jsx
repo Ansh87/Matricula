@@ -402,20 +402,3 @@ export function ClearSearchButton({ onClear, label = "Clear search" }) {
   return <button className="btn ghost sm" onClick={onClear}>{label}</button>;
 }
 
-// The full legal disclaimer required by the spec.
-export function LegalDisclaimer() {
-  return (
-    <div className="disclaimer">
-      <strong>Disclaimer:</strong> Matricula is an educational planning tool, not a counseling service or
-      admissions office. Admissions are holistic and unpredictable, and Matricula's estimates are not guarantees.
-      College costs, financial aid, deadlines, scholarships, programs, policies, and career outcomes can change
-      over time. Always verify important information with official college sources, admissions and
-      financial-aid offices, net price calculators, FAFSA/CSS Profile resources, and your school counselor
-      before making decisions.
-      <br /><br />
-      Matricula was developed by high school student Ansh Saini as an independent educational technology
-      project to help students explore college, major, career, and application-planning options using
-      data-driven tools.
-    </div>
-  );
-}

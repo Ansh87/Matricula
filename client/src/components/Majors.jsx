@@ -183,7 +183,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
   return (
     <div className="stack">
       <div>
-        <div className="eyebrow">Majors for you</div>
+        <div className="eyebrow">Official field-of-study program data</div>
         <h1>Majors that fit your profile</h1>
         <p className="lead">Ranked from your interests, strengths, and career goals - each with where it leads and
           whether it typically needs graduate school. Based on official BLS career data.</p>
@@ -241,13 +241,6 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
           </div>
         </div>
         <RestoredNote restoredFrom={restoredFrom} />
-        {comboMode && (
-          <div className="disclaimer" style={{ marginTop: 8, marginBottom: 0 }}>
-            Do not assume a double major is possible just because a college offers both fields separately. Colleges
-            differ widely in whether double majors are allowed, capped, require separate applications, or need
-            special permission, always confirm the actual policy with the college's advising office or catalog.
-          </div>
-        )}
         <div className="row wrap" style={{ gap: 8, marginTop: 8, alignItems: "flex-start" }}>
           <div style={{ flex: 1, minWidth: 180 }}>
             <MajorAutocomplete value={majorQuery} placeholder={comboMode ? "Primary major (e.g. Computer Science)" : "Major (e.g. Computer Science)"}
@@ -359,13 +352,6 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
                     <span className="note">{majorColleges.length} scored colleges</span>
                   </div>
                 </div>
-                {searchMeta?.combo && (
-                  <div className="disclaimer" style={{ borderLeftColor: "var(--amber)", marginBottom: 8 }}>
-                    These colleges offer both fields at bachelor's level according to official College Scorecard
-                    program data. That is <strong>not</strong> the same as permission to declare a formal double
-                    major - confirm double-major and dual-degree rules with each college's catalog or advising office.
-                  </div>
-                )}
               </>
             )}
             {majorColleges.length > 0 && (
@@ -616,8 +602,8 @@ function MajorCollegeCard({ c, profile, studentId, searchMeta, onOpen, onToggleS
         actionNeeded: isConfirmed ? null : "Verify double-major rules and school-to-school restrictions with the college's advising office or catalog.",
       });
       setComboSaveMsg(isConfirmed
-        ? "Saved to Decision Plan as a confirmed double major."
-        : "Saved to Decision Plan as a double-major consideration. Programs exist - double-major rules not verified.");
+        ? "Saved to your list as a confirmed double major."
+        : "Saved to your list as a double-major consideration. Programs exist, double-major rules not verified.");
     } catch (e) {
       setComboSaveMsg(`Could not save: ${e.message}`);
     } finally { setComboSaving(false); }
@@ -743,7 +729,7 @@ function MajorCollegeCard({ c, profile, studentId, searchMeta, onOpen, onToggleS
         )}
         {c.offersMajor1 != null && studentId && (
           <button className="link" onClick={saveComboToDecisionPlan} disabled={comboSaving}>
-            {comboSaving ? "Saving to Decision Plan…" : <>Save as double-major consideration <Arrow /></>}
+            {comboSaving ? "Saving to your list…" : <>Save as double-major consideration <Arrow /></>}
           </button>
         )}
         {onToggleSave && !isCombo && (

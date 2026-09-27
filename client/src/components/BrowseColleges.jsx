@@ -33,7 +33,7 @@ export function BrowseColleges({ profile, onOpen, savedIds, onToggleSave, studen
   return (
     <div className="stack">
       <div>
-        <div className="eyebrow">Browse</div>
+        <div className="eyebrow">Live College Scorecard search</div>
         <h1>Browse colleges</h1>
         <p className="lead">Search and explore any college in the U.S. database.
           {" "}<strong>Browse results are not personalized recommendations.</strong></p>

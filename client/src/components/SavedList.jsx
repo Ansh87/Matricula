@@ -112,7 +112,7 @@ export function SavedList({ studentId, saved, profile, onOpen, onRemove, onClear
     <div className="stack">
       <div className="row spread wrap">
         <div>
-          <div className="eyebrow">Saved</div>
+          <div className="eyebrow">Your working set of colleges</div>
           <h1>My college list</h1>
           <p className="lead">The colleges you've saved. These feed your Compare, Tracker, and reports.</p>
         </div>

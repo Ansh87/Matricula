@@ -10,7 +10,7 @@ import { auth, firebaseConfigured } from "../lib/firebase.js";
 import { Arrow } from "./icons.jsx";
 
 const SAVED_DATA_ITEMS = [
-  "Student profile", "Saved colleges", "Imported college lists", "Decision Plan",
+  "Student profile", "Saved colleges", "Imported college lists",
   "Essay prompts and story bank", "Application timelines", "Verification items",
   "Cost/NPC tracker", "Recommendation tracker", "Scholarship/honors tracker", "Portal tracker",
 ];
@@ -73,21 +73,21 @@ function exportCategories(studentId) {
   return {
     planning: {
       label: "Planning exports",
+      // The Decision Plan page is gone, but the data it wrote is still on the
+      // server, so its CSV exports stay available here rather than stranding
+      // anything a family already entered.
       items: [
-        { label: "Decision Plan", desc: "Your final list, categories, program verification, cost, and strategy notes.", open: "decisionPlan", csv: () => api.decisionPlanExportUrl(studentId) },
-        { label: "Timeline & Tasks", desc: "Every task on your Decision Plan timeline (all task types, not essay-only).", open: "decisionPlan", csv: () => api.decisionPlanTasksExportUrl(studentId) },
-        { label: "Final List Health Check", desc: "Balance, risk, cost, and workload summary shown at the top of Decision Plan.", open: "decisionPlan", csv: null },
-        { label: "Cost / NPC Tracker", desc: "Net price calculator status and cost fields, tracked per college inside Decision Plan.", open: "decisionPlan", csv: null },
+        { label: "My List", desc: "Your saved colleges with categories, fit scores, and admission estimates.", open: "saved", csv: () => api.decisionPlanExportUrl(studentId) },
+        { label: "Tasks", desc: "Every planning task on file, of every type.", open: "saved", csv: () => api.decisionPlanTasksExportUrl(studentId) },
         { label: "Scholarship Tracker", desc: "Every scholarship you're tracking.", open: "scholarships", csv: () => api.scholarshipsExportCsvUrl(studentId) },
-        { label: "Visit / Interest Tracker", desc: "Visit / info-session tasks, tracked inside Decision Plan's Timeline & Tasks.", open: "decisionPlan", csv: null },
       ],
     },
     application: {
       label: "Application exports",
       items: [
-        { label: "Application Tracker", desc: "Per-college application status and dates. Export CSV is available on that page.", open: "applications", csv: null },
+        { label: "Application Tracker", desc: "Per-college application status and dates. Export CSV is available on that page.", open: "applicationPathways", csv: null },
         { label: "Application Timeline", desc: "Deadline, notification, and enrollment dates.", open: "applicationPathways", csv: () => api.timelineExportCsvUrl(studentId) },
-        { label: "Recommendation Tracker", desc: "Recommendation status per college. Included in the Application Tracker export.", open: "applications", csv: null },
+        { label: "Recommendation Tracker", desc: "Recommendation status per college. Included in the Application Tracker export.", open: "applicationPathways", csv: null },
         { label: "Portal Tracker", desc: "Not built yet. There is no dedicated system for this.", open: "portalTracker", csv: null },
       ],
     },
@@ -96,16 +96,15 @@ function exportCategories(studentId) {
       items: [
         { label: "Essay Center", desc: "The full workspace: prompts, strategy, samples, published examples, story bank.", open: "essays", csv: null },
         { label: "Essay Prompts", desc: "Every essay prompt, deadline, and verification status.", open: "essays", csv: () => api.essayExportCsvUrl(studentId) },
-        { label: "Story Bank", desc: "Browse under Apply -> Essays -> Story Bank. No separate export yet.", open: "essays", csv: null },
-        { label: "Essay Tasks", desc: "Essay-research tasks live inside Decision Plan's Timeline & Tasks export.", open: "decisionPlan", csv: null },
+        { label: "Story Bank", desc: "Browse under Essays -> Story Bank. No separate export yet.", open: "essays", csv: null },
       ],
     },
     verification: {
       label: "Verification exports",
       items: [
-        { label: "Verification Center", desc: "Every open verification item across your list.", open: "decisionPlan", csv: () => api.verificationCenterExportCsvUrl(studentId) },
+        { label: "Verification Center", desc: "Every open verification item across your list.", open: "saved", csv: () => api.verificationCenterExportCsvUrl(studentId) },
         { label: "Programs & Opportunities", desc: "Discovered and manually-added programs, with source and verification status.", open: "programs", csv: () => api.programsExportCsvUrl(studentId) },
-        { label: "Double-Major Verification", desc: "Included in the Decision Plan and Verification Center exports above.", open: "majors", csv: null },
+        { label: "Double-Major Verification", desc: "Included in the My List and Verification Center exports above.", open: "majors", csv: null },
       ],
     },
   };
@@ -145,7 +144,7 @@ export function Settings({ user, studentId, onSignOut, onGo }) {
 
   return (
     <div className="stack">
-      <div><div className="eyebrow">More</div><h1>Settings</h1></div>
+      <div><div className="eyebrow">Account, data and exports</div><h1>Settings</h1></div>
 
       {/* 1. Account */}
       <div className="card pad stack">
@@ -200,7 +199,7 @@ export function Settings({ user, studentId, onSignOut, onGo }) {
           ))}
         </div>
         {clearedMsg && <div className="note" style={{ color: "var(--safety)" }}>{clearedMsg}</div>}
-        <div className="disclaimer">This only clears saved search results on this device. It does not delete your
+        <div className="note">This only clears saved search results on this device. It does not delete your
           saved colleges, profile, or planning data.</div>
       </div>
 

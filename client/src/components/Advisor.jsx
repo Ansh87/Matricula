@@ -1,7 +1,6 @@
 // Advisor.jsx - explains the student's own results using only available data.
 import React, { useState } from "react";
 import { api } from "../lib/api.js";
-import { SourceBadge } from "./ui.jsx";
 import { TrackRecommendations } from "./TrackRecommendations.jsx";
 
 const SUGGESTED = [
@@ -35,7 +34,7 @@ export function Advisor({ profile, recs, onRunMatches, onViewCoursePlan }) {
   const [busy, setBusy] = useState(false);
 
   const ask = async (question) => {
-    // Guard against double-submission -- suggested-question chips and the
+    // Guard against double-submission. Suggested-question chips and the
     // Enter-key handler don't have their own disabled state, so without this
     // a fast double-click/double-Enter could fire two concurrent requests.
     if (busy || !question.trim()) return;
@@ -87,7 +86,6 @@ export function Advisor({ profile, recs, onRunMatches, onViewCoursePlan }) {
         <button className="btn primary" disabled={busy} onClick={() => ask(q)}>Send</button>
       </div>
       <div className="row" style={{ gap: 8 }}>
-        <SourceBadge level="estimated" />
         <span className="note">Answers are generated from your profile and the official data on your list.</span>
       </div>
     </div>

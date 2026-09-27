@@ -184,7 +184,7 @@ phone or any computer. The short version:
        - Add an environment variable:   DB_PATH = /data/matricula.db
          (If you're redeploying an EXISTING Railway project that already has
          DB_PATH set to something else, e.g. /data/collegegene-navigator.db,
-         leave it as-is -- that's where your real saved data already lives.)
+         leave it as-is. That's where your real saved data already lives.)
   6. Run the one-time data import (Railway shell, or add it to the build):
        npm run import
   7. Railway gives you a public URL - open it from anywhere.

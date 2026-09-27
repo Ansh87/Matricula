@@ -2,12 +2,13 @@
 // college names, review the matches (never auto-adding anything the app
 // isn't confident about), then add the confirmed colleges to My List. Three
 // steps: input -> review -> summary. Every college added here is scored with
-// the exact same profile-scoring the rest of the app uses -- nothing here is
+// the exact same profile-scoring the rest of the app uses. Nothing here is
 // a new formula.
 import React, { useState, useRef, useCallback } from "react";
 import { api } from "../lib/api.js";
 import { Spinner, InlineSpinner, SuccessNote, RestoredNote, useAutocompleteSearch } from "./ui.jsx";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
+import { Arrow } from "./icons.jsx";
 
 const CONFIDENCE_COLOR = {
   "High confidence": "var(--safety-b)",
@@ -22,7 +23,7 @@ const CONFIDENCE_COLOR = {
 // /api/colleges/search endpoint. Kept as its own small component instead of
 // the shared CollegeAutocomplete because onPick needs the FULL matched
 // college record (id, name, city, state, controlType) to correct the import
-// row below -- CollegeAutocomplete's onChange only returns {collegeId,
+// row below. CollegeAutocomplete's onChange only returns {collegeId,
 // collegeName}, which isn't enough here.
 function ManualSearch({ onPick, onCancel }) {
   const search = useCallback((q) => api.searchColleges({ name: q }).then((r) => r.results || []), []);
@@ -86,7 +87,7 @@ export function ImportColleges({ studentId, profile, saved, onImported }) {
   // Issue 1: keep an in-progress review (pasted text, matched rows, batch id,
   // which step the family is on) if they navigate away and come back, rather
   // than losing the whole review and having to re-paste/re-match. Never
-  // writes anything to My List by itself -- that still only happens when the
+  // writes anything to My List by itself. That still only happens when the
   // family explicitly confirms, exactly as before.
   const importSnapshot = { step, pasteText, batchId, rows, summaryResult };
   const { restoredFrom, clear } = usePersistedSearch(studentId, "importColleges", importSnapshot, (r) => {
@@ -356,7 +357,7 @@ export function ImportColleges({ studentId, profile, saved, onImported }) {
               {summaryResult.results.map((r, i) => (
                 <div key={`${r.originalName}-${i}`} className="row spread wrap" style={{ borderBottom: "1px solid var(--line)", paddingBottom: 6 }}>
                   <div>
-                    <strong>{r.originalName}</strong>{r.matchedName && r.matchedName !== r.originalName ? ` → ${r.matchedName}` : ""}
+                    <strong>{r.originalName}</strong>{r.matchedName && r.matchedName !== r.originalName ? <> <Arrow /> {r.matchedName}</> : ""}
                     {r.reason && <div className="note">{r.reason}</div>}
                   </div>
                   <span className="pill">{r.result}</span>

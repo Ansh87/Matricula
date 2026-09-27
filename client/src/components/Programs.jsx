@@ -1,7 +1,7 @@
-// Programs.jsx -- "Programs & Opportunities" tab. "Program" is broad: major,
+// Programs.jsx. "Programs & Opportunities" tab. "Program" is broad: major,
 // minor, concentration, certificate, honors/scholars/bridge program, research
 // program, direct-admit pipeline, scholarship-linked cohort, etc. The primary
-// workflow is one button -- "Research this college" -- which runs College
+// workflow is one button, "Research this college", which runs College
 // Scorecard field-of-study seeding and, when the college's official website is
 // on file, a bounded official-domain crawl automatically. A family never has
 // to already know or type a web address to get started. Power users who do
@@ -13,6 +13,7 @@ import { api } from "../lib/api.js";
 import { auth, firebaseConfigured } from "../lib/firebase.js";
 import { SourceBadge, InlineSpinner, RestoredNote, useAutocompleteSearch } from "./ui.jsx";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
+import { Check } from "./icons.jsx";
 
 const SOURCE_TYPES = [
   ["program_page", "Program page"],
@@ -113,7 +114,7 @@ export function Programs({ studentId, profile }) {
   // Issue 1: keep the selected college, keyword/track/verification filters,
   // and dismissed/needs-review toggles when navigating away and back (or
   // refreshing, or logging back in). Restoring selectedCollege re-triggers
-  // loadPrograms() below automatically -- no separate results persistence
+  // loadPrograms() below automatically, no separate results persistence
   // needed, so this can never show stale program data.
   const programsSnapshot = { collegeQuery, selectedCollege, filters, showDismissed, showNeedsReview };
   const { restoredFrom } = usePersistedSearch(studentId, "programs", programsSnapshot, (r) => {
@@ -143,7 +144,7 @@ export function Programs({ studentId, profile }) {
 
   useEffect(() => { loadPrograms(); }, [loadPrograms]);
 
-  // Live 2-character debounced search (useAutocompleteSearch -- the same
+  // Live 2-character debounced search (useAutocompleteSearch, the same
   // engine behind CollegeAutocomplete/MajorAutocomplete/Browse Colleges'
   // quick-jump), reusing the same canonical /api/colleges/search endpoint
   // instead of the separate browseColleges list endpoint this used to call.
@@ -182,7 +183,7 @@ export function Programs({ studentId, profile }) {
         collegeId: selectedCollege?.id, collegeName: selectedCollege?.name || manual.collegeName,
         ...manual, relevantTracks: manualTracks,
       });
-      setActionMsg({ ok: true, text: `Added "${r.program_name}" -- marked User verified. Keep the source link current.` });
+      setActionMsg({ ok: true, text: `Added "${r.program_name}". Marked User verified. Keep the source link current.` });
       setManual(BLANK_MANUAL); setManualTracks([]);
       loadPrograms();
     } catch (e) {
@@ -248,13 +249,13 @@ export function Programs({ studentId, profile }) {
     loadPrograms();
   };
 
-  // "Clear discovered programs" -- scoped to whichever set is currently shown
+  // "Clear discovered programs". Scoped to whichever set is currently shown
   // (one college, or every college when "Show all colleges" is on), so a
   // family can wipe out a messy first pass and re-run "Research this college"
   // cleanly instead of dismissing/deleting rows one at a time.
   const clearDiscovered = async () => {
     const scopedToCollege = selectedCollege && !listAllColleges ? selectedCollege : null;
-    const label = scopedToCollege ? `all discovered programs for ${scopedToCollege.name}` : "ALL discovered programs across every college";
+    const label = scopedToCollege ? `all discovered programs for ${scopedToCollege.name}` : "all discovered programs across every college";
     if (!window.confirm(`Remove ${label}? This can't be undone. Programs already added to your Decision Plan are not affected.`)) return;
     setBusy(true);
     try {
@@ -306,7 +307,7 @@ export function Programs({ studentId, profile }) {
           <h1>Programs &amp; Opportunities</h1>
           <p className="lead">
             Find real majors, minors, concentrations, certificates, honors/scholars/bridge programs, research
-            programs, and other special opportunities at the colleges you're considering -- every record is
+            programs, and other special opportunities at the colleges you're considering. Every record is
             source-labeled, dated, and flagged when it still needs manual verification. Nothing here is invented.
           </p>
         </div>
@@ -319,7 +320,7 @@ export function Programs({ studentId, profile }) {
       </div>
 
       <div className="disclaimer">
-        Program discovery may be incomplete -- some official pages block automated access, or a program simply
+        Program discovery may be incomplete. Some official pages block automated access, or a program simply
         isn't described in a crawlable page. Do not treat any record below as confirmed until its status is
         "Official source verified" or "User verified." Always verify final decisions on official college websites.
       </div>
@@ -360,7 +361,7 @@ export function Programs({ studentId, profile }) {
         <h3>2. Research this college</h3>
         <p className="note">
           One button, three things happen: we pull broad field-of-study data from the U.S. Department of Education
-          College Scorecard, and -- if the college's official website is on file -- we automatically run a bounded
+          College Scorecard, and, if the college's official website is on file, we automatically run a bounded
           scan (up to 40 pages, official domain only) looking for program, admissions, and special-opportunity pages.
           You don't need to already know or type a web address.
         </p>
@@ -407,7 +408,7 @@ export function Programs({ studentId, profile }) {
 
       <div className="card pad">
         <h3>3. Add a program you already know about</h3>
-        <p className="note">Know a specific major, minor, or special program from a brochure, campus visit, or counselor conversation? Add the name and you're done -- fill in more details now or later.</p>
+        <p className="note">Know a specific major, minor, or special program from a brochure, campus visit, or counselor conversation? Add the name and you're done. Fill in more details now or later.</p>
         <div className="grid cols-2">
           <div>
             <label className="lbl">Program name *</label>
@@ -475,7 +476,7 @@ export function Programs({ studentId, profile }) {
             <input className="inp" value={manual.notes} onChange={(e) => setManual((m) => ({ ...m, notes: e.target.value }))} />
           </div>
         )}
-        <p className="note" style={{ marginTop: 8 }}>You can always come back and fill in the rest later -- open it from the "Verified" list below and click Details. Nothing here needs to be complete on the first pass.</p>
+        <p className="note" style={{ marginTop: 8 }}>You can always come back and fill in the rest later. Open it from the "Verified" list below and click Details. Nothing here needs to be complete on the first pass.</p>
       </div>
 
       {actionMsg && (
@@ -589,7 +590,7 @@ export function Programs({ studentId, profile }) {
             <div className="stack" style={{ marginTop: 12 }}>
               {verified.length > 0 && (
                 <div className="stack" style={{ gap: 8 }}>
-                  <div className="note" style={{ fontWeight: 600 }}>✓ Verified ({verified.length})</div>
+                  <div className="note" style={{ fontWeight: 600 }}><Check /> Verified ({verified.length})</div>
                   {verified.map((p) => renderRow(p))}
                 </div>
               )}
@@ -654,7 +655,7 @@ export function Programs({ studentId, profile }) {
               <div className="card pad">
                 <h3>Discover from an official domain (bounded)</h3>
                 <p className="note">
-                  Crawls ONLY the official college domain you provide -- max 40 pages, max depth 2, robots.txt-aware,
+                  Crawls only the official college domain you provide, max 40 pages, max depth 2, robots.txt-aware,
                   PDFs skipped by default, every page cached and source-linked. This is not a general web search.
                 </p>
                 <label className="lbl">Official domain (e.g. college.edu)</label>

@@ -39,7 +39,7 @@ function ensureInit() {
 
     if (!credentialObj) {
       initError = new Error("Firebase Admin credentials not configured.");
-      console.error("[auth] Firebase Admin NOT initialized: no credentials found. Set FIREBASE_SERVICE_ACCOUNT_JSON.");
+      console.error("[auth] Firebase Admin not initialized: no credentials found. Set FIREBASE_SERVICE_ACCOUNT_JSON.");
       return;
     }
     // firebase-admin v13+ is modular: use getApps()/initializeApp()/cert()
@@ -60,10 +60,10 @@ function ensureInit() {
 // init rather than merely checking that env strings exist, so health can't
 // disagree with what protected routes experience.
 export function authStatus() {
-  if (config.authDevBypass) return "DEV BYPASS (no Firebase - local only)";
+  if (config.authDevBypass) return "Dev bypass (no Firebase, local only)";
   ensureInit();
   if (initialized) return "Firebase Admin configured";
-  return `NOT configured - ${initError ? initError.message : "unknown reason"}`;
+  return `not configured - ${initError ? initError.message : "unknown reason"}`;
 }
 
 // A fixed dev user used only when AUTH_DEV_BYPASS=true and NODE_ENV!=="production".

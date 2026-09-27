@@ -37,7 +37,7 @@ export function majorStrategyFor(collegeId, interests = []) {
     if (sw.ease && /easy/i.test(sw.ease)) {
       points.push(`Switching majors later is rated "${sw.ease}". ${sw.note || ""} That makes a less-impacted entry major a reasonable strategy - but only if you'd genuinely be happy there.`);
     } else if (sw.ease && /hard|competitive/i.test(sw.ease)) {
-      points.push(`Switching INTO the competitive major later is rated "${sw.ease}". ${sw.note || ""} So do NOT count on transferring in - apply to the major you actually want, and prepare strongly for it.`);
+      points.push(`Switching INTO the competitive major later is rated "${sw.ease}". ${sw.note || ""} So do not count on transferring in - apply to the major you actually want, and prepare strongly for it.`);
     } else if (sw.note) {
       points.push(`On changing majors later: ${sw.note}`);
     }

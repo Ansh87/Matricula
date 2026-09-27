@@ -1,12 +1,13 @@
-// Settings.jsx -- More -> Settings. Five sections: Account, Your Data,
+// Settings.jsx. More -> Settings. Five sections: Account, Your Data,
 // Data & Export, Local Saved Searches, Privacy. Every export button here
-// links to a real, already-working CSV export (see api.js) -- if a specific
+// links to a real, already-working CSV export (see api.js). If a specific
 // item has no dedicated export, only "Open page" is shown, never a fake
 // download button.
 import React, { useState } from "react";
 import { api } from "../lib/api.js";
 import { clearLocalSearch } from "../lib/persistedSearch.js";
 import { auth, firebaseConfigured } from "../lib/firebase.js";
+import { Arrow } from "./icons.jsx";
 
 const SAVED_DATA_ITEMS = [
   "Student profile", "Saved colleges", "Imported college lists", "Decision Plan",
@@ -16,7 +17,7 @@ const SAVED_DATA_ITEMS = [
 
 // Same auth-header + fetch-blob-and-click pattern every other CSV export
 // button in the app already uses (DecisionPlan.jsx, FinancialAid.jsx,
-// etc.) -- a plain <a href> wouldn't carry the signed-in Firebase token, so
+// etc.), a plain <a href> wouldn't carry the signed-in Firebase token, so
 // the download would 401 for any real (non-dev-bypass) account.
 async function authHeader() {
   try {
@@ -59,7 +60,7 @@ function ExportRow({ item, studentId, onGo }) {
         {err && <div className="note" style={{ color: "var(--reach)" }}>{err}</div>}
       </div>
       <div className="row" style={{ gap: 8 }}>
-        <button className="btn ghost sm" onClick={() => onGo(item.open)}>Open page →</button>
+        <button className="btn ghost sm" onClick={() => onGo(item.open)}>Open page <Arrow /></button>
         {item.csv && (
           <button className="btn ghost sm" onClick={runExport} disabled={busy}>{busy ? "Saving…" : "Export CSV"}</button>
         )}
@@ -86,8 +87,8 @@ function exportCategories(studentId) {
       items: [
         { label: "Application Tracker", desc: "Per-college application status and dates. Export CSV is available on that page.", open: "applications", csv: null },
         { label: "Application Timeline", desc: "Deadline, notification, and enrollment dates.", open: "applicationPathways", csv: () => api.timelineExportCsvUrl(studentId) },
-        { label: "Recommendation Tracker", desc: "Recommendation status per college -- included in the Application Tracker export.", open: "applications", csv: null },
-        { label: "Portal Tracker", desc: "Not built yet -- there is no dedicated system for this.", open: "portalTracker", csv: null },
+        { label: "Recommendation Tracker", desc: "Recommendation status per college. Included in the Application Tracker export.", open: "applications", csv: null },
+        { label: "Portal Tracker", desc: "Not built yet. There is no dedicated system for this.", open: "portalTracker", csv: null },
       ],
     },
     essay: {
@@ -110,9 +111,9 @@ function exportCategories(studentId) {
   };
 }
 
-// The 6 search areas Local Saved Searches can clear (device-only -- see
+// The 6 search areas Local Saved Searches can clear (device-only. See
 // lib/persistedSearch.js clearLocalSearch). Deliberately excludes Decision
-// Plan, Verification Center, and Import Colleges review state -- those
+// Plan, Verification Center, and Import Colleges review state. Those
 // aren't "search results" and the family asked that this section never
 // touch My List or Decision Plan.
 function searchAreas(studentId) {
@@ -151,11 +152,11 @@ export function Settings({ user, studentId, onSignOut, onGo }) {
         <h3>Account</h3>
         {user ? (
           <>
-            <p className="note">Signed in as <strong>{user.email || user.displayName || (user.isAnonymous ? "Guest" : "user")}</strong>{user.isAnonymous && " (guest account -- sign in with email or Google to keep access to this data later)"}.</p>
+            <p className="note">Signed in as <strong>{user.email || user.displayName || (user.isAnonymous ? "Guest" : "user")}</strong>{user.isAnonymous && " (guest account. Sign in with email or Google to keep access to this data later)"}.</p>
             <button className="btn ghost" style={{ alignSelf: "flex-start" }} onClick={onSignOut}>Sign out</button>
           </>
         ) : (
-          <p className="note">Not signed in -- using a local, unauthenticated profile ({studentId}). Sign in to sync your data across devices.</p>
+          <p className="note">Not signed in. Using a local, unauthenticated profile ({studentId}). Sign in to sync your data across devices.</p>
         )}
       </div>
 

@@ -4,10 +4,10 @@
 // data for a college; it can never prove a college's actual double-major /
 // second-major / dual-degree POLICY, because Scorecard has no such data.
 // Records in double_major_verifications are the one place that gap gets
-// closed -- and only ever by an official source URL the family (or, later,
+// closed, and only ever by an official source URL the family (or, later,
 // the official-domain crawl as a suggested-source breadcrumb) attaches, never
 // by inference. A record is "confirmed" only when every field in
-// isConfirmedDoubleMajor() below is present -- there is no partial-credit
+// isConfirmedDoubleMajor() below is present. There is no partial-credit
 // confirmed state.
 import { db } from "../db/database.js";
 
@@ -40,7 +40,7 @@ export const DOUBLE_MAJOR_VERIFICATION_STATUSES = [
 export const DOUBLE_MAJOR_VERIFIED_STATUSES = ["Official source verified", "User verified"];
 
 // Family-facing status labels for a double-major SEARCH RESULT or a saved
-// pathway on My List/Decision Plan -- distinct from double_major_allowed_status
+// pathway on My List/Decision Plan. Distinct from double_major_allowed_status
 // (which only ever appears on a full verification record). This is the label
 // shown before/instead of opening a full verification record.
 export const DOUBLE_MAJOR_DISPLAY_STATUSES = [
@@ -52,7 +52,7 @@ export const DOUBLE_MAJOR_DISPLAY_STATUSES = [
   "Not confirmed",
 ];
 
-// The ONE gate for "confirmed." Every field below must be present -- a
+// The ONE gate for "confirmed." Every field below must be present, a
 // verification record missing even one (e.g. no source_url, or a status of
 // "Needs manual verification") is NOT confirmed, no matter how complete the
 // rest of the record looks. This function is the single source of truth for
@@ -89,10 +89,10 @@ export function displayStatusForRecord(v) {
 
 // GENERIC program-type signal from a College Scorecard program TITLE string.
 // Deliberately not tied to any specific major (Computer Science/AI is just
-// one example) -- applies the same literal-keyword check to whatever the
+// one example). Applies the same literal-keyword check to whatever the
 // title text actually says, for any major pair. Scorecard's field-of-study
 // titles are usually just the plain CIP category name and rarely say
-// "concentration"/"minor"/etc, so the honest default is "Unknown" -- this
+// "concentration"/"minor"/etc, so the honest default is "Unknown". This
 // only ever returns a specific type when the title text itself says so.
 const TYPE_HINT_PATTERNS = [
   [/\bminor\b/i, "Minor"],
@@ -109,7 +109,7 @@ export function programTypeHintFromTitle(title) {
 // Classify a Scorecard-only (unverified) combo evidence pair into the
 // family-facing display status + a program-type hint for the secondary
 // field. `secondaryTitle` is whatever CIP title Scorecard returned for the
-// SECOND major searched -- works identically for any major pair, not a
+// SECOND major searched. Works identically for any major pair, not a
 // specific hardcoded field.
 export function classifyComboEvidence(secondaryTitle) {
   const hint = programTypeHintFromTitle(secondaryTitle);

@@ -72,11 +72,11 @@ export const DEADLINE_PROFILES = [
     fafsa_source_url: null,
     scholarship_deadline: null, scholarship_source_url: null,
     honors_deadline: null, honors_source_url: null,
-    portfolio_deadline: "College of Fine Arts applicants are encouraged to apply earlier to secure audition/portfolio review slots -- confirm exact date on the official CFA applicant page.",
+    portfolio_deadline: "College of Fine Arts applicants are encouraged to apply earlier to secure audition/portfolio review slots. Confirm exact date on the official CFA applicant page.",
     portfolio_source_url: "https://www.cmu.edu/admission/admission/college-of-fine-arts-applicants",
     interview_deadline: null, interview_source_url: null,
     deadline_confidence_level: "verified",
-    notes: "ED notified by Dec 15, enroll by Feb 1. RD notified by Apr 1 (no later than), enroll by May 1. Schools of Drama and Music use a Dec 1 Regular Decision deadline instead of Jan 4. These are the cycle current as of the last-reviewed date above -- always confirm on CMU's own admission site before treating a date as final, since deadlines are republished each cycle and can shift by a day or two.",
+    notes: "ED notified by Dec 15, enroll by Feb 1. RD notified by Apr 1 (no later than), enroll by May 1. Schools of Drama and Music use a Dec 1 Regular Decision deadline instead of Jan 4. These are the cycle current as of the last-reviewed date above, always confirm on CMU's own admission site before treating a date as final, since deadlines are republished each cycle and can shift by a day or two.",
   },
   {
     college_id: "139755", // Georgia Tech
@@ -98,7 +98,7 @@ export const DEADLINE_PROFILES = [
 ];
 
 // ---------------------------------------------------------------------------
-// TIMELINE_AUTOFILL_PROFILES -- name-pattern matched (same technique as
+// TIMELINE_AUTOFILL_PROFILES. Name-pattern matched (same technique as
 // applicationPathways.js's suggestPlatform/COLLEGE_PATTERNS), hand-verified
 // application-timeline dates for well-known colleges. Used by the "Auto-fill
 // official dates" button on a selected college's Application Timeline.
@@ -106,13 +106,13 @@ export const DEADLINE_PROFILES = [
 // Every entry was checked directly against the college's own admissions page
 // (or, for the "Application opens" row shared by Common-App colleges,
 // against commonapp.org) on the date in `lastChecked`. Nothing here is a
-// guess -- if a college isn't listed, the button says so and the family uses
+// guess. If a college isn't listed, the button says so and the family uses
 // "Verify deadlines" (crawl) or manual entry instead. Confidence is marked
 // "verified" only when checked directly against the college's own current
-// page; "recurring pattern -- confirm" when the source page still showed a
+// page; "recurring pattern, confirm" when the source page still showed a
 // stale prior-cycle label at check time (the underlying date has held for
 // multiple years running, but the page itself hadn't yet been refreshed for
-// the newest cycle) -- these are still shown as a starting point, just with
+// the newest cycle). These are still shown as a starting point, just with
 // an extra on-screen caution.
 //
 // IMPORTANT: deadlines shift by a day or two most cycles (weekday
@@ -161,9 +161,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "columbia", re: /\bcolumbia university\b/i, collegeName: "Columbia University",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-20",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-20",
     sourceUrl: "https://undergrad.admissions.columbia.edu/apply/firstyear",
-    notes: "Columbia's own deadlines page still showed a 'Fall 2025 applications now available' label when this was last checked (2026-07) -- these dates match the last several cycles, but confirm on the official page once it's refreshed for the current cycle.",
+    notes: "Columbia's own deadlines page still showed a 'Fall 2025 applications now available' label when this was last checked (2026-07). These dates match the last several cycles, but confirm on the official page once it's refreshed for the current cycle.",
     events: [
       { eventType: "Early Decision deadline", eventLabel: "Early Decision deadline", eventDate: "Nov 1", applicationRound: "ED" },
       { eventType: "Decision notification", eventLabel: "Early Decision notification", eventDate: "Dec 15", applicationRound: "ED", notes: "Columbia says \"mid-December.\"" },
@@ -172,7 +172,7 @@ export const TIMELINE_AUTOFILL_PROFILES = [
       { eventType: "Enrollment deposit deadline", eventLabel: "Reply deadline", eventDate: "May 1", applicationRound: "RD" },
     ],
     // Application-detail fields (Part of the requirement record's YNU/detail
-    // fields) -- read directly off Columbia's own "First-Year Applicants"
+    // fields). Read directly off Columbia's own "First-Year Applicants"
     // page on 2026-07-20 (see sourceUrl). Columbia does not run a separate
     // honors-college or merit-scholarship application (aid is need-based
     // only), and general first-year applicants don't submit a portfolio
@@ -204,9 +204,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "dartmouth", re: /\bdartmouth\b/i, collegeName: "Dartmouth College",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-19",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-19",
     sourceUrl: "https://admissions.dartmouth.edu/apply-dartmouth",
-    notes: "Confirmed via Dartmouth's own admissions glossary pages rather than a single deadlines table -- worth a quick check on the official Apply page before relying on it.",
+    notes: "Confirmed via Dartmouth's own admissions glossary pages rather than a single deadlines table. Worth a quick check on the official Apply page before relying on it.",
     events: [
       { eventType: "Early Decision deadline", eventLabel: "Early Decision deadline", eventDate: "Nov 1", applicationRound: "ED" },
       { eventType: "Decision notification", eventLabel: "Early Decision notification", eventDate: "Dec 15", applicationRound: "ED", notes: "Dartmouth says \"mid-December.\"" },
@@ -216,7 +216,7 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "brown", re: /\bbrown university\b/i, collegeName: "Brown University",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-19",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-19",
     sourceUrl: "https://admission.brown.edu/first-year",
     events: [
       { eventType: "Early Decision deadline", eventLabel: "Early Decision deadline", eventDate: "Nov 1", applicationRound: "ED" },
@@ -228,7 +228,7 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "upenn", re: /\buniversity of pennsylvania\b|\bupenn\b/i, collegeName: "University of Pennsylvania",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-19",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-19",
     sourceUrl: "https://admissions.upenn.edu/how-to-apply/first-year-applicants",
     events: [
       { eventType: "Early Decision deadline", eventLabel: "Early Decision deadline", eventDate: "Nov 1", applicationRound: "ED" },
@@ -240,9 +240,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "georgetown", re: /\bgeorgetown university\b/i, collegeName: "Georgetown University",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-19",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-19",
     sourceUrl: "https://uadmissions.georgetown.edu/applying/first-year/",
-    notes: "Georgetown does NOT use the Common App -- it uses its own application system.",
+    notes: "Georgetown does not use the Common App. It uses its own application system.",
     events: [
       { eventType: "Early Action deadline", eventLabel: "Early Action deadline", eventDate: "Nov 1", applicationRound: "EA" },
       { eventType: "Decision notification", eventLabel: "Early Action notification", eventDate: "Dec 15", applicationRound: "EA" },
@@ -252,9 +252,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "uiuc", re: /\buniversity of illinois.*urbana|\buiuc\b/i, collegeName: "University of Illinois Urbana-Champaign",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-19",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-19",
     sourceUrl: "https://www.admissions.illinois.edu/apply/freshman/dates",
-    notes: "UIUC's own Dates & Deadlines page was still labeled for the prior cycle when this was last checked (2026-07) -- it typically refreshes closer to the application opening. Confirm on the official page before relying on it.",
+    notes: "UIUC's own Dates & Deadlines page was still labeled for the prior cycle when this was last checked (2026-07). It typically refreshes closer to the application opening. Confirm on the official page before relying on it.",
     events: [
       { eventType: "Application opens", eventLabel: "myIllini application opens", eventDate: "Sep 1", applicationRound: null },
       { eventType: "Early Action deadline", eventLabel: "Early Action deadline", eventDate: "Nov 1", applicationRound: "EA" },
@@ -311,9 +311,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
     // directly against the page's own surrounding prose (which IS text) on
     // the date below.
     key: "caltech", re: /\bcalifornia institute of technology\b|\bcaltech\b/i, collegeName: "California Institute of Technology",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://www.admissions.caltech.edu/apply/first-year-applicants/deadlines",
-    notes: "Caltech's deadlines page currently shows dates for the Fall 2026 entry cycle (REA due Nov 1, 2025; RD due Jan 5, 2026) -- that cycle has already concluded. These dates match Caltech's stable multi-year pattern (REA Nov 1, RD Jan 5) and are shown as a starting point for the next cycle; confirm the exact date once Caltech publishes it. Note: Caltech's own deadline table is an image, not text, so this app's automatic site search cannot read it directly -- this reference entry is the reliable path for this college going forward.",
+    notes: "Caltech's deadlines page currently shows dates for the Fall 2026 entry cycle (REA due Nov 1, 2025; RD due Jan 5, 2026). That cycle has already concluded. These dates match Caltech's stable multi-year pattern (REA Nov 1, RD Jan 5) and are shown as a starting point for the next cycle; confirm the exact date once Caltech publishes it. Note: Caltech's own deadline table is an image, not text, so this app's automatic site search cannot read it directly, this reference entry is the reliable path for this college going forward.",
     events: [
       { eventType: "REA / SCEA deadline", eventLabel: "Restrictive Early Action deadline", eventDate: "Nov 1", applicationRound: "REA/SCEA", notes: "You have until Nov 6 to submit remaining required/supplemental materials; standardized testing (if submitted) must be complete by Nov 30." },
       { eventType: "Decision notification", eventLabel: "Restrictive Early Action notification", eventDate: "Dec 15", applicationRound: "REA/SCEA", notes: "Caltech says \"mid-December.\"" },
@@ -326,10 +326,10 @@ export const TIMELINE_AUTOFILL_PROFILES = [
     // Added alongside Caltech above for the same reason: reported as "Not
     // found" despite the deadlines being real and public. Stanford's page IS
     // real text (unlike Caltech's), so this one is a gap in this app's
-    // discovery/matching rather than a genuine JS/image barrier -- worth
+    // discovery/matching rather than a genuine JS/image barrier. Worth
     // fixing as a reference entry regardless, since it's now hand-verified.
     key: "stanford", re: /\bstanford university\b|^stanford$/i, collegeName: "Stanford University",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://admission.stanford.edu/apply/first-year/index.html",
     notes: "Stanford's page (last updated by Stanford on Oct 1, 2025) currently shows dates for the Fall 2026 entry cycle, which has already concluded. These dates match Stanford's stable pattern (REA Nov 1, RD Jan 5) and are shown as a starting point for the next cycle; confirm the exact date once Stanford publishes it.",
     events: [
@@ -354,17 +354,17 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   // (or, where noted, an image-based table was read/transcribed directly)
   // on 2026-07-21. Colleges whose official pages were still showing an
   // already-completed prior cycle (not yet republished for the next one)
-  // are marked "recurring pattern -- confirm" with a note explaining why,
-  // same convention as Columbia/Brown/Dartmouth above -- never marked
+  // are marked "recurring pattern, confirm" with a note explaining why,
+  // same convention as Columbia/Brown/Dartmouth above, never marked
   // "verified" unless the page itself explicitly confirmed the current
   // cycle (an explicit year label, or "last modified" metadata close to
   // the check date).
   // --------------------------------------------------------------------
   {
     key: "ucberkeley", re: /\buniversity of california,? berkeley\b|\bberkeley\b/i, collegeName: "University of California, Berkeley",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-first-year/dates-and-deadlines.html",
-    notes: "UC's systemwide page still shows the completed Fall 2026 cycle (filing period Oct 1 - Dec 1, 2025) -- the next cycle hadn't been republished as of this check. All UC campuses share ONE systemwide filing period per campus choice (no separate EA/ED/RD rounds). Confirm the exact date once UC republishes.",
+    notes: "UC's systemwide page still shows the completed Fall 2026 cycle (filing period Oct 1 - Dec 1, 2025), the next cycle hadn't been republished as of this check. All UC campuses share ONE systemwide filing period per campus choice (no separate EA/ED/RD rounds). Confirm the exact date once UC republishes.",
     events: [
       { eventType: "Application opens", eventLabel: "UC filing period opens", eventDate: "Oct 1", applicationRound: "UC filing period" },
       { eventType: "Regular Decision deadline", eventLabel: "UC filing period deadline", eventDate: "Dec 1", applicationRound: "UC filing period" },
@@ -375,9 +375,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "ucla", re: /\buniversity of california,? los angeles\b|\bucla\b/i, collegeName: "University of California, Los Angeles",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-first-year/dates-and-deadlines.html",
-    notes: "Same shared UC systemwide filing period as UC Berkeley -- see that entry's note; this page had not yet been republished for the next cycle as of this check.",
+    notes: "Same shared UC systemwide filing period as UC Berkeley. See that entry's note; this page had not yet been republished for the next cycle as of this check.",
     events: [
       { eventType: "Application opens", eventLabel: "UC filing period opens", eventDate: "Oct 1", applicationRound: "UC filing period" },
       { eventType: "Regular Decision deadline", eventLabel: "UC filing period deadline", eventDate: "Dec 1", applicationRound: "UC filing period" },
@@ -388,9 +388,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "ucsd", re: /\buniversity of california,? san diego\b|\bucsd\b|\buc san diego\b/i, collegeName: "University of California, San Diego",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-first-year/dates-and-deadlines.html",
-    notes: "Same shared UC systemwide filing period as UC Berkeley -- see that entry's note; this page had not yet been republished for the next cycle as of this check.",
+    notes: "Same shared UC systemwide filing period as UC Berkeley. See that entry's note; this page had not yet been republished for the next cycle as of this check.",
     events: [
       { eventType: "Application opens", eventLabel: "UC filing period opens", eventDate: "Oct 1", applicationRound: "UC filing period" },
       { eventType: "Regular Decision deadline", eventLabel: "UC filing period deadline", eventDate: "Dec 1", applicationRound: "UC filing period" },
@@ -401,9 +401,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "ucdavis", re: /\buniversity of california,? davis\b|\buc davis\b/i, collegeName: "University of California, Davis",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-first-year/dates-and-deadlines.html",
-    notes: "Same shared UC systemwide filing period as UC Berkeley -- see that entry's note; this page had not yet been republished for the next cycle as of this check.",
+    notes: "Same shared UC systemwide filing period as UC Berkeley. See that entry's note; this page had not yet been republished for the next cycle as of this check.",
     events: [
       { eventType: "Application opens", eventLabel: "UC filing period opens", eventDate: "Oct 1", applicationRound: "UC filing period" },
       { eventType: "Regular Decision deadline", eventLabel: "UC filing period deadline", eventDate: "Dec 1", applicationRound: "UC filing period" },
@@ -414,9 +414,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "ucirvine", re: /\buniversity of california,? irvine\b|\buc irvine\b/i, collegeName: "University of California, Irvine",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-first-year/dates-and-deadlines.html",
-    notes: "Same shared UC systemwide filing period as UC Berkeley -- see that entry's note; this page had not yet been republished for the next cycle as of this check.",
+    notes: "Same shared UC systemwide filing period as UC Berkeley. See that entry's note; this page had not yet been republished for the next cycle as of this check.",
     events: [
       { eventType: "Application opens", eventLabel: "UC filing period opens", eventDate: "Oct 1", applicationRound: "UC filing period" },
       { eventType: "Regular Decision deadline", eventLabel: "UC filing period deadline", eventDate: "Dec 1", applicationRound: "UC filing period" },
@@ -427,9 +427,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "ucsb", re: /\buniversity of california,? santa barbara\b|\bucsb\b|\buc santa barbara\b/i, collegeName: "University of California, Santa Barbara",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-first-year/dates-and-deadlines.html",
-    notes: "Same shared UC systemwide filing period as UC Berkeley -- see that entry's note; this page had not yet been republished for the next cycle as of this check.",
+    notes: "Same shared UC systemwide filing period as UC Berkeley. See that entry's note; this page had not yet been republished for the next cycle as of this check.",
     events: [
       { eventType: "Application opens", eventLabel: "UC filing period opens", eventDate: "Oct 1", applicationRound: "UC filing period" },
       { eventType: "Regular Decision deadline", eventLabel: "UC filing period deadline", eventDate: "Dec 1", applicationRound: "UC filing period" },
@@ -440,9 +440,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "uw", re: /\buniversity of washington\b/i, collegeName: "University of Washington",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://admit.washington.edu/apply/dates-deadlines/",
-    notes: "UW does not offer Early Action/Early Decision -- one autumn deadline. Page shows no explicit cycle year (presented as recurring policy); confirm before relying on it. Enrollment reply date is stated to vary by individual offer letter, with May 1 as the general national target.",
+    notes: "UW does not offer Early Action/Early Decision. One autumn deadline. Page shows no explicit cycle year (presented as recurring policy); confirm before relying on it. Enrollment reply date is stated to vary by individual offer letter, with May 1 as the general national target.",
     events: [
       { eventType: "Application opens", eventLabel: "Application opens", eventDate: "Aug 1" },
       { eventType: "Regular Decision deadline", eventLabel: "Autumn quarter application deadline", eventDate: "Nov 15", applicationRound: "RD", notes: "Test score deadline (if submitting) is Dec 31." },
@@ -468,9 +468,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "asu", re: /\barizona state university\b|^asu$/i, collegeName: "Arizona State University",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://admission.asu.edu/apply/first-year/admission",
-    notes: "ASU is rolling admission with no hard deadlines -- Nov 1 is a priority date for best scholarship/financial-aid consideration, not a cutoff. Two official ASU pages disagreed on the \"regular\" priority date (Feb 1 on one, Jan 15 on another); a Fall-specific deadline table exists but is JavaScript-rendered and could not be read directly -- confirm on the official site.",
+    notes: "ASU is rolling admission with no hard deadlines, Nov 1 is a priority date for best scholarship/financial-aid consideration, not a cutoff. Two official ASU pages disagreed on the \"regular\" priority date (Feb 1 on one, Jan 15 on another); a Fall-specific deadline table exists but is JavaScript-rendered and could not be read directly, confirm on the official site.",
     events: [
       { eventType: "Priority deadline", eventLabel: "Priority admission/scholarship date (not a hard deadline)", eventDate: "Nov 1" },
       { eventType: "FAFSA priority deadline", eventLabel: "FAFSA priority filing date", eventDate: "Jan 15" },
@@ -480,9 +480,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "michigan", re: /\buniversity of michigan\b/i, collegeName: "University of Michigan",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://admissions.umich.edu/apply/first-year-applicants/requirements-deadlines",
-    notes: "Page explicitly states the next cycle's changes will post before the application opens Aug 1 -- these are the prior cycle's dates, shown as a starting point.",
+    notes: "Page explicitly states the next cycle's changes will post before the application opens Aug 1. These are the prior cycle's dates, shown as a starting point.",
     events: [
       { eventType: "Early Decision deadline", eventLabel: "Early Decision deadline (binding)", eventDate: "Nov 1", applicationRound: "ED" },
       { eventType: "Early Action deadline", eventLabel: "Early Action deadline (non-binding)", eventDate: "Nov 1", applicationRound: "EA" },
@@ -496,9 +496,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "purdue", re: /\bpurdue university\b/i, collegeName: "Purdue University",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://admissions.purdue.edu/apply/deadlines.php",
-    notes: "Page gives evergreen month/day dates with no cycle year and states applications open Aug 1 -- next cycle hadn't opened as of this check.",
+    notes: "Page gives evergreen month/day dates with no cycle year and states applications open Aug 1. Next cycle hadn't opened as of this check.",
     events: [
       { eventType: "Early Action deadline", eventLabel: "Early Action deadline (non-binding)", eventDate: "Nov 1", applicationRound: "EA" },
       { eventType: "Decision notification", eventLabel: "Early Action notification", eventDate: "Jan 15", applicationRound: "EA" },
@@ -524,7 +524,7 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "wisconsin", re: /\buniversity of wisconsin.madison\b|\buw.madison\b/i, collegeName: "University of Wisconsin-Madison",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://admissions.wisc.edu/deadlines/",
     notes: "No explicit cycle year found on the deadlines table; applications open Aug 1 so next cycle hadn't opened as of this check.",
     events: [
@@ -537,7 +537,7 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "pennstate", re: /\bpennsylvania state university\b|\bpenn state\b/i, collegeName: "Pennsylvania State University",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://www.psu.edu/resources/first-year-students/deadlines",
     notes: "No explicit cycle year found. Penn State's model is a fixed Early Action date followed by continuous rolling review (no separate hard Regular Decision deadline).",
     events: [
@@ -549,13 +549,13 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "maryland", re: /\buniversity of maryland\b/i, collegeName: "University of Maryland, College Park",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://admissions.umd.edu/apply/application-deadlines",
-    notes: "The page's own example footnote is stale (still describes a prior cycle), which specifically casts doubt on the Jan 20 Regular Decision date shown -- re-verify that one directly before relying on it. The Nov 1 Early Action date is a fixed calendar date each year and more reliably evergreen.",
+    notes: "The page's own example footnote is stale (still describes a prior cycle), which specifically casts doubt on the Jan 20 Regular Decision date shown. Re-verify that one directly before relying on it. The Nov 1 Early Action date is a fixed calendar date each year and more reliably evergreen.",
     events: [
       { eventType: "Early Action deadline", eventLabel: "Early Action deadline (non-binding)", eventDate: "Nov 1", applicationRound: "EA" },
       { eventType: "Decision notification", eventLabel: "Early Action notification", eventDate: "Feb 1", applicationRound: "EA" },
-      { eventType: "Regular Decision deadline", eventLabel: "Regular Decision deadline", eventDate: "Jan 20", applicationRound: "RD", notes: "Flagged as possibly carried over from the prior cycle -- confirm on the official page." },
+      { eventType: "Regular Decision deadline", eventLabel: "Regular Decision deadline", eventDate: "Jan 20", applicationRound: "RD", notes: "Flagged as possibly carried over from the prior cycle. Confirm on the official page." },
       { eventType: "Decision notification", eventLabel: "Regular Decision notification", eventDate: "Apr 1", applicationRound: "RD" },
       { eventType: "Enrollment deposit deadline", eventLabel: "Enrollment deposit", eventDate: "May 1" },
     ],
@@ -587,7 +587,7 @@ export const TIMELINE_AUTOFILL_PROFILES = [
       { eventType: "Decision notification", eventLabel: "Early Action notification", eventDate: "Feb 1", applicationRound: "EA" },
       { eventType: "Regular Decision deadline", eventLabel: "Fall/Summer Regular Decision deadline", eventDate: "Jan 15", applicationRound: "RD" },
       { eventType: "Decision notification", eventLabel: "Regular Decision notification", eventDate: "Apr 1", applicationRound: "RD" },
-      { eventType: "Enrollment deposit deadline", eventLabel: "Enrollment deposit", eventDate: "May 1", notes: "Exact date not explicitly stated on this page; shown as the national norm -- confirm on your offer letter." },
+      { eventType: "Enrollment deposit deadline", eventLabel: "Enrollment deposit", eventDate: "May 1", notes: "Exact date not explicitly stated on this page; shown as the national norm. Confirm on your offer letter." },
     ],
   },
   {
@@ -607,9 +607,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "nyu", re: /\bnew york university\b|^nyu$/i, collegeName: "New York University",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://www.nyu.edu/admissions/undergraduate-admissions/how-to-apply/all-freshmen-applicants.html",
-    notes: "NYU's admitted-students page still referenced the prior cohort, indicating the site hasn't been visibly refreshed for the next cycle -- dates below are NYU's fixed recurring pattern.",
+    notes: "NYU's admitted-students page still referenced the prior cohort, indicating the site hasn't been visibly refreshed for the next cycle. Dates below are NYU's fixed recurring pattern.",
     events: [
       { eventType: "Early Decision deadline", eventLabel: "Early Decision I deadline (binding)", eventDate: "Nov 1", applicationRound: "ED" },
       { eventType: "Decision notification", eventLabel: "Early Decision I notification", eventDate: "Dec 15", applicationRound: "ED" },
@@ -621,9 +621,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "northeastern", re: /\bnortheastern university\b/i, collegeName: "Northeastern University",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://admissions.northeastern.edu/application-information/admissions-deadlines-decisions/",
-    notes: "Northeastern's own admitted-student resources page was still headlined for the prior cohort, indicating the site hasn't been republished for the next cycle -- dates below are Northeastern's fixed recurring pattern.",
+    notes: "Northeastern's own admitted-student resources page was still headlined for the prior cohort, indicating the site hasn't been republished for the next cycle. Dates below are Northeastern's fixed recurring pattern.",
     events: [
       { eventType: "Early Decision deadline", eventLabel: "Early Decision I deadline (binding)", eventDate: "Nov 1", applicationRound: "ED" },
       { eventType: "Decision notification", eventLabel: "Early Decision I notification", eventDate: "Jan 1", applicationRound: "ED", notes: "Northeastern says \"by January 1.\"" },
@@ -638,9 +638,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "bu", re: /\bboston university\b/i, collegeName: "Boston University",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://www.bu.edu/admissions/apply/deadlines/",
-    notes: "No explicit cycle year on the deadlines page; BU's admitted-students navigation still referenced the prior cohort -- dates below are BU's fixed recurring pattern.",
+    notes: "No explicit cycle year on the deadlines page; BU's admitted-students navigation still referenced the prior cohort. Dates below are BU's fixed recurring pattern.",
     events: [
       { eventType: "Early Decision deadline", eventLabel: "Early Decision deadline (binding)", eventDate: "Nov 2", applicationRound: "ED", notes: "Enrollment deposit due early-to-mid January." },
       { eventType: "Decision notification", eventLabel: "Early Decision notification", eventDate: "Dec 15", applicationRound: "ED" },
@@ -669,9 +669,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "wpi", re: /\bworcester polytechnic institute\b|^wpi$/i, collegeName: "Worcester Polytechnic Institute",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://www.wpi.edu/admissions/undergraduate/apply/application-options",
-    notes: "No explicit next-cycle year found on the page -- dates below are WPI's fixed recurring pattern.",
+    notes: "No explicit next-cycle year found on the page. Dates below are WPI's fixed recurring pattern.",
     events: [
       { eventType: "Early Decision deadline", eventLabel: "Early Decision I deadline (binding)", eventDate: "Nov 1", applicationRound: "ED" },
       { eventType: "Decision notification", eventLabel: "Early Decision I notification", eventDate: "Dec 15", applicationRound: "ED", notes: "WPI says \"mid-December.\"" },
@@ -688,9 +688,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "stevens", re: /\bstevens institute of technology\b/i, collegeName: "Stevens Institute of Technology",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://www.stevens.edu/admission-aid/undergraduate-admissions/admissions-timeline",
-    notes: "No explicit next-cycle year confirmed on the page -- dates below are Stevens' fixed recurring pattern.",
+    notes: "No explicit next-cycle year confirmed on the page. Dates below are Stevens' fixed recurring pattern.",
     events: [
       { eventType: "Early Decision deadline", eventLabel: "Early Decision I deadline (binding)", eventDate: "Nov 15", applicationRound: "ED", notes: "CSS Profile/FAFSA due Nov 15; deposit due Jan 10." },
       { eventType: "Decision notification", eventLabel: "Early Decision I notification", eventDate: "Dec 15", applicationRound: "ED" },
@@ -704,9 +704,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "harveymudd", re: /\bharvey mudd college\b/i, collegeName: "Harvey Mudd College",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://www.hmc.edu/admission/apply/",
-    notes: "Page's test-optional policy text and class-profile reference indicate this reflects the prior cycle, not yet republished -- dates below are Harvey Mudd's fixed recurring pattern. Whether the test-optional policy continues into the next cycle could not be verified.",
+    notes: "Page's test-optional policy text and class-profile reference indicate this reflects the prior cycle, not yet republished. Dates below are Harvey Mudd's fixed recurring pattern. Whether the test-optional policy continues into the next cycle could not be verified.",
     events: [
       { eventType: "Early Decision deadline", eventLabel: "Early Decision I deadline (binding)", eventDate: "Nov 15", applicationRound: "ED", notes: "Reply/deposit date Jan 9." },
       { eventType: "Decision notification", eventLabel: "Early Decision I notification", eventDate: "Dec 15", applicationRound: "ED" },
@@ -719,9 +719,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "rosehulman", re: /\brose-hulman institute of technology\b|\brose.hulman\b/i, collegeName: "Rose-Hulman Institute of Technology",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://www.rose-hulman.edu/admissions-and-aid/the-application-process/application-and-deadlines/index.html",
-    notes: "No explicit cycle year confirmed directly on this page -- dates below are Rose-Hulman's fixed recurring pattern.",
+    notes: "No explicit cycle year confirmed directly on this page. Dates below are Rose-Hulman's fixed recurring pattern.",
     events: [
       { eventType: "Early Action deadline", eventLabel: "Early Action deadline (non-binding)", eventDate: "Nov 1", applicationRound: "EA", notes: "If incomplete by this date, moves into the Regular Decision pool." },
       { eventType: "Regular Decision deadline", eventLabel: "Regular Decision deadline", eventDate: "Feb 1", applicationRound: "RD" },
@@ -745,7 +745,7 @@ export const TIMELINE_AUTOFILL_PROFILES = [
     key: "duke", re: /\bduke university\b/i, collegeName: "Duke University",
     confidence: "verified", lastChecked: "2026-07-21",
     sourceUrl: "https://admissions.duke.edu/apply/",
-    notes: "Page explicitly stated it represents the current admission cycle's requirements and deadlines. Note: a separate, older Duke checklist page still shows the prior cycle's dates -- use this apply/ page as authoritative. Enrollment deposit date not independently confirmed on this page.",
+    notes: "Page explicitly stated it represents the current admission cycle's requirements and deadlines. Note: a separate, older Duke checklist page still shows the prior cycle's dates. Use this apply/ page as authoritative. Enrollment deposit date not independently confirmed on this page.",
     events: [
       { eventType: "Early Decision deadline", eventLabel: "Early Decision deadline (binding)", eventDate: "Nov 2", applicationRound: "ED", notes: "Financial aid due Nov 2; additional documents due Nov 15." },
       { eventType: "Decision notification", eventLabel: "Early Decision notification", eventDate: "Dec 15", applicationRound: "ED", notes: "Duke says \"mid-December.\"" },
@@ -757,11 +757,11 @@ export const TIMELINE_AUTOFILL_PROFILES = [
     key: "northwestern", re: /\bnorthwestern university\b/i, collegeName: "Northwestern University",
     confidence: "verified", lastChecked: "2026-07-21",
     sourceUrl: "https://admissions.northwestern.edu/apply/application-deadlines.html",
-    notes: "Page showed explicit dates for the current next cycle. Flag: the page itself has an internal conflict for the Regular Decision deadline -- the summary table says Jan 4, the detailed section says Jan 2 -- shown here as Jan 4 (the summary table value) with the conflict noted; confirm directly with Northwestern before relying on the exact day.",
+    notes: "Page showed explicit dates for the current next cycle. Flag: the page itself has an internal conflict for the Regular Decision deadline: the summary table says Jan 4, the detailed section says Jan 2. Shown here as Jan 4 (the summary table value) with the conflict noted; confirm directly with Northwestern before relying on the exact day.",
     events: [
       { eventType: "Early Decision deadline", eventLabel: "Early Decision deadline (binding)", eventDate: "Nov 1", applicationRound: "ED", notes: "Financial aid due Dec 1; enrollment deposit due Feb 1." },
       { eventType: "Decision notification", eventLabel: "Early Decision notification", eventDate: "Dec 15", applicationRound: "ED", notes: "Northwestern's summary table says mid-December." },
-      { eventType: "Regular Decision deadline", eventLabel: "Regular Decision deadline", eventDate: "Jan 4", applicationRound: "RD", notes: "Northwestern's own page shows a conflicting Jan 2 date elsewhere on the same page -- confirm exact day directly." },
+      { eventType: "Regular Decision deadline", eventLabel: "Regular Decision deadline", eventDate: "Jan 4", applicationRound: "RD", notes: "Northwestern's own page shows a conflicting Jan 2 date elsewhere on the same page. Confirm exact day directly." },
       { eventType: "Decision notification", eventLabel: "Regular Decision notification", eventDate: "Mar 31", applicationRound: "RD", notes: "Northwestern says \"March\" / \"late March.\"" },
       { eventType: "Enrollment deposit deadline", eventLabel: "Enrollment/tuition deposit (RD)", eventDate: "May 1", applicationRound: "RD" },
       { eventType: "FAFSA priority deadline", eventLabel: "Financial aid deadline (RD)", eventDate: "Feb 1", applicationRound: "RD" },
@@ -769,9 +769,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "jhu", re: /\bjohns hopkins university\b/i, collegeName: "Johns Hopkins University",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
-    notes: "Page shows the already-completed prior cycle's dates. JHU's own page states updated dates are made public each August -- next cycle wasn't posted yet as of this check.",
+    notes: "Page shows the already-completed prior cycle's dates. JHU's own page states updated dates are made public each August. Next cycle wasn't posted yet as of this check.",
     events: [
       { eventType: "Early Decision deadline", eventLabel: "Early Decision I deadline (binding)", eventDate: "Nov 1", applicationRound: "ED", notes: "Financial aid due Nov 15; reply-by date Jan 15." },
       { eventType: "Decision notification", eventLabel: "Early Decision I notification", eventDate: "Dec 12", applicationRound: "ED" },
@@ -798,9 +798,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "vanderbilt", re: /\bvanderbilt university\b/i, collegeName: "Vanderbilt University",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://admissions.vanderbilt.edu/apply/",
-    notes: "Page shows the already-completed prior cycle's dates (its own May 1 deposit deadline has already passed as of this check) -- next cycle not yet published.",
+    notes: "Page shows the already-completed prior cycle's dates (its own May 1 deposit deadline has already passed as of this check). Next cycle not yet published.",
     events: [
       { eventType: "Early Decision deadline", eventLabel: "Early Decision I deadline (binding)", eventDate: "Nov 1", applicationRound: "ED", notes: "Matriculation deposit due Dec 31." },
       { eventType: "Decision notification", eventLabel: "Early Decision I notification", eventDate: "Dec 15", applicationRound: "ED", notes: "Vanderbilt says \"mid-December.\"" },
@@ -812,7 +812,7 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "utaustin", re: /\buniversity of texas at austin\b|\but austin\b/i, collegeName: "University of Texas at Austin",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://admissions.utexas.edu/apply/freshman/",
     notes: "Page shows the already-completed prior cycle's specific dates. UT Austin uses ApplyTexas/Common App with a Priority (Early) + one Regular deadline structure, not a private-school ED/EA/RD split. The month/day pattern typically repeats but wasn't independently confirmed for the next cycle.",
     events: [
@@ -835,9 +835,9 @@ export const TIMELINE_AUTOFILL_PROFILES = [
   },
   {
     key: "vatech", re: /\bvirginia tech\b|\bvirginia polytechnic\b/i, collegeName: "Virginia Tech",
-    confidence: "recurring pattern -- confirm", lastChecked: "2026-07-21",
+    confidence: "recurring pattern, confirm", lastChecked: "2026-07-21",
     sourceUrl: "https://www.vt.edu/admissions/undergraduate/apply/decision-plans.html",
-    notes: "Virginia Tech's dedicated dates page did not render as text (appears JavaScript-rendered) and a search snippet suggested it still shows the prior cycle's title. The month/day deadline PATTERN below was confirmed from two other official VT pages, but notification and deposit dates could not be independently confirmed on an official page this check -- treat notification/deposit dates as unconfirmed estimates only.",
+    notes: "Virginia Tech's dedicated dates page did not render as text (appears JavaScript-rendered) and a search snippet suggested it still shows the prior cycle's title. The month/day deadline PATTERN below was confirmed from two other official VT pages, but notification and deposit dates could not be independently confirmed on an official page this check. Treat notification/deposit dates as unconfirmed estimates only.",
     events: [
       { eventType: "Early Action deadline", eventLabel: "Early Action deadline (non-binding)", eventDate: "Nov 1", applicationRound: "EA", notes: "Most common decision plan at Virginia Tech." },
       { eventType: "Regular Decision deadline", eventLabel: "Regular Decision deadline", eventDate: "Jan 15", applicationRound: "RD" },

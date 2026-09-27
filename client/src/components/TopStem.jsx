@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { api } from "../lib/api.js";
 import { CategoryTag, SourceBadge, Spinner, fmtUSD, fmtPct } from "./ui.jsx";
+import { Check, CircleFilled, Diamond, Triangle } from "./icons.jsx";
 
 export function TopStem({ profile, onOpen, savedIds, onToggleSave }) {
   const [data, setData] = useState(null);
@@ -43,9 +44,9 @@ export function TopStem({ profile, onOpen, savedIds, onToggleSave }) {
         {data.colleges?.length > 0 && (
         <div className="kpis">
           <div className="kpi"><div className="n">{data.colleges.length}</div><div className="l">STEM colleges shown</div></div>
-          <div className="kpi"><div className="n" style={{ color: "var(--reach)" }}>{data.colleges.filter((c) => c.scored?.admission?.category?.includes("Reach")).length}</div><div className="l">▲ Reach</div></div>
-          <div className="kpi"><div className="n" style={{ color: "var(--target)" }}>{data.colleges.filter((c) => c.scored?.admission?.category === "Target").length}</div><div className="l">◆ Target</div></div>
-          <div className="kpi"><div className="n" style={{ color: "var(--safety)" }}>{data.colleges.filter((c) => ["Safety", "Likely", "Financial Safety"].includes(c.scored?.admission?.category)).length}</div><div className="l">● Safety</div></div>
+          <div className="kpi"><div className="n" style={{ color: "var(--reach)" }}>{data.colleges.filter((c) => c.scored?.admission?.category?.includes("Reach")).length}</div><div className="l"><Triangle /> Reach</div></div>
+          <div className="kpi"><div className="n" style={{ color: "var(--target)" }}>{data.colleges.filter((c) => c.scored?.admission?.category === "Target").length}</div><div className="l"><Diamond /> Target</div></div>
+          <div className="kpi"><div className="n" style={{ color: "var(--safety)" }}>{data.colleges.filter((c) => ["Safety", "Likely", "Financial Safety"].includes(c.scored?.admission?.category)).length}</div><div className="l"><CircleFilled /> Safety</div></div>
           <div className="kpi"><div className="n">{data.colleges.filter((c) => savedIds?.has(c.id)).length}</div><div className="l">On my list</div></div>
         </div>
       )}
@@ -80,7 +81,7 @@ export function TopStem({ profile, onOpen, savedIds, onToggleSave }) {
                 {onToggleSave && (
                   <button className={`btn sm ${savedIds?.has(c.id) ? "ghost" : "amber"}`}
                     onClick={() => onToggleSave({ college: { id: c.id, name: c.name, state: c.official?.state }, admission: { category: c.scored?.category, range: c.scored?.range }, overall: c.scored?.overall })}>
-                    {savedIds?.has(c.id) ? "Saved ✓" : "+ List"}
+                    {savedIds?.has(c.id) ? <>Saved <Check /></> : "+ List"}
                   </button>
                 )}
               </div>

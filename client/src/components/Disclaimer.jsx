@@ -1,4 +1,4 @@
-// Disclaimer.jsx -- the app's AI/essay policy and general disclaimer, split
+// Disclaimer.jsx, the app's AI/essay policy and general disclaimer, split
 // out from About.jsx so "how it works" and "what to know before you rely on
 // this" are two separate pages (More -> About vs. More -> Disclaimer).
 import React from "react";
@@ -15,7 +15,7 @@ export function Disclaimer() {
         <strong>AI &amp; essay policy.</strong> Matricula helps with brainstorming, outlining, prompt
         tracking, story mapping, and revision planning. It never generates a finished essay for submission and never
         presents any AI-written text as ready to submit. The student must write the final essay in their own voice
-        and follow each college's own AI-use policy -- these vary by school and change over time, so check the
+        and follow each college's own AI-use policy. These vary by school and change over time, so check the
         official application portal before submitting.
       </div>
 

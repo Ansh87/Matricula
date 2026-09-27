@@ -632,7 +632,7 @@ async function fetchComboCandidatePool({ cips1, state = null, control = null, po
   return { raws: all.slice(0, poolLimit), total, pagesFetched: page, partial, error: lastErr };
 }
 
-// Qualitative double-major evidence label -- NOT a numeric score, and NEVER a
+// Qualitative double-major evidence label, NOT a numeric score, and NEVER a
 // claim that a college officially permits a double major. College Scorecard
 // can only ever show that two program AREAS exist in its field-of-study data;
 // it has no concept of a double-major/second-major/dual-degree POLICY, so
@@ -640,9 +640,9 @@ async function fetchComboCandidatePool({ cips1, state = null, control = null, po
 // rules not verified." A pairing only ever earns the stronger "Confirmed
 // double-major path" wording once a family attaches an official source via
 // the double_major_verifications record (see services/doubleMajorVerification.js
-// -- isConfirmedDoubleMajor()); that happens downstream of this shared/cached
+//. IsConfirmedDoubleMajor()); that happens downstream of this shared/cached
 // search, never here. classifyComboEvidence() also looks at the literal CIP
-// title text Scorecard returned for the SECOND major -- this works identically
+// title text Scorecard returned for the SECOND major. This works identically
 // for any major pair (e.g. "Computer Science" + "Artificial Intelligence" is
 // just one example), never a hardcoded major.
 function doubleMajorEvidenceStatus(m1, m2) {

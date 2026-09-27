@@ -1,9 +1,9 @@
-// verificationCenter.js -- Verification Center (Feature 1): one cross-college
+// verificationCenter.js. Verification Center (Feature 1): one cross-college
 // list of everything still unresolved, pulled together from data that
 // already exists elsewhere in the app (essay_prompts, college_application_
 // timeline_events + its existing conflict detector, college_application_
 // requirements, discovered_programs, verification_checklists). Nothing here
-// invents a new fact or a new verification concept -- it is a read-only
+// invents a new fact or a new verification concept. It is a read-only
 // aggregation across tables that each already track their own verification
 // status, so a family doesn't have to open five different tabs to find out
 // what's still unresolved. Categories with no real underlying data anywhere
@@ -25,7 +25,7 @@ const VERIFIED_STATUSES = ["Official source verified", "User verified"];
 function isVerifiedStatus(status) { return VERIFIED_STATUSES.includes(status); }
 
 // Same saved-colleges + Decision Plan dedup used by Essay Center's coverage
-// summary and findEssayPromptsForAllColleges -- one consistent college list
+// summary and findEssayPromptsForAllColleges. One consistent college list
 // across every cross-page feature in this app.
 function collegesFor(studentId) {
   const saved = db.prepare(
@@ -64,9 +64,9 @@ export function buildVerificationCenter(studentId) {
   for (const c of colleges) {
     const label = c.collegeName;
 
-    // -- Imported List: verify official college match. Only fires when the
-    // match wasn't a confident exact match -- i.e. it was corrected from a
-    // misspelling, or came back Medium/Low confidence -- so a family
+    //. Imported List: verify official college match. Only fires when the
+    // match wasn't a confident exact match. I.e. it was corrected from a
+    // misspelling, or came back Medium/Low confidence, so a family
     // double-checks the app matched the right school before relying on it.
     // High-confidence, non-corrected imports (e.g. CMU -> Carnegie Mellon
     // University via a known abbreviation) don't need this nudge.
@@ -82,7 +82,7 @@ export function buildVerificationCenter(studentId) {
       }
     }
 
-    // -- Essay prompts needing verification --
+    //. Essay prompts needing verification --
     const prompts = c.collegeId
       ? db.prepare("SELECT * FROM essay_prompts WHERE student_id=? AND college_id=?").all(studentId, c.collegeId)
       : db.prepare("SELECT * FROM essay_prompts WHERE student_id=? AND college_id IS NULL AND LOWER(college_name)=LOWER(?)").all(studentId, c.collegeName);
@@ -98,7 +98,7 @@ export function buildVerificationCenter(studentId) {
         priority: "Medium", relatedPage: "essays" });
     }
 
-    // -- Application deadlines needing verification + conflicting dates --
+    //. Application deadlines needing verification + conflicting dates --
     const timelineRows = c.collegeId
       ? db.prepare("SELECT * FROM college_application_timeline_events WHERE student_id=? AND college_id=?").all(studentId, c.collegeId)
       : [];
@@ -123,7 +123,7 @@ export function buildVerificationCenter(studentId) {
       }
     }
 
-    // -- Application platform + honors/scholarship application requirement --
+    //. Application platform + honors/scholarship application requirement --
     const reqRows = c.collegeId
       ? db.prepare("SELECT * FROM college_application_requirements WHERE student_id=? AND college_id=?").all(studentId, c.collegeId)
       : [];
@@ -149,12 +149,12 @@ export function buildVerificationCenter(studentId) {
         addItem({ college: label, collegeId: c.collegeId, programOrTrack: r.program_label || flags.join(" / "),
           issueType: "Honors/scholarship deadlines needing verification", status: "Needs verification",
           sourceUrl: r.source_url, lastChecked: r.last_checked,
-          actionNeeded: `${flags.join(" / ")} application requirement is marked "Yes" but not yet verified -- confirm the deadline on the official page.`,
+          actionNeeded: `${flags.join(" / ")} application requirement is marked "Yes" but not yet verified. Confirm the deadline on the official page.`,
           priority: "Medium", relatedPage: "pathways" });
       }
     }
 
-    // -- Programs / major existence, sourced from discovered_programs --
+    //. Programs / major existence, sourced from discovered_programs --
     const programs = c.collegeId
       ? db.prepare("SELECT * FROM discovered_programs WHERE student_id=? AND college_id=?").all(studentId, c.collegeId)
       : [];
@@ -172,7 +172,7 @@ export function buildVerificationCenter(studentId) {
         priority: "Medium", relatedPage: "programs" });
     }
 
-    // -- Direct-admit / double-major / special-program eligibility rules,
+    //. Direct-admit / double-major / special-program eligibility rules,
     // sourced from the Decision Plan's existing Verification Checklist
     // (verification_checklists) when this college has a Decision Plan item.
     if (c.itemId) {
@@ -184,7 +184,7 @@ export function buildVerificationCenter(studentId) {
       }
       if (!checklist || !checklist.internal_transfer_rules_checked || !checklist.program_restrictions_checked) {
         addItem({ college: label, collegeId: c.collegeId, issueType: "Double-major rules needing verification", status: checklist ? "Needs verification" : "Missing source",
-          actionNeeded: "Confirm double-major, minor, and internal-transfer restrictions on the official college site -- this app does not track major-combination rules automatically.",
+          actionNeeded: "Confirm double-major, minor, and internal-transfer restrictions on the official college site. This app does not track major-combination rules automatically.",
           priority: "Low", relatedPage: "decision-plan" });
       }
       if (checklist && checklist.special_program_exists === "Unknown") {
@@ -194,14 +194,14 @@ export function buildVerificationCenter(studentId) {
       }
     }
 
-    // -- Double-major rules needing verification, specifically for colleges
+    //. Double-major rules needing verification, specifically for colleges
     // selected from Double Major Search (student_college_list.primary_major /
     // decision_plan_items.primary_major). This is separate from the generic
     // checklist-based item above: it fires whenever the app actually has a
     // primary+secondary major pairing on file for this college and there is
     // NO matching official-source-confirmed double_major_verifications record
     // (checked directly against isConfirmedDoubleMajor(), not just the flat
-    // double_major_verification_status mirror column) -- i.e. exactly what
+    // double_major_verification_status mirror column). I.e. exactly what
     // Double Major Search produces before a family confirms it with a source.
     // Feature 6: one High-priority summary item PLUS five separate granular
     // checks, so the family sees exactly what still needs confirming instead
@@ -225,7 +225,7 @@ export function buildVerificationCenter(studentId) {
         addItem({
           college: label, collegeId: c.collegeId, programOrTrack: pairLabel,
           issueType: "Double-major rules needing verification", status: "Needs verification",
-          actionNeeded: `Verify double-major rules for ${label} -- check official catalog, advising page, registrar, or department requirements.`,
+          actionNeeded: `Verify double-major rules for ${label}. Check official catalog, advising page, registrar, or department requirements.`,
           priority: "High", relatedPage: "programs",
         });
         addItem({ college: label, collegeId: c.collegeId, programOrTrack: pairLabel,
@@ -251,7 +251,7 @@ export function buildVerificationCenter(studentId) {
       }
     }
 
-    // -- Cost / Net Price Calculator, sourced from decision_plan_items (only
+    //. Cost / Net Price Calculator, sourced from decision_plan_items (only
     // meaningful for colleges actually in the Decision Plan) --
     if (c.itemId) {
       const planItem = db.prepare("SELECT npc_completed, net_price_calculator_url FROM decision_plan_items WHERE student_id=? AND item_id=?").get(studentId, c.itemId);
@@ -276,6 +276,6 @@ export function buildVerificationCenter(studentId) {
     totalItems: items.length,
     byStatus, byPriority, byIssueType,
     items: items.sort((a, b) => (VERIFICATION_PRIORITIES.indexOf(a.priority) - VERIFICATION_PRIORITIES.indexOf(b.priority)) || a.college.localeCompare(b.college)),
-    notice: "This list only ever reflects what's already tracked elsewhere in the app -- nothing here is a new fact about any college. Anything not \"Verified\" or \"User verified\" should be confirmed on the official source before you rely on it.",
+    notice: "This list only ever reflects what's already tracked elsewhere in the app. Nothing here is a new fact about any college. Anything not \"Verified\" or \"User verified\" should be confirmed on the official source before you rely on it.",
   };
 }

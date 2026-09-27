@@ -80,7 +80,7 @@ export const SELECTION_SEED = [
     college_id: "110635", // UC Berkeley
     admit_factors_json: JSON.stringify(factors({ rigor: VI, gpa: VI, test: NC, recs: NC, essay: IMP, ec: IMP, talent: CON, character: IMP, firstGen: IMP, volunteer: CON, work: CON })),
     culture_json: JSON.stringify({ tags: ["large public research", "academically elite", "activist/independent", "sprawling & self-driven"], size: "very large", vibe: "World-class research university; independent, do-it-yourself culture. Politically engaged, huge range of student life. You must be proactive." }),
-    what_they_want: "Top academic achievement in context, plus evidence of contribution and character through UC's Personal Insight Questions. As a public, Berkeley uses 13 comprehensive-review factors and does NOT consider SAT/ACT (test-blind).",
+    what_they_want: "Top academic achievement in context, plus evidence of contribution and character through UC's Personal Insight Questions. As a public, Berkeley uses 13 comprehensive-review factors and does not consider SAT/ACT (test-blind).",
     how_they_select: "Test-blind comprehensive review by 13 factors including academic performance in context, rigor, and personal qualities via PIQs. Admission to some majors (esp. CS in L&S / EECS in engineering) is far more competitive.",
     applies_by_major: 1,
     major_competition_json: JSON.stringify({ EECS: "Extremely competitive (College of Engineering)", CS_LnS: "Very competitive; capped major with GPA gate historically", Haas_Business: "Competitive, often junior-entry", note: "CS/EECS at Berkeley are among the hardest admits; the college and major you pick matter a lot." }),
@@ -258,7 +258,7 @@ export const SELECTION_SEED = [
     what_they_want: "Students who will thrive in a demanding shared Core Curriculum and an intensely urban, intellectual environment. Fit with the Core and NYC matters; they value serious thinkers who engage across disciplines.",
     how_they_select: "Holistic and need-blind. Applicants choose Columbia College or the Fu Foundation School of Engineering (SEAS); both are academically rigorous with the Core.",
     applies_by_major: 1,
-    major_competition_json: JSON.stringify({ note: "You apply to Columbia College (liberal arts) OR SEAS (engineering) - pick the school, not a specific major. Majors declared later within each.", SEAS: "Engineering school; strong math/science prep expected" }),
+    major_competition_json: JSON.stringify({ note: "You apply to Columbia College (liberal arts) or SEAS (engineering) - pick the school, not a specific major. Majors declared later within each.", SEAS: "Engineering school; strong math/science prep expected" }),
     switch_major_json: JSON.stringify({ ease: "Easy within school", note: "Majors declared sophomore year; changing within Columbia College or within SEAS is routine. Transferring between CC and SEAS is possible but a process." }),
     ideal_applicant_json: JSON.stringify({ rewards: ["intellectual seriousness", "fit with the Core & NYC", "strong essays", "character"], neutral: ["demonstrated interest"] }),
     source_url: "https://undergrad.admissions.columbia.edu/apply",

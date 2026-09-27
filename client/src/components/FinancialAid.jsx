@@ -7,6 +7,7 @@ import React, { useState, useEffect } from "react";
 import { api } from "../lib/api.js";
 import { Spinner } from "./ui.jsx";
 import { auth, firebaseConfigured } from "../lib/firebase.js";
+import { ExternalArrow } from "./icons.jsx";
 
 async function authHeader() {
   try {
@@ -156,7 +157,7 @@ function Tracker({ studentId }) {
               </div>
               {s.eligibility && <p className="note">{s.eligibility}</p>}
               <div className="row" style={{ gap: 8, marginTop: 6 }}>
-                {s.link && <a className="link" href={s.link} target="_blank" rel="noreferrer">Open ↗</a>}
+                {s.link && <a className="link" href={s.link} target="_blank" rel="noreferrer">Open <ExternalArrow /></a>}
                 <button className="link" onClick={() => setEditing(s)}>Edit</button>
                 <button className="link" style={{ color: "var(--reach)" }} onClick={() => remove(s.scholarship_id)}>Delete</button>
               </div>

@@ -57,7 +57,7 @@ export function CareerPlanner() {
 
       {/* Career Market Overview - high level, source-labeled */}
       <div className="card pad">
-        <div className="row spread"><h2>Career market overview</h2><SourceBadge level="official">BLS OOH 2024–34</SourceBadge></div>
+        <div className="row spread"><h2>Career market overview</h2><SourceBadge level="official">BLS OOH 2024-34</SourceBadge></div>
         <p className="note" style={{ marginTop: 8, fontSize: 13.5 }}>
           AI and automation are increasing demand for people who can <strong>build, evaluate, secure, and apply</strong>
           {" "}intelligent systems. Roles that apply computing or engineering to a real domain are projected to grow
@@ -147,7 +147,7 @@ export function CareerPlanner() {
       <div className="disclaimer">
         Career outlooks are projections, not guarantees. Students should verify current data and combine market trends
         with personal strengths, college fit, internships, projects, and long-term interests. Sources: U.S. Bureau of
-        Labor Statistics Occupational Outlook Handbook (OOH), 2024–34 employment projections; U.S. Department of
+        Labor Statistics Occupational Outlook Handbook (OOH), 2024-34 employment projections; U.S. Department of
         Education College Scorecard for program-level cost and earnings outcomes where available.
       </div>
     </div>

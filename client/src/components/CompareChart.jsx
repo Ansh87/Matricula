@@ -23,7 +23,7 @@ export function CompareChart({ factors, colleges, metricsFor }) {
     <div className="card pad">
       <div className="row spread" style={{ marginBottom: 6 }}>
         <h3 style={{ margin: 0 }}>Side-by-side scores</h3>
-        <span className="note">0–100 per factor · higher is better</span>
+        <span className="note">0-100 per factor · higher is better</span>
       </div>
 
       <div className="row wrap" style={{ gap: 12, marginBottom: 10 }}>

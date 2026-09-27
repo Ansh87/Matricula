@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { CategoryTag, Meter, SourceBadge, fmtUSD, fmtPct, useAutocompleteSearch } from "./ui.jsx";
 import { api } from "../lib/api.js";
+import { Check, CircleFilled, Diamond, Triangle } from "./icons.jsx";
 
 const US_STATES = "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY DC".split(" ");
 
@@ -64,17 +65,14 @@ function CollegeCard({ scored, saved, onOpen, onToggleSave }) {
         <div className="row" style={{ gap: 6, marginTop: 6 }}>
           {scored.matchType === "verified-major-match" ? (
             <>
-              <SourceBadge level="official" />
               <span className="note" style={{ fontSize: 11, color: "var(--safety)" }}>Offers your major (official program data)</span>
             </>
           ) : scored.matchType === "relaxed-profile-match" ? (
             <>
-              <SourceBadge level="unavailable" />
               <span className="note" style={{ fontSize: 11, color: "var(--amber)" }}>Program availability not verified - confirm on official college website</span>
             </>
           ) : scored.majorFit.status === "no-match" ? (
             <>
-              <SourceBadge level="official" />
               <span className="note" style={{ fontSize: 11, color: "var(--reach)" }}>No matching bachelor's program in official data</span>
             </>
           ) : null}
@@ -109,7 +107,7 @@ function CollegeCard({ scored, saved, onOpen, onToggleSave }) {
         <div className="row" style={{ gap: 8 }}>
           <button className="btn ghost sm" onClick={() => onOpen(c.id)}>Details</button>
           <button className={`btn sm ${saved ? "ghost" : "amber"}`} onClick={() => onToggleSave(scored)}>
-            {saved ? "Saved ✓" : "+ List"}
+            {saved ? <>Saved <Check /></> : "+ List"}
           </button>
         </div>
       </div>
@@ -141,7 +139,7 @@ export function Results({ recs, meta, savedIds, onOpen, onToggleSave, onRefilter
   const [cat, setCat] = useState(initialCat);
   const [sort, setSort] = useState("overall");
   const [topN, setTopN] = useState(30); // default cap for performance; "All" available
-  // Live 2-character debounced search (useAutocompleteSearch -- the same
+  // Live 2-character debounced search (useAutocompleteSearch, the same
   // engine behind CollegeAutocomplete/MajorAutocomplete elsewhere), reusing
   // the same canonical /api/colleges/search endpoint this used to call from
   // a manual "click Search" button.
@@ -239,9 +237,9 @@ export function Results({ recs, meta, savedIds, onOpen, onToggleSave, onRefilter
           <div className="n">{filtered.length}</div>
           <div className="l">{cat === "All" ? "all scored colleges" : topN ? `Best Fit displayed` : "personalized matches"}</div>
         </div>
-        <div className="kpi"><div className="n" style={{ color: "var(--reach)" }}>{viewCounts.Reach}</div><div className="l">▲ Reach</div></div>
-        <div className="kpi"><div className="n" style={{ color: "var(--target)" }}>{viewCounts.Target}</div><div className="l">◆ Target</div></div>
-        <div className="kpi"><div className="n" style={{ color: "var(--safety)" }}>{viewCounts.Safety}</div><div className="l">● Safety</div></div>
+        <div className="kpi"><div className="n" style={{ color: "var(--reach)" }}>{viewCounts.Reach}</div><div className="l"><Triangle /> Reach</div></div>
+        <div className="kpi"><div className="n" style={{ color: "var(--target)" }}>{viewCounts.Target}</div><div className="l"><Diamond /> Target</div></div>
+        <div className="kpi"><div className="n" style={{ color: "var(--safety)" }}>{viewCounts.Safety}</div><div className="l"><CircleFilled /> Safety</div></div>
         {viewCounts["Financial Safety"] > 0 && (
           <div className="kpi"><div className="n" style={{ color: "var(--safety)" }}>{viewCounts["Financial Safety"]}</div><div className="l">$ Financial Safety</div></div>
         )}
@@ -304,7 +302,7 @@ export function Results({ recs, meta, savedIds, onOpen, onToggleSave, onRefilter
                   <button className="btn ghost sm" onClick={() => onOpen(c.id)}>Details</button>
                   <button className={`btn sm ${savedIds.has(c.id) ? "ghost" : "amber"}`}
                     onClick={() => onToggleSave({ college: c, admission: {}, subs: {} })}>
-                    {savedIds.has(c.id) ? "Saved ✓" : "+ List"}
+                    {savedIds.has(c.id) ? <>Saved <Check /></> : "+ List"}
                   </button>
                 </div>
               </div>
@@ -427,7 +425,7 @@ export function Results({ recs, meta, savedIds, onOpen, onToggleSave, onRefilter
                   </div>
                   <div className="row" style={{ gap: 8, marginTop: 6 }}>
                     <button className="link" onClick={() => onOpen(c.college.id)}>Details</button>
-                    <button className="link" onClick={() => onToggleSave(c)}>{savedIds.has(c.college.id) ? "Saved ✓" : "+ List"}</button>
+                    <button className="link" onClick={() => onToggleSave(c)}>{savedIds.has(c.college.id) ? <>Saved <Check /></> : "+ List"}</button>
                   </div>
                 </div>
               ))}

@@ -1,15 +1,16 @@
 // Dashboard.jsx - home overview: profile completeness, list balance, open
 // verification items, upcoming deadlines, essay workload, final list health,
-// and recommended next steps. Pulls together the whole app -- the family
+// and recommended next steps. Pulls together the whole app, the family
 // command center. Every card below reads from data that already exists and
 // is already computed elsewhere (Decision Plan summary, Verification
-// Center, Decision Plan items) -- nothing here is a new formula or a new
+// Center, Decision Plan items). Nothing here is a new formula or a new
 // fetch that duplicates logic; it's the same endpoints DecisionPlan.jsx
 // already calls, just surfaced one level up. Anything that fails to load or
 // comes back empty is shown as "Needs review," never guessed at.
 import React, { useMemo, useState, useEffect } from "react";
 import { api } from "../lib/api.js";
 import { CategoryTag } from "./ui.jsx";
+import { Arrow, Check, CircleFilled, CircleOpen, Diamond, Triangle } from "./icons.jsx";
 
 function completeness(p) {
   const checks = [
@@ -39,8 +40,8 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
     const total = saved.length;
     if (!total) return "You haven't saved any colleges yet. Generate matches and add a balanced set.";
     const tips = [];
-    if (byCat.Safety < 2) tips.push("add 1–2 more safety schools you'd be happy to attend");
-    if (byCat.Target < 3) tips.push("aim for 3–5 targets - they're the core of a strong list");
+    if (byCat.Safety < 2) tips.push("add 1-2 more safety schools you'd be happy to attend");
+    if (byCat.Target < 3) tips.push("aim for 3-5 targets - they're the core of a strong list");
     if (byCat.Reach > 6) tips.push("you have a lot of reaches; make sure targets and safeties are solid");
     return tips.length ? "Suggestion: " + tips.join("; ") + "." : "Nice - your list looks reasonably balanced across reach, target, and safety.";
   }, [saved, byCat]);
@@ -60,7 +61,7 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
     api.listDecisionItems(studentId).then((r) => setDecisionItems(r.items || [])).catch(() => setDecisionItems(null));
   }, [studentId, saved.length]);
 
-  // "Next recommended actions" -- every condition below reuses a value
+  // "Next recommended actions". Every condition below reuses a value
   // that's already computed above or by an existing backend summary (no new
   // thresholds invented for this dashboard). undefined = still loading,
   // null = failed to load ("Needs review"); both are handled explicitly.
@@ -78,8 +79,15 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
       else if (planSummary.tasks?.dueSoon > 0) actions.push({ label: "Upcoming deadlines", detail: `${planSummary.tasks.dueSoon} due in the next 14 days`, go: "decisionPlan" });
       if (planSummary.essayCoverageMissing > 0) actions.push({ label: "Essay prompts missing", detail: `${planSummary.essayCoverageMissing} college(s) with no essays tracked`, go: "essays" });
       if (planSummary.timelineMissing > 0) actions.push({ label: "Application timeline missing", detail: `${planSummary.timelineMissing} college(s)`, go: "applicationPathways" });
-      if (planSummary.finalListHealth && planSummary.finalListHealth.overallStatus && planSummary.finalListHealth.overallStatus !== "Strong balanced list") {
-        actions.push({ label: "Final list is too reach-heavy", detail: planSummary.finalListHealth.overallStatus, go: "decisionPlan" });
+      // Only flag the final list once there IS one. With an empty Decision
+      // Plan the health check reports "Not started", which used to surface
+      // here as "Final list is too reach-heavy" - a complaint about a list
+      // the family hasn't built yet. The label now carries the health
+      // check's own first message instead of assuming reach-heaviness,
+      // which was only ever one of the reasons it can need attention.
+      const health = planSummary.finalListHealth;
+      if (health && health.overallStatus && !["Strong balanced list", "Not started"].includes(health.overallStatus)) {
+        actions.push({ label: "Final list needs attention", detail: health.messages?.[0] || health.overallStatus, go: "decisionPlan" });
       }
     }
 
@@ -94,32 +102,51 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
     return actions;
   }, [comp.pct, saved.length, byCat.Safety, verification, planSummary, decisionItems]);
 
+  // The old separate welcome/landing screen was folded into this page, so the
+  // dashboard now opens with that hero instead of living behind an extra
+  // click. A family that hasn't filled anything in yet gets the welcome copy
+  // and "Start your profile"; once there's a profile, the same banner turns
+  // into their own plan header and points at Journey.
+  const started = comp.pct > 0 || saved.length > 0;
+
   return (
     <div className="stack">
-      <div className="row spread wrap" style={{ alignItems: "flex-start" }}>
-        <div>
-          <div className="eyebrow">Dashboard</div>
-          <h1>{profile.name ? `${profile.name}'s plan` : "Your college plan"}</h1>
-          <p className="lead">A quick snapshot - your profile, your list balance, and where things stand.</p>
+      <div className="banner">
+        <div className="hero-content">
+          <div className="eyebrow">College planning, grounded in data</div>
+          <h1>{profile.name ? `${profile.name}'s plan` : (started ? "Your college plan" : "College planning, backed by real data.")}</h1>
+          <p className="lead">{started
+            ? "A quick snapshot: your profile, your list balance, and where things stand."
+            : "Find colleges that fit your profile, explore majors and career outcomes, and manage your application plan, using trusted U.S. education and labor data."}</p>
+          <div className="row wrap" style={{ marginTop: 14, gap: 14 }}>
+            {started
+              ? <button className="btn amber" onClick={() => onGo("journey")}>Continue your Journey <Arrow /></button>
+              : <button className="btn amber" onClick={() => onGo("profile")}>Start your profile <Arrow /></button>}
+            <button className="btn ghost" onClick={() => onGo("about")} style={{ color: "#dbe6ef", borderColor: "#3a5670" }}>How it works</button>
+          </div>
         </div>
-        <button className="btn amber" onClick={() => onGo("journey")}>Continue your Journey →</button>
       </div>
 
       <div className="kpis">
         <div className="kpi"><div className="n">{comp.pct}%</div><div className="l">Profile complete</div></div>
         <div className="kpi"><div className="n">{saved.length}</div><div className="l">Colleges saved</div></div>
-        <div className="kpi"><div className="n" style={{ color: "var(--reach)" }}>{byCat.Reach}</div><div className="l">▲ Reach</div></div>
-        <div className="kpi"><div className="n" style={{ color: "var(--target)" }}>{byCat.Target}</div><div className="l">◆ Target</div></div>
-        <div className="kpi"><div className="n" style={{ color: "var(--safety)" }}>{byCat.Safety}</div><div className="l">● Safety</div></div>
+        <div className="kpi"><div className="n" style={{ color: "var(--reach)" }}>{byCat.Reach}</div><div className="l"><Triangle /> Reach</div></div>
+        <div className="kpi"><div className="n" style={{ color: "var(--target)" }}>{byCat.Target}</div><div className="l"><Diamond /> Target</div></div>
+        <div className="kpi"><div className="n" style={{ color: "var(--safety)" }}>{byCat.Safety}</div><div className="l"><CircleFilled /> Safety</div></div>
       </div>
 
       <div className="card pad stack" style={{ background: "var(--paper-2)" }}>
         <div className="row spread" style={{ alignItems: "center" }}>
           <div>
             <h3 style={{ marginBottom: 2 }}>Your full step-by-step roadmap lives in Journey</h3>
-            <p className="note">Profile → Majors/Tracks → Matches → Program research → Admission risk → Course plan → Strategy → Final list → Deadlines → Export. Journey tracks real status for each stage from your own data.</p>
+            <p className="note">
+              {["Profile", "Majors/Tracks", "Matches", "Program research", "Admission risk",
+                "Course plan", "Strategy", "Final list", "Deadlines", "Export"].map((stage, i) => (
+                <React.Fragment key={stage}>{i > 0 && <> <Arrow /> </>}{stage}</React.Fragment>
+              ))}. Journey tracks real status for each stage from your own data.
+            </p>
           </div>
-          <button className="btn ghost" onClick={() => onGo("journey")}>Open Journey →</button>
+          <button className="btn ghost" onClick={() => onGo("journey")}>Open Journey <Arrow /></button>
         </div>
       </div>
 
@@ -127,17 +154,17 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
         <h3>Profile completeness</h3>
         {comp.checks.map(([label, ok]) => (
           <div key={label} className="row" style={{ gap: 8 }}>
-            <span style={{ color: ok ? "var(--safety)" : "var(--muted)" }}>{ok ? "✓" : "○"}</span>
+            <span style={{ color: ok ? "var(--safety)" : "var(--muted)" }}>{ok ? <Check /> : <CircleOpen />}</span>
             <span className="note" style={{ color: ok ? "var(--ink-900)" : "var(--muted)" }}>{label}</span>
           </div>
         ))}
-        {comp.pct < 100 && <button className="btn amber sm" style={{ marginTop: 8, alignSelf: "flex-start" }} onClick={() => onGo("profile")}>Finish profile →</button>}
+        {comp.pct < 100 && <button className="btn amber sm" style={{ marginTop: 8, alignSelf: "flex-start" }} onClick={() => onGo("profile")}>Finish profile <Arrow /></button>}
       </div>
 
       <div className="card pad stack">
         <div className="row spread">
           <h3>List balance</h3>
-          <button className="btn ghost sm" onClick={() => onGo("saved")}>View my list →</button>
+          <button className="btn ghost sm" onClick={() => onGo("saved")}>View my list <Arrow /></button>
         </div>
         <p className="note">{balanceNote}</p>
         {saved.length > 0 && (
@@ -154,7 +181,7 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
 
       <div className="grid cols-2">
         <div className="card pad stack">
-          <div className="row spread"><h3>Open verification items</h3><button className="btn ghost sm" onClick={() => onGo("decisionPlan")}>Verification Center →</button></div>
+          <div className="row spread"><h3>Open verification items</h3><button className="btn ghost sm" onClick={() => onGo("decisionPlan")}>Verification Center <Arrow /></button></div>
           {verification === undefined && <p className="note">Loading…</p>}
           {verification === null && <p className="note">Needs review - couldn't load right now.</p>}
           {verification && (
@@ -165,7 +192,7 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
         </div>
 
         <div className="card pad stack">
-          <div className="row spread"><h3>Upcoming deadlines</h3><button className="btn ghost sm" onClick={() => onGo("decisionPlan")}>Timeline & Tasks →</button></div>
+          <div className="row spread"><h3>Upcoming deadlines</h3><button className="btn ghost sm" onClick={() => onGo("decisionPlan")}>Timeline & Tasks <Arrow /></button></div>
           {planSummary === undefined && <p className="note">Loading…</p>}
           {planSummary === null && <p className="note">Needs review - couldn't load right now.</p>}
           {planSummary && (
@@ -178,7 +205,7 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
         </div>
 
         <div className="card pad stack">
-          <div className="row spread"><h3>Essay workload</h3><button className="btn ghost sm" onClick={() => onGo("essays")}>Essays →</button></div>
+          <div className="row spread"><h3>Essay workload</h3><button className="btn ghost sm" onClick={() => onGo("essays")}>Essays <Arrow /></button></div>
           {planSummary === undefined && <p className="note">Loading…</p>}
           {planSummary === null && <p className="note">Needs review - couldn't load right now.</p>}
           {planSummary && (
@@ -188,13 +215,15 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
         </div>
 
         <div className="card pad stack">
-          <div className="row spread"><h3>Final list health</h3><button className="btn ghost sm" onClick={() => onGo("decisionPlan")}>Final List Health Check →</button></div>
+          <div className="row spread"><h3>Final list health</h3><button className="btn ghost sm" onClick={() => onGo("decisionPlan")}>Final List Health Check <Arrow /></button></div>
           {planSummary === undefined && <p className="note">Loading…</p>}
           {planSummary === null && <p className="note">Needs review - couldn't load right now.</p>}
-          {planSummary && !planSummary.finalListHealth && <p className="note">Add colleges to your Decision Plan to see a health check.</p>}
-          {planSummary?.finalListHealth && (
+          {planSummary && (!planSummary.finalListHealth || planSummary.finalListHealth.overallStatus === "Not started") && (
+            <p className="note">Add colleges to your Decision Plan to see a health check.</p>
+          )}
+          {planSummary?.finalListHealth && planSummary.finalListHealth.overallStatus !== "Not started" && (
             <p className="note">
-              <span className="pill" style={{ marginRight: 6 }}>{planSummary.finalListHealth.overallStatus}</span>
+              <strong>{planSummary.finalListHealth.overallStatus}.</strong>{" "}
               {planSummary.finalListHealth.messages?.[0]}
             </p>
           )}
@@ -212,14 +241,15 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
         {nextActions.map((a, i) => (
           <div key={i} className="row spread wrap" style={{ padding: "6px 0", borderBottom: i < nextActions.length - 1 ? "1px solid var(--line-2)" : "none", gap: 8 }}>
             <div style={{ minWidth: 0 }}><div style={{ fontWeight: 600, fontSize: 13.5 }}>{a.label}</div><div className="note">{a.detail}</div></div>
-            <button className="btn ghost sm" onClick={() => onGo(a.go)}>Open →</button>
+            <button className="btn ghost sm" onClick={() => onGo(a.go)}>Open <Arrow /></button>
           </div>
         ))}
       </div>
 
       <div className="disclaimer">
-        This dashboard summarizes your own entries and official data. Estimates aren't guarantees - confirm
-        deadlines, costs, and requirements with each college's official site.
+        Planning aid only, not a guarantee. This dashboard summarizes your own entries and official data.
+        Confirm deadlines, costs, and requirements with each college's official site.{" "}
+        <button className="link" onClick={() => onGo("about")}>Read how it works &amp; the full disclaimer <Arrow /></button>
       </div>
     </div>
   );

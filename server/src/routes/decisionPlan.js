@@ -305,7 +305,7 @@ decisionPlanRouter.delete("/:id/tasks/:taskId", (req, res) => {
 // One aggregation endpoint the Decision Plan tab (and the Journey tab) can
 // call to render a top-of-page status panel without re-deriving counts
 // client-side. Purely a read/aggregation of data the family already entered
-// or verified elsewhere -- invents nothing new.
+// or verified elsewhere. Invents nothing new.
 decisionPlanRouter.get("/:id/summary", (req, res) => {
   const sid = req.params.id;
   const items = db.prepare("SELECT * FROM decision_plan_items WHERE student_id=?").all(sid);
@@ -348,7 +348,7 @@ decisionPlanRouter.get("/:id/summary", (req, res) => {
 
   // Final List Health Check (Feature 2): a couple more read-only counts --
   // colleges with zero essay prompts tracked, colleges with no application
-  // deadline on file -- feed into buildFinalListGuidance below alongside the
+  // deadline on file. Feed into buildFinalListGuidance below alongside the
   // counts already computed above. Same don't-invent-data rule: these are
   // just cross-references to essay_prompts / college_application_timeline_events,
   // scoped to this Decision Plan's own colleges only.
@@ -398,7 +398,7 @@ decisionPlanRouter.get("/:id/summary", (req, res) => {
   });
 });
 
-// Verification Center (Feature 1) -- one cross-college list of everything
+// Verification Center (Feature 1). One cross-college list of everything
 // still unresolved, pulled from data already tracked elsewhere in the app
 // (essays, timeline, application requirements, programs, verification
 // checklist, cost/NPC). See services/verificationCenter.js.
@@ -406,7 +406,7 @@ decisionPlanRouter.get("/:id/verification-center", (req, res) => {
   res.json(buildVerificationCenter(req.params.id));
 });
 
-// Essay status per college (Part M) -- read-only cross-reference to the
+// Essay status per college (Part M). Read-only cross-reference to the
 // Essay Center, same don't-merge-two-systems pattern as everywhere else:
 // essay count, whether current-cycle prompts are verified, whether
 // previous-year prompts are on file, how many still need verification,
@@ -424,7 +424,7 @@ function csvEscape(v) {
 
 // Feature 9: look up the official double-major verification record (if any)
 // for a given college + primary/secondary pairing, for CSV export only. Never
-// falls back to Scorecard-tier fields -- an export cell is either the real
+// falls back to Scorecard-tier fields, an export cell is either the real
 // official value or blank, never a guess.
 function lookupDmVerification(studentId, collegeId, primaryMajor, secondaryMajor) {
   if (!collegeId || !primaryMajor || !secondaryMajor) return null;
@@ -449,7 +449,7 @@ function dmExportCells(v, primaryMajor, secondaryMajor) {
   ];
 }
 
-// Verification Center CSV export -- same shape as the on-screen list, one
+// Verification Center CSV export. Same shape as the on-screen list, one
 // row per unresolved item, so a family can share/print the full to-do list.
 const DM_ISSUE_TYPES = new Set([
   "Double-major rules needing verification", "Verify primary major official name",
@@ -503,7 +503,7 @@ decisionPlanRouter.get("/:id/export.csv", (req, res) => {
     if (p.prompt_cycle) m.cycles.add(p.prompt_cycle);
   }
 
-  // Read-only cross-reference to Application Timeline (Part H) -- earliest
+  // Read-only cross-reference to Application Timeline (Part H). Earliest
   // deadline event per college, same don't-merge-two-systems pattern as the
   // Applications-tracker and Essay-Center cross-references above.
   const timelineRows = db.prepare("SELECT college_id, event_type, event_label, event_date, application_round, verification_status FROM college_application_timeline_events WHERE student_id=?").all(req.params.id);
@@ -541,7 +541,7 @@ decisionPlanRouter.get("/:id/export.csv", (req, res) => {
     lines.push([
       it.college_name, it.program_name, specialPrograms.join("; "), it.career_track, it.admission_category,
       it.program_verification_status, it.major_risk, it.cost_risk, it.application_round, it.decision_status,
-      pw?.platform_name || "Unknown -- needs verification", earliestDeadline,
+      pw?.platform_name || "Unknown, needs verification", earliestDeadline,
       es?.total ?? 0, es?.notStarted ?? 0, es?.special ?? 0, es ? [...es.cycles].join("; ") : "",
       tl ? `${tl.event_label || tl.event_type}: ${tl.event_date}` : "", tl?.application_round || "", tl?.verification_status || "",
       it.source_context, it.primary_major, it.secondary_major, it.double_major_status, it.double_major_verification_status,

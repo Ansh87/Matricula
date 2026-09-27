@@ -41,7 +41,7 @@ export const PROGRAM_NOTES = {
     url: "https://www.upenn.edu/undergraduate-majors",
   },
   "190415": { // Cornell
-    combinations: ["CS (in Engineering OR Arts & Sciences)", "Information Science", "Operations Research & Engineering", "Applied Economics & Management (Dyson)"],
+    combinations: ["CS (in Engineering or Arts & Sciences)", "Information Science", "Operations Research & Engineering", "Applied Economics & Management (Dyson)"],
     dualDegrees: ["College Scholar; double majors within a college"],
     engineering: "College of Engineering: CS, ECE, Mechanical, Aerospace, Biological, Chemical, Civil, Environmental, Materials, Operations Research, Systems.",
     note: "CS exists in two colleges with different application paths and requirements.",

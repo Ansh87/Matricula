@@ -28,19 +28,19 @@ API keys live only on the server. The browser talks solely to the app's own
 This app adds two new tabs on top of the original single-page planner:
 
 **Programs** (Program Discovery) finds and organizes real college opportunities beyond
-just majors -- minors, concentrations, certificates, honors/scholars/bridge programs,
+just majors. Minors, concentrations, certificates, honors/scholars/bridge programs,
 research programs, and other special opportunities. Three layers, all source-labeled:
 
 1. Seed from College Scorecard / CIP field-of-study data (broad, institution-level evidence).
 2. Add an official URL (program page, admissions page, Common Data Set, net price
-   calculator, etc.) -- the server fetches that one page and extracts structured fields.
+   calculator, etc.), the server fetches that one page and extracts structured fields.
 3. Bounded, same-domain discovery from a college's official site (max 25 pages, max
    depth 2, robots.txt-aware, PDFs skipped by default, every page cached and source-linked).
 
 Every record shows its source, last-checked date, a confidence level, and a
 verification status (Official source verified / College Scorecard-CIP inferred / User
 verified / Needs manual verification / Outdated-needs recheck / Not relevant). Nothing
-is invented -- automatic extraction that finds no clear fields is labeled accordingly,
+is invented. Automatic extraction that finds no clear fields is labeled accordingly,
 never guessed.
 
 **Decision Plan** is the family's working area: a Final Application List Builder
@@ -50,12 +50,12 @@ automatic caution warning for historically impacted/direct-admit fields like CS,
 engineering, business, data science, and nursing when school-specific risk is
 unknown), cost-risk and net-price tracking, auto-generated Strategy Notes (why this
 college/program, best application round, essay angle, risks, actions before applying,
-questions for admissions -- template-driven from your profile and recorded evidence,
+questions for admissions. Template-driven from your profile and recorded evidence,
 never fabricated), a Course & Preparation Plan per Career Track, a timeline/task
 tracker, and CSV export.
 
-All of this data -- programs, sources, decision items, checklists, strategy notes, and
-tasks -- is stored in its own SQLite tables and isolated by Firebase UID, exactly like
+All of this data. Programs, sources, decision items, checklists, strategy notes, and
+tasks. Is stored in its own SQLite tables and isolated by Firebase UID, exactly like
 the existing profile/list/tracker data. See `server/src/db/database.js` for the schema
 and `server/src/routes/programs.js` / `server/src/routes/decisionPlan.js` for the API.
 
@@ -107,7 +107,7 @@ Set these in `server/.env` (copy from `server/.env.example`):
 | `PORT` | Optional | Server port (default 4000). |
 | `CACHE_TTL_MS` | Optional | Live-response cache lifetime (default 24h). |
 | `STALE_AFTER_MS` | Optional | Age after which cached data is flagged stale (default 7d). |
-| `DB_PATH` | Optional | SQLite file path (default `./matricula.db`). On Railway, set to a mounted volume path, e.g. `/data/matricula.db` for a brand-new deploy -- but if you're redeploying an EXISTING Railway project, leave `DB_PATH` at whatever it's already set to (e.g. `/data/collegegene-navigator.db`) so you don't orphan your real saved data (see DEPLOYMENT.md). |
+| `DB_PATH` | Optional | SQLite file path (default `./matricula.db`). On Railway, set to a mounted volume path, e.g. `/data/matricula.db` for a brand-new deploy, but if you're redeploying an EXISTING Railway project, leave `DB_PATH` at whatever it's already set to (e.g. `/data/collegegene-navigator.db`) so you don't orphan your real saved data (see DEPLOYMENT.md). |
 
 ### Getting API keys
 
@@ -183,7 +183,7 @@ cd server && npm start
   `DB_PATH=/data/matricula.db` and `UPLOAD_DIR=/data/uploads` (new deploy) so
   profiles, saved lists, Programs & Opportunities records, and Decision Plans
   survive deploys. **Redeploying an existing project?** Do not change `DB_PATH`
-  from whatever it's already set to -- changing it points the app at a new,
+  from whatever it's already set to. Changing it points the app at a new,
   empty database and makes your existing saved data appear to vanish. Full
   walkthrough (including Firebase setup) in `DEPLOYMENT.md`.
 
@@ -311,7 +311,7 @@ the signed-in family's own data, never the whole database.
 
 ## Comparing colleges
 
-The **Compare** tab puts 2–5 saved colleges side by side on live official data
+The **Compare** tab puts 2-5 saved colleges side by side on live official data
 (admit rate, cost, earnings, graduation) plus your estimated culture fit, with
 adjustable weight sliders for what matters most to you and a "best match" star.
 Export the comparison to CSV.

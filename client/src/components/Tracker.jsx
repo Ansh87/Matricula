@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { api } from "../lib/api.js";
 import { fmtUSD } from "./ui.jsx";
+import { Arrow } from "./icons.jsx";
 
 const STATUS = ["Considering", "Planning to apply", "In progress", "Submitted", "Accepted", "Waitlisted", "Denied", "Committed"];
 const YN = ["", "Not started", "In progress", "Done", "N/A"];
@@ -30,10 +31,10 @@ export function Tracker({ studentId, list, collegeNames, onGo }) {
   const [open, setOpen] = useState(null);
   // Read-only cross-reference to the Decision Plan's Final List, so a family
   // doesn't have to keep two separate application-round/decision statuses in
-  // sync by hand -- both views are visible from either tab.
+  // sync by hand. Both views are visible from either tab.
   const [decisionItems, setDecisionItems] = useState({});
   // Read-only cross-references to Application Pathways (platform) and Essay
-  // Center (prompt counts), keyed by college_id -- same pattern as
+  // Center (prompt counts), keyed by college_id. Same pattern as
   // decisionItems above: fetched here, never merged into the tracker's own rows.
   const [pathwaysByCollege, setPathwaysByCollege] = useState({});
   const [essayByCollege, setEssayByCollege] = useState({});
@@ -137,7 +138,7 @@ export function Tracker({ studentId, list, collegeNames, onGo }) {
                     </div>
                   )}
                   <div className="note" style={{ fontSize: 11, color: "var(--muted)" }}>
-                    Application Pathways: {pathwaysByCollege[cid]?.platform_name || "Unknown -- needs verification"}
+                    Application Pathways: {pathwaysByCollege[cid]?.platform_name || "Unknown, needs verification"}
                     {" · Essay Center: "}
                     {essayByCollege[cid] ? `${essayByCollege[cid].total} tracked, ${essayByCollege[cid].notStarted} not started` : "none tracked yet"}
                   </div>
@@ -181,9 +182,9 @@ export function Tracker({ studentId, list, collegeNames, onGo }) {
                     </div>
                   </div>
                   <div className="row wrap" style={{ marginTop: 12, gap: 8 }}>
-                    {dp && <button className="btn sm ghost" onClick={() => onGo && onGo("decisionPlan")}>Open in Decision Plan →</button>}
-                    <button className="btn sm ghost" onClick={() => onGo && onGo("applicationPathways")}>Open in Application Pathways →</button>
-                    <button className="btn sm ghost" onClick={() => onGo && onGo("essays")}>Open in Essay Center →</button>
+                    {dp && <button className="btn sm ghost" onClick={() => onGo && onGo("decisionPlan")}>Open in Decision Plan <Arrow /></button>}
+                    <button className="btn sm ghost" onClick={() => onGo && onGo("applicationPathways")}>Open in Application Pathways <Arrow /></button>
+                    <button className="btn sm ghost" onClick={() => onGo && onGo("essays")}>Open in Essay Center <Arrow /></button>
                   </div>
                 </div>
               )}

@@ -1,8 +1,8 @@
-// regions.js -- informational-only region grouping + application-route
+// regions.js. Informational-only region grouping + application-route
 // guidance for the Application Pathways "Region view" (Part C). This is
 // general knowledge about how U.S. college application platforms are
 // typically organized by region/state-system, NOT a claim about any specific
-// college's actual application route -- always verify per college.
+// college's actual application route, always verify per college.
 const STATE_TO_REGION = {
   ME: "Northeast", NH: "Northeast", VT: "Northeast", MA: "Northeast", RI: "Northeast",
   CT: "Northeast", NJ: "Northeast", PA: "Northeast",
@@ -43,7 +43,7 @@ const REGION_GUIDANCE = {
   South: {
     label: "South",
     likelyRoutes: ["Common App", "Coalition / Scoir", "College-specific application", "Other state/system application"],
-    note: "Many Southern public-university systems run their own state application in addition to accepting Common App -- verify per state/college.",
+    note: "Many Southern public-university systems run their own state application in addition to accepting Common App. Verify per state/college.",
   },
   Texas: {
     label: "Texas",

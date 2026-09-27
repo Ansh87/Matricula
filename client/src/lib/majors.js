@@ -1,10 +1,10 @@
-// majors.js -- the canonical, CIP-backed major/interest list shared by every
+// majors.js, the canonical, CIP-backed major/interest list shared by every
 // major search field across Matricula: Profile's Intended Major fields,
 // Explorer's Single/Double-Major Planner (Majors.jsx), and the Academic
 // Interests picker. One list, defined once, so every major search offers the
 // exact same options instead of drifting per page.
 //
-// This is not an invented/hardcoded convenience list -- every entry here has
+// This is not an invented/hardcoded convenience list. Every entry here has
 // real College Scorecard CIP-code backing in server/src/services/scorecard.js
 // (MAJOR_CIP_MAP) or a BLS career mapping in server/src/services/bls.js
 // (MAJOR_MAP), which is what the recommendation/scoring/college-by-major
@@ -22,7 +22,7 @@ export const ALL_MAJORS = [
   "Public Policy","Political Science","Psychology","Nursing","Public Health","English","History","Philosophy",
 ];
 
-// Local, instant "search" over the in-memory list above -- no network call,
+// Local, instant "search" over the in-memory list above, no network call,
 // which is both faster than a round trip and keeps this consistent with the
 // "don't fetch the whole database just to implement autocomplete" guidance:
 // there's no database here to begin with, just this static, already-loaded

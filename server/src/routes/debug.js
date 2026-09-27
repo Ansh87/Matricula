@@ -101,7 +101,7 @@ debugRouter.get("/probe-cip", async (req, res) => {
     ["F. undotted CIP + level", { "school.state": state, "latest.programs.cip_4_digit.code": "1107", "latest.programs.cip_4_digit.credential.level": "3" }],
     ["G. dotted CIP + credential_level", { "school.state": state, "latest.programs.cip_4_digit.code": "11.07", "latest.programs.cip_4_digit.credential_level": "3" }],
     ["H. title = Computer Science", { "school.state": state, "latest.programs.cip_4_digit.title": "Computer Science" }],
-    ["I. multi-code OR (our real CS list) + level", { "school.state": state, "latest.programs.cip_4_digit.code": "1107,1101,1102,3008", "latest.programs.cip_4_digit.credential.level": "3" }],
+    ["I. multi-code or (our real CS list) + level", { "school.state": state, "latest.programs.cip_4_digit.code": "1107,1101,1102,3008", "latest.programs.cip_4_digit.credential.level": "3" }],
     ["J. nationwide CS + level (no state)", { "latest.programs.cip_4_digit.code": "1107", "latest.programs.cip_4_digit.credential.level": "3" }],
   ];
 

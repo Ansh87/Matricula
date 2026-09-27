@@ -39,7 +39,7 @@ programsRouter.post("/:id/seed-scorecard", async (req, res) => {
 // ---------- "Research this college" one-button family workflow ----------
 // Runs Layer 1 (College Scorecard / CIP seed) always, and Layer 3 (bounded
 // official-domain crawl) automatically whenever College Scorecard has an
-// official website on file for the college -- the family never has to
+// official website on file for the college, the family never has to
 // already know or type a domain. See services/programDiscovery.js.
 programsRouter.post("/:id/research", async (req, res) => {
   const { collegeId, collegeName, track, keyword } = req.body || {};
@@ -185,10 +185,10 @@ programsRouter.delete("/:id/discovered/:programId", (req, res) => {
 });
 
 // ---------- Bulk clear: "Clear discovered programs" ----------
-// Scoped to one college when collegeId is given (the common case -- the
+// Scoped to one college when collegeId is given (the common case, the
 // family is looking at one college's results and wants a clean slate before
 // re-running "Research this college"), or every discovered program for this
-// family when omitted. Only ever deletes discovered_programs rows -- never
+// family when omitted. Only ever deletes discovered_programs rows, never
 // touches program_sources (the raw fetched-page audit trail) or any other
 // table, and never affects another family's data (scoped by student_id).
 programsRouter.delete("/:id/discovered", (req, res) => {

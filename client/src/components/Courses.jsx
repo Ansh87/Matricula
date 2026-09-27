@@ -5,10 +5,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { api } from "../lib/api.js";
 import { SourceBadge, Spinner, ErrorNote, RestoredNote, ClearSearchButton } from "./ui.jsx";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
+import { Arrow, ArrowLeft, ExternalArrow } from "./icons.jsx";
 
 // College Scorecard's school_url field comes back as a bare domain (e.g.
 // "web.mit.edu", no scheme), which the browser treats as a relative path if
-// used directly as an href -- same fix already used in CollegeDetail.jsx.
+// used directly as an href. Same fix already used in CollegeDetail.jsx.
 function fixUrl(u) { return u ? (/^https?:/.test(u) ? u : `https://${u}`) : u; }
 
 export function Courses({ onOpen, studentId, profile, initialTrackId }) {
@@ -61,14 +62,14 @@ export function Courses({ onOpen, studentId, profile, initialTrackId }) {
     finally { if (searchIdRef.current === myId) setSearching(false); }
   };
 
-  // Auto-search once 2+ characters are typed, debounced ~350ms -- the same
-  // standard every other search field in the app now follows -- layered on
+  // Auto-search once 2+ characters are typed, debounced ~350ms, the same
+  // standard every other search field in the app now follows. Layered on
   // top of the existing manual Search button/Enter key below (both keep
   // working exactly as before). Skips the one q-change caused by restoring
   // a previous session's search so restoring never re-runs/re-fetches it.
   useEffect(() => {
     if (justRestoredRef.current) { justRestoredRef.current = false; return; }
-    if (selected) return; // already viewing a college's programs -- don't re-search behind it
+    if (selected) return; // already viewing a college's programs. Don't re-search behind it
     const trimmed = q.trim();
     if (trimmed.length < 2) return;
     const t = setTimeout(() => { search(); }, 350);
@@ -136,7 +137,7 @@ export function Courses({ onOpen, studentId, profile, initialTrackId }) {
                 <strong>{c.name}</strong>
                 <div className="note">{[c.city, c.state].filter(Boolean).join(", ")} · {c.controlType || ""}</div>
               </div>
-              <button className="btn ghost sm">View programs →</button>
+              <button className="btn ghost sm">View programs <Arrow /></button>
             </div>
           ))}
         </div>
@@ -150,7 +151,7 @@ export function Courses({ onOpen, studentId, profile, initialTrackId }) {
               <div className="note">{[selected.city, selected.state].filter(Boolean).join(", ")}</div>
             </div>
             <div className="row" style={{ gap: 8 }}>
-              <button className="btn ghost sm" onClick={() => { setSelected(null); setPrograms(null); }}>← Back</button>
+              <button className="btn ghost sm" onClick={() => { setSelected(null); setPrograms(null); }}><ArrowLeft /> Back</button>
               <button className="btn amber sm" onClick={() => onOpen(selected.id)}>Full dossier</button>
             </div>
           </div>
@@ -166,7 +167,7 @@ export function Courses({ onOpen, studentId, profile, initialTrackId }) {
               {/* verified combinations / dual-degrees */}
               {programs.notes && (
                 <div className="card pad stack">
-                  <div className="row spread"><h3>Notable major combinations &amp; dual-degrees</h3><SourceBadge level="verified" /></div>
+                  <div className="row spread"><h3>Notable major combinations &amp; dual-degrees</h3></div>
                   {programs.notes.combinations && (
                     <div>
                       <div className="note" style={{ fontWeight: 600, marginBottom: 6 }}>Popular combinations</div>
@@ -186,7 +187,7 @@ export function Courses({ onOpen, studentId, profile, initialTrackId }) {
                     </div>
                   )}
                   {programs.notes.note && <p className="note">{programs.notes.note}</p>}
-                  {programs.notes.url && <a className="link" href={programs.notes.url} target="_blank" rel="noreferrer">Official program page ↗</a>}
+                  {programs.notes.url && <a className="link" href={programs.notes.url} target="_blank" rel="noreferrer">Official program page <ExternalArrow /></a>}
                 </div>
               )}
 
@@ -200,7 +201,7 @@ export function Courses({ onOpen, studentId, profile, initialTrackId }) {
                   <div className="note" style={{ marginBottom: 10 }}>
                     This is the federal government's program taxonomy, not {selected.name}'s own department page - titles and groupings won't always match the college's own website.
                     {programs.officialWebsiteUrl && (
-                      <> <a className="link" href={fixUrl(programs.officialWebsiteUrl)} target="_blank" rel="noreferrer">Compare with {selected.name}'s official site ↗</a></>
+                      <> <a className="link" href={fixUrl(programs.officialWebsiteUrl)} target="_blank" rel="noreferrer">Compare with {selected.name}'s official site <ExternalArrow /></a></>
                     )}
                   </div>
                   {Object.entries(grouped).map(([area, list]) => (
@@ -249,7 +250,7 @@ export function Courses({ onOpen, studentId, profile, initialTrackId }) {
                       <div className="stack" style={{ gap: 4 }}>
                         {siteScan.majors.map((m) => (
                           <a key={m.url} className="link" href={m.url} target="_blank" rel="noreferrer" style={{ display: "block" }}>
-                            {m.title} ↗
+                            {m.title} <ExternalArrow />
                           </a>
                         ))}
                       </div>
@@ -269,11 +270,11 @@ export function Courses({ onOpen, studentId, profile, initialTrackId }) {
   );
 }
 
-// "By Career Track" -- general, evidence-based course/prep guidance per
+// "By Career Track". General, evidence-based course/prep guidance per
 // Career Track (senior-year courses, college early direction, math/domain
 // expectations, suggested projects/skills, risks if prep is weak). Reuses the
 // same shared reference data (course_plans) as the Decision Plan tab's Course
-// & Prep Plans sub-tab -- never a claim about what a specific college requires.
+// & Prep Plans sub-tab, never a claim about what a specific college requires.
 function TrackPlans({ studentId, profile, initialTrackId }) {
   const [plans, setPlans] = useState([]);
   const [trackId, setTrackId] = useState(initialTrackId || profile?.preferredScenarioId || "");
@@ -298,7 +299,7 @@ function TrackPlans({ studentId, profile, initialTrackId }) {
     <div className="stack">
       <div className="card pad">
         <h3>Course &amp; Preparation Plan by Career Track</h3>
-        <p className="note">General, evidence-based prep guidance per Career Track -- not a claim about what any specific college requires or offers.</p>
+        <p className="note">General, evidence-based prep guidance per Career Track, not a claim about what any specific college requires or offers.</p>
         <select className="inp" style={{ maxWidth: 420, marginTop: 8 }} value={trackId} onChange={(e) => setTrackId(e.target.value)}>
           <option value="">Choose a track...</option>
           {plans.map((p) => <option key={p.track_id} value={p.track_id}>{p.track_name}</option>)}

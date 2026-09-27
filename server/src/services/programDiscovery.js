@@ -207,7 +207,7 @@ function guessDepartment(sentences) {
 // Feature 7 (double-major verification strengthening): when a family
 // researches a college, flag pages whose text mentions double-major-related
 // policy language, as a breadcrumb pointing the family at pages worth
-// checking manually -- this NEVER creates or updates a double_major_
+// checking manually. This NEVER creates or updates a double_major_
 // verifications record by itself (that would mean guessing which specific
 // major pair the family cares about, and inventing that association would
 // violate the "never invent facts" rule). It only ever adds a note to the
@@ -270,7 +270,7 @@ export function extractProgramFromHtml(html, url) {
 }
 
 // --- Quality gate for Layer 3 (automatic crawl) results only. Layer 2 (a
-// family-pasted URL) is always trusted -- the family chose that link on
+// family-pasted URL) is always trusted, the family chose that link on
 // purpose. Layer 3 visits dozens of pages automatically and, without a gate,
 // happily "discovers" navigation furniture (an "Apply" button, a footer
 // "State and System Resources" link, a careers page) as if it were a real
@@ -409,7 +409,7 @@ export async function seedProgramsFromScorecard(studentId, collegeId) {
       confidence_level: "medium",
       verification_status: "College Scorecard / CIP inferred",
       last_checked: ts,
-      notes: "Inferred from College Scorecard / CIP field-of-study data. This confirms a broad field of study is offered at the institution level - it does NOT confirm a specific program page, honors track, or special-program variant. Needs manual verification against the official program page for anything beyond the major itself.",
+      notes: "Inferred from College Scorecard / CIP field-of-study data. This confirms a broad field of study is offered at the institution level - it does not confirm a specific program page, honors track, or special-program variant. Needs manual verification against the official program page for anything beyond the major itself.",
       action_needed: defaultActionNeeded("College Scorecard / CIP inferred"),
       created_at: ts,
       updated_at: ts,
@@ -799,7 +799,7 @@ function looksLikeMajorPage(url, title) {
 // the usual " | University Name" / " - University Name" suffix noise.
 function cleanMajorTitle(title, collegeName) {
   if (!title) return null;
-  let t = title.replace(/\s*[|\-–-]\s*.*$/, "").trim();
+  let t = title.replace(/\s*[|\---]\s*.*$/, "").trim();
   if (collegeName && t.toLowerCase() === collegeName.toLowerCase()) return null;
   return t.length >= 3 && t.length <= 120 ? t : title.slice(0, 120);
 }

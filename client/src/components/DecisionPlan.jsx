@@ -1,7 +1,7 @@
-// DecisionPlan.jsx -- the family's real working area: Final Application List
+// DecisionPlan.jsx, the family's real working area: Final Application List
 // Builder, Program Verification Checklist, major-specific admission risk, cost
 // risk, Strategy Notes, Course/Prep Plan, Timeline & Tasks, and CSV export.
-// Nothing here invents a school-specific fact -- unknowns say "Verify with
+// Nothing here invents a school-specific fact. Unknowns say "Verify with
 // official source," and major-risk defaults to a caution warning (never a
 // guessed risk level) for historically impacted/direct-admit fields.
 import React, { useState, useEffect, useCallback } from "react";
@@ -11,6 +11,7 @@ import { SetupPlanningButton, InlineSpinner, RestoredNote } from "./ui.jsx";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
 import { PremiumGate } from "../subscription/PremiumGate.jsx";
 import { useEntryOverride } from "../lib/entryOverride.js";
+import { Arrow, Warning } from "./icons.jsx";
 
 const CATEGORY_OPTS = ["", "Dream / Lottery", "Reach", "Target", "Safety", "Financial Safety", "In-state Anchor"];
 const DECISION_OPTS = ["Keep", "Maybe", "Remove", "Need to verify", "Applied", "Accepted", "Rejected", "Waitlisted"];
@@ -65,12 +66,12 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
   const [trackerByCollege, setTrackerByCollege] = useState({});
   // Read-only cross-references to Application Pathways (platform/route/
   // deadlines) and Essay Center (prompt counts/status), keyed by college_id.
-  // Fetched here, never merged into decision_plan_items -- same
+  // Fetched here, never merged into decision_plan_items. Same
   // don't-merge-two-systems pattern already used for the tracker above.
   const [pathwaysByCollege, setPathwaysByCollege] = useState({});
   const [essayByCollege, setEssayByCollege] = useState({});
   // Read-only cross-reference to Application Timeline (Part H), keyed by
-  // college_id -- same don't-merge-two-systems pattern as the two above.
+  // college_id. Same don't-merge-two-systems pattern as the two above.
   const [timelineByCollege, setTimelineByCollege] = useState({});
   const loadTimelineSummary = useCallback(() => {
     api.timelineDecisionPlanSummary(studentId).then((r) => setTimelineByCollege(r.byCollege || {})).catch(() => {});
@@ -92,7 +93,7 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
   }, [studentId]);
 
   // Application Pathways: keep only the "main application" record per college
-  // (the one with no program/honors label) for this summary -- a college may
+  // (the one with no program/honors label) for this summary, a college may
   // have a second row for a separate honors/scholarship application.
   useEffect(() => {
     api.listRequirements(studentId).then((r) => {
@@ -107,7 +108,7 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
   }, [studentId]);
 
   // Essay Center (Part M): per-college essay status computed server-side by
-  // services/essayCenter.js's buildDecisionPlanEssayStatus -- essay count,
+  // services/essayCenter.js's buildDecisionPlanEssayStatus. Essay count,
   // whether current-cycle prompts are verified, whether previous-year
   // prompts are on file, how many still need verification, overall status,
   // earliest essay deadline, whether a special-program essay is required,
@@ -146,7 +147,7 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
       await api.addDecisionTask(studentId, {
         collegeId: it.college_id, collegeName: it.college_name, taskType: "application_deadline",
         dueDate: tl.earliestUpcomingDeadline.nextOccurrenceIso || null, priority: "High",
-        notes: `${tl.earliestUpcomingDeadline.eventLabel || "Application deadline"} for ${it.college_name} (${tl.earliestUpcomingDeadline.date})${tl.applicationRound ? ` -- ${tl.applicationRound}` : ""}`,
+        notes: `${tl.earliestUpcomingDeadline.eventLabel || "Application deadline"} for ${it.college_name} (${tl.earliestUpcomingDeadline.date})${tl.applicationRound ? `, ${tl.applicationRound}` : ""}`,
       });
       setTaskMsg(`Task added for ${it.college_name}.`);
       setTimeout(() => setTaskMsg(null), 3000);
@@ -172,7 +173,7 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
     const row = saved.find((s) => s.college_id === addCollegeId);
     if (!row) return;
     // Carry over the Reach/Target/Safety category already computed when this
-    // college was matched/saved -- no reason to make the family re-classify
+    // college was matched/saved, no reason to make the family re-classify
     // something the app already knows.
     const r = await api.addDecisionItem(studentId, {
       collegeId: row.college_id, collegeName: row.college_name || collegeNames[row.college_id] || row.college_id,
@@ -278,7 +279,7 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
         <div>
           <div className="eyebrow">Family working area</div>
           <h1>Decision Plan</h1>
-          <p className="lead">Build the real final list, verify every program, track major-specific admission risk and cost risk, and generate strategy notes -- all evidence-based, never invented.</p>
+          <p className="lead">Build the real final list, verify every program, track major-specific admission risk and cost risk, and generate strategy notes. All evidence-based, never invented.</p>
         </div>
         <div>
           <button className="btn ghost" onClick={exportCsv} disabled={csvBusy}>
@@ -302,7 +303,7 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
         <div className="stack">
           <div className="note" style={{ padding: "0 2px" }}>
             The status dropdown on each card (Keep / Maybe / Remove / Applied / etc.) is a label, not a delete
-            action -- it keeps a record so you remember why a college was ruled out. To take a college off this
+            action. It keeps a record so you remember why a college was ruled out. To take a college off this
             list entirely, use the <strong>Delete</strong> button on its card. For day-to-day essay/recommendation/
             submission tracking, use <button className="link" onClick={() => onGo && onGo("applications")}>Applications</button> --
             this tab is for strategy: category, program verification, admission risk, and cost.
@@ -311,7 +312,7 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
           <div className="card pad">
             <h3>Add a saved college to the Decision Plan</h3>
             {!availableSaved.length ? (
-              <div className="note">All saved colleges are already on your Decision Plan, or nothing is saved yet -- save colleges from Matches/Browse/My List first.</div>
+              <div className="note">All saved colleges are already on your Decision Plan, or nothing is saved yet. Save colleges from Matches/Browse/My List first.</div>
             ) : (
               <div className="row wrap" style={{ gap: 8, marginTop: 8, alignItems: "center" }}>
                 <select className="inp" style={{ maxWidth: 320 }} value={addCollegeId} onChange={(e) => setAddCollegeId(e.target.value)}>
@@ -412,13 +413,13 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
                         </div>
                       )}
                       <div className="note" style={{ fontSize: 11, color: "var(--muted)" }}>
-                        Application platform: {pathwaysByCollege[it.college_id]?.platform_name || "Unknown -- needs verification"}
+                        Application platform: {pathwaysByCollege[it.college_id]?.platform_name || "Unknown, needs verification"}
                         {pathwaysByCollege[it.college_id]?.ea_deadline || pathwaysByCollege[it.college_id]?.rd_deadline
                           ? ` · Earliest deadline: ${pathwaysByCollege[it.college_id]?.ea_deadline || pathwaysByCollege[it.college_id]?.ed_deadline || pathwaysByCollege[it.college_id]?.rea_scea_deadline || pathwaysByCollege[it.college_id]?.priority_deadline || pathwaysByCollege[it.college_id]?.rd_deadline || pathwaysByCollege[it.college_id]?.rolling_deadline}`
                           : ""}
                         {" · Essays: "}
                         {essayByCollege[it.item_id]?.total
-                          ? `${essayByCollege[it.item_id].total} tracked -- ${essayByCollege[it.item_id].essayStatus || "status unknown"}${essayByCollege[it.item_id].special ? " · special-program essay required" : ""}`
+                          ? `${essayByCollege[it.item_id].total} tracked, ${essayByCollege[it.item_id].essayStatus || "status unknown"}${essayByCollege[it.item_id].special ? " · special-program essay required" : ""}`
                           : "none tracked yet"}
                       </div>
                       {essayByCollege[it.item_id]?.total > 0 && (
@@ -445,7 +446,7 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
                         {timelineByCollege[it.college_id]?.earliestUpcomingDeadline
                           ? ` · Earliest upcoming: ${timelineByCollege[it.college_id].earliestUpcomingDeadline.eventLabel} ${timelineByCollege[it.college_id].earliestUpcomingDeadline.date}${timelineByCollege[it.college_id].applicationRound ? ` (${timelineByCollege[it.college_id].applicationRound})` : ""}`
                           : ""}
-                        {timelineByCollege[it.college_id]?.hasConflicts && <strong style={{ color: "var(--reach)" }}> · Conflicting dates -- verify</strong>}
+                        {timelineByCollege[it.college_id]?.hasConflicts && <strong style={{ color: "var(--reach)" }}> · Conflicting dates. Verify</strong>}
                         {timelineByCollege[it.college_id]?.deadlinesNeedingVerification > 0 && ` · ${timelineByCollege[it.college_id].deadlinesNeedingVerification} deadline(s) need verification`}
                         {timelineByCollege[it.college_id]?.missingEventTypes?.length > 0 && ` · Missing: ${timelineByCollege[it.college_id].missingEventTypes.join(", ")}`}
                       </div>
@@ -463,7 +464,7 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
                     </div>
                   </div>
 
-                  {caution && <div className="note" style={{ padding: "0 20px 10px", color: "#7a5313" }}>⚠ {options.majorRiskWarning}</div>}
+                  {caution && <div className="note" style={{ padding: "0 20px 10px", color: "#7a5313" }}><Warning /> {options.majorRiskWarning}</div>}
 
                   {isOpen && (
                     <div className="pad" style={{ borderTop: "1px solid var(--line-2)" }}>
@@ -565,7 +566,7 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
 
                       <h3 style={{ marginTop: 16 }}>Strategy notes</h3>
                       <p className="note" style={{ marginTop: -4, marginBottom: 8 }}>
-                        Why this college, essay angle, and risks -- specific to {it.college_name || "this college"}. For
+                        Why this college, essay angle, and risks. Specific to {it.college_name || "this college"}. For
                         whole-list balance (Reach/Target/Safety ratio, best ED pick), see{" "}
                         <button className="link" onClick={() => onGo && onGo("strategy")}>Strategy</button>.
                       </p>
@@ -595,11 +596,11 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
 
                       <div className="row wrap" style={{ marginTop: 12, gap: 8 }}>
                         <button className="btn sm ghost" onClick={confirmDelete}>Delete this college from Decision Plan</button>
-                        <button className="btn sm ghost" onClick={() => onGo && onGo("applications")}>Track application progress in Applications →</button>
-                        <button className="btn sm ghost" onClick={() => onGo && onGo("applicationPathways", it.college_id)}>Set platform &amp; deadlines in Application Pathways →</button>
-                        <button className="btn sm ghost" onClick={() => onGo && onGo("applicationPathways", it.college_id)}>View timeline →</button>
+                        <button className="btn sm ghost" onClick={() => onGo && onGo("applications")}>Track application progress in Applications <Arrow /></button>
+                        <button className="btn sm ghost" onClick={() => onGo && onGo("applicationPathways", it.college_id)}>Set platform &amp; deadlines in Application Pathways <Arrow /></button>
+                        <button className="btn sm ghost" onClick={() => onGo && onGo("applicationPathways", it.college_id)}>View timeline <Arrow /></button>
                         <button className="btn sm ghost" disabled={!timelineByCollege[it.college_id]?.earliestUpcomingDeadline} onClick={() => createTaskFromTimeline(it)}>Create task from timeline</button>
-                        <button className="btn sm ghost" onClick={() => onGo && onGo("essays", it.college_id)}>Track essays in Essay Center →</button>
+                        <button className="btn sm ghost" onClick={() => onGo && onGo("essays", it.college_id)}>Track essays in Essay Center <Arrow /></button>
                       </div>
                       {taskMsg && <div className="note" style={{ marginTop: 6, color: "var(--safety)" }}>{taskMsg}</div>}
                     </div>
@@ -623,7 +624,7 @@ export function DecisionPlan({ studentId, profile, saved, collegeNames, onGo, en
   );
 }
 
-// Family Command Center summary -- a top-of-page status panel aggregating
+// Family Command Center summary, a top-of-page status panel aggregating
 // what the family has already entered/verified elsewhere in the app. Read-
 // only; invents nothing new. Backed by GET /api/decision-plan/:id/summary.
 function SummaryPanel({ studentId, refreshKey }) {
@@ -686,7 +687,7 @@ function SummaryPanel({ studentId, refreshKey }) {
   );
 }
 
-// Verification Center (Feature 1) -- one cross-college list of everything
+// Verification Center (Feature 1). One cross-college list of everything
 // still unresolved, pulled from data already tracked elsewhere in the app.
 // Read-only; every item links back to the page where it can actually be
 // resolved. Backed by GET /api/decision-plan/:id/verification-center.
@@ -748,7 +749,7 @@ function VerificationCenterPanel({ studentId, refreshKey, onGo }) {
           {csvErr && <span className="note" style={{ color: "var(--reach)" }}>{csvErr}</span>}
         </div>
       </div>
-      <p className="note">Everything below still needs a source checked, a conflict resolved, or a family decision made -- nothing here is hidden or assumed.</p>
+      <p className="note">Everything below still needs a source checked, a conflict resolved, or a family decision made. Nothing here is hidden or assumed.</p>
       <RestoredNote restoredFrom={vcRestoredFrom} />
       <div className="row wrap" style={{ gap: 6 }}>
         {["High", "Medium", "Low"].map((p) => (
@@ -758,7 +759,7 @@ function VerificationCenterPanel({ studentId, refreshKey, onGo }) {
         ))}
       </div>
       {!data.totalItems ? (
-        <div className="note" style={{ color: "var(--safety)" }}>Nothing outstanding right now -- every tracked item has a source or is marked verified.</div>
+        <div className="note" style={{ color: "var(--safety)" }}>Nothing outstanding right now. Every tracked item has a source or is marked verified.</div>
       ) : (
         <div className="stack" style={{ gap: 6 }}>
           {shown.map((it, i) => (
@@ -776,7 +777,7 @@ function VerificationCenterPanel({ studentId, refreshKey, onGo }) {
               </div>
               {RELATED_PAGE_LABEL[it.relatedPage] && (
                 <button className="btn sm ghost" onClick={() => onGo && onGo(RELATED_PAGE_TAB[it.relatedPage], it.collegeId)}>
-                  {RELATED_PAGE_LABEL[it.relatedPage]} →
+                  {RELATED_PAGE_LABEL[it.relatedPage]} <Arrow />
                 </button>
               )}
             </div>
@@ -815,7 +816,7 @@ function CoursePlans({ studentId, profile }) {
     <div className="stack">
       <div className="card pad">
         <h3>Course &amp; Preparation Plan</h3>
-        <p className="note">General, evidence-based prep guidance per Career Track -- not a claim about what any specific college requires.</p>
+        <p className="note">General, evidence-based prep guidance per Career Track, not a claim about what any specific college requires.</p>
         <select className="inp" style={{ maxWidth: 420, marginTop: 8 }} value={trackId} onChange={(e) => setTrackId(e.target.value)}>
           <option value="">Choose a track...</option>
           {plans.map((p) => <option key={p.track_id} value={p.track_id}>{p.track_name}</option>)}

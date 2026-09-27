@@ -30,17 +30,17 @@ const M = (major_name, careers, salary_range, ai, grad) => ({
 });
 
 export const MAJOR_SEED = [
-  M("Computer Science", ["software-developers","data-scientists","information-security-analysts"], "$112,590–$132,270", "AI augments this field; strong demand for AI-system builders.", "Not required for most roles."),
-  M("Artificial Intelligence", ["data-scientists","software-developers"], "$112,590–$132,270", "Directly builds AI; fastest-growing skill area.", "Advanced roles often favor a master's/PhD."),
-  M("Data Science", ["data-scientists","operations-research-analysts","software-developers"], "$91,290–$132,270", "Central to AI/analytics; very strong growth.", "Not required; helpful for research."),
-  M("Cybersecurity", ["information-security-analysts","software-developers"], "$124,910–$132,270", "Rising demand as AI expands threat surface.", "Not required for most roles."),
-  M("Electrical Engineering", ["electrical-engineers","computer-hardware-engineers"], "$111,910–$155,020", "Edge-AI and semiconductors are growth areas.", "Not required; specialization may help."),
-  M("Computer Engineering", ["computer-hardware-engineers","software-developers","electrical-engineers"], "$111,910–$155,020", "Bridges hardware and software for AI.", "Not required for most roles."),
-  M("Finance", ["financial-analysts","management-analysts"], "$99,410–$99,890", "AI automates routine analysis; judgment stays valuable.", "Not required; MBA/CFA can advance."),
-  M("Economics", ["economists","financial-analysts","management-analysts"], "$99,410–$115,730", "Data/AI methods increasingly used.", "Economist roles often require master's/PhD."),
-  M("Business Analytics", ["management-analysts","operations-research-analysts","data-scientists"], "$91,290–$112,590", "Analytics + AI tooling is a strong hiring area.", "Not required."),
+  M("Computer Science", ["software-developers","data-scientists","information-security-analysts"], "$112,590-$132,270", "AI augments this field; strong demand for AI-system builders.", "Not required for most roles."),
+  M("Artificial Intelligence", ["data-scientists","software-developers"], "$112,590-$132,270", "Directly builds AI; fastest-growing skill area.", "Advanced roles often favor a master's/PhD."),
+  M("Data Science", ["data-scientists","operations-research-analysts","software-developers"], "$91,290-$132,270", "Central to AI/analytics; very strong growth.", "Not required; helpful for research."),
+  M("Cybersecurity", ["information-security-analysts","software-developers"], "$124,910-$132,270", "Rising demand as AI expands threat surface.", "Not required for most roles."),
+  M("Electrical Engineering", ["electrical-engineers","computer-hardware-engineers"], "$111,910-$155,020", "Edge-AI and semiconductors are growth areas.", "Not required; specialization may help."),
+  M("Computer Engineering", ["computer-hardware-engineers","software-developers","electrical-engineers"], "$111,910-$155,020", "Bridges hardware and software for AI.", "Not required for most roles."),
+  M("Finance", ["financial-analysts","management-analysts"], "$99,410-$99,890", "AI automates routine analysis; judgment stays valuable.", "Not required; MBA/CFA can advance."),
+  M("Economics", ["economists","financial-analysts","management-analysts"], "$99,410-$115,730", "Data/AI methods increasingly used.", "Economist roles often require master's/PhD."),
+  M("Business Analytics", ["management-analysts","operations-research-analysts","data-scientists"], "$91,290-$112,590", "Analytics + AI tooling is a strong hiring area.", "Not required."),
   M("Biomedical Engineering", ["biomedical-engineers"], "$100,730", "AI in devices/diagnostics is emerging.", "Some roles favor graduate study."),
   M("Environmental Engineering", ["environmental-engineers"], "$100,090", "Modeling/sensing increasingly data-driven.", "Not required for most roles."),
-  M("Public Policy", ["management-analysts","economists","operations-research-analysts"], "$91,290–$115,730", "Data-informed policy analysis growing.", "Analyst roles often favor a master's."),
-  M("Mechanical Engineering", ["mechanical-engineers","electrical-engineers"], "$99,510–$111,910", "Automation/robotics integrate AI.", "Not required for most roles."),
+  M("Public Policy", ["management-analysts","economists","operations-research-analysts"], "$91,290-$115,730", "Data-informed policy analysis growing.", "Analyst roles often favor a master's."),
+  M("Mechanical Engineering", ["mechanical-engineers","electrical-engineers"], "$99,510-$111,910", "Automation/robotics integrate AI.", "Not required for most roles."),
 ];

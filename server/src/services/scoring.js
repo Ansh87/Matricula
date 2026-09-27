@@ -337,9 +337,9 @@ export function classify(profile, c, academic, ec) {
   let category, label, range;
   if (adj >= 85 && baseRate >= 60) { category = "Safety"; label = "Very High"; range = "70%+"; }
   else if (adj >= 70) { category = "Likely"; label = "Very High"; range = "70%+"; }
-  else if (adj >= 50) { category = "Likely"; label = "High"; range = "50–70%"; }
-  else if (adj >= 30) { category = "Target"; label = "Moderate"; range = "30–50%"; }
-  else if (adj >= 15) { category = "Reach"; label = "Low"; range = "15–30%"; }
+  else if (adj >= 50) { category = "Likely"; label = "High"; range = "50-70%"; }
+  else if (adj >= 30) { category = "Target"; label = "Moderate"; range = "30-50%"; }
+  else if (adj >= 15) { category = "Reach"; label = "Low"; range = "15-30%"; }
   else { category = "Far Reach"; label = "Very Low"; range = "below 15%"; }
 
   // Downgrade an over-confident Safety/Likely when data is thin.

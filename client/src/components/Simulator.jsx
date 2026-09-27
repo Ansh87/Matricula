@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { api } from "../lib/api.js";
 import { CategoryTag } from "./ui.jsx";
+import { Arrow, ArrowUp, Info } from "./icons.jsx";
 
 export function Simulator({ collegeId, profile }) {
   const [levers, setLevers] = useState([]);
@@ -63,12 +64,12 @@ export function Simulator({ collegeId, profile }) {
               <Stat k="Academic" v={result.after.academic} up={result.after.academic > result.before.academic} />
               <Stat k="Culture fit" v={result.after.cultureFit} up={(result.after.cultureFit ?? 0) > (result.before.cultureFit ?? 0)} />
             </div>
-            {result.shifted && <div className="note" style={{ marginTop: 8, color: "var(--safety)", fontWeight: 600 }}>Category improved →</div>}
+            {result.shifted && <div className="note" style={{ marginTop: 8, color: "var(--safety)", fontWeight: 600 }}>Category improved <Arrow /></div>}
           </div>
         </div>
       )}
 
-      {result?.earlyNote && <div className="note" style={{ marginTop: 10 }}>ℹ {result.earlyNote}</div>}
+      {result?.earlyNote && <div className="note" style={{ marginTop: 10 }}><Info /> {result.earlyNote}</div>}
     </div>
   );
 }
@@ -78,7 +79,7 @@ function Stat({ k, v, up }) {
     <div>
       <div className="note" style={{ fontSize: 11 }}>{k}</div>
       <div className="mono" style={{ fontSize: 18, fontWeight: 600, color: up ? "var(--safety)" : "var(--ink-900)" }}>
-        {v == null ? "-" : v}{up ? " ↑" : ""}
+        {v == null ? "-" : v}{up ? <> <ArrowUp /></> : ""}
       </div>
     </div>
   );

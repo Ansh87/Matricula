@@ -11,9 +11,9 @@ export function buildStrategy(saved, profile) {
 
   const issues = [];
   if (counts.Reach > IDEAL.reach[1] + 2) issues.push(`Your list is reach-heavy (${counts.Reach} reaches). Add stronger targets and safeties you'd be happy to attend.`);
-  if (counts.Target < IDEAL.target[0]) issues.push(`Only ${counts.Target} target schools - aim for ${IDEAL.target[0]}–${IDEAL.target[1]}. Targets are the core of a strong list.`);
+  if (counts.Target < IDEAL.target[0]) issues.push(`Only ${counts.Target} target schools - aim for ${IDEAL.target[0]}-${IDEAL.target[1]}. Targets are the core of a strong list.`);
   if (counts.Safety < IDEAL.safety[0]) issues.push(`Only ${counts.Safety} safety schools - add ${IDEAL.safety[0] - counts.Safety} more you're confident about and can afford.`);
-  if (total < 6) issues.push("A typical balanced list has ~8–12 colleges; you have fewer than that so far.");
+  if (total < 6) issues.push("A typical balanced list has ~8-12 colleges; you have fewer than that so far.");
   if (total > 15) issues.push("You have a lot of applications - each one takes real effort. Consider trimming the weakest fits.");
 
   // Financial-safety check: an affordable, likely-admit school within budget.

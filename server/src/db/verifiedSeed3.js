@@ -119,7 +119,7 @@ export const VERIFIED_SEED_3 = [
       deadlines: { Priority: "Nov 1", Regular: "Jan 15" },
       css: "Not required (FAFSA-based)",
       majorRestrictions: { note: "Rolling admission with no hard cutoff; priority dates most affect financial aid/scholarship consideration." } }),
-  // University of Wisconsin–Madison
+  // University of Wisconsin-Madison
   V({ id: "240444", url: "https://admissions.wisc.edu/apply-as-a-freshman/", ed: false, ea: true, rd: true,
       deadlines: { EA: "Nov 1", RD: "Jan 15" },
       css: "Not required (FAFSA-based)" }),
@@ -153,19 +153,19 @@ export const VERIFIED_SEED_3 = [
   // Insight Questions, no CSS Profile). Campus-specific major-competitiveness
   // notes below.
   V({ id: "110680", url: "https://admissions.ucsd.edu/", ed: false, ea: false, rd: true,
-      deadlines: { "UC application": "Nov 1–30 filing period" }, testing: "Test-blind (SAT/ACT not considered)",
+      deadlines: { "UC application": "Nov 1-30 filing period" }, testing: "Test-blind (SAT/ACT not considered)",
       recs: "Not required (letters not part of standard UC review)", essays: "4 UC Personal Insight Questions",
       css: "Not required (FAFSA/California Dream Act)",
       majorRestrictions: { note: "Admitted by college/major; CS (Jacobs School) and other high-demand majors are capped and more competitive than the campus overall rate." },
       honors: "Provost's Honors and college-specific honors programs" }),
   V({ id: "110705", url: "https://admissions.sa.ucsb.edu/", ed: false, ea: false, rd: true,
-      deadlines: { "UC application": "Nov 1–30 filing period" }, testing: "Test-blind (SAT/ACT not considered)",
+      deadlines: { "UC application": "Nov 1-30 filing period" }, testing: "Test-blind (SAT/ACT not considered)",
       recs: "Not required (letters not part of standard UC review)", essays: "4 UC Personal Insight Questions",
       css: "Not required (FAFSA/California Dream Act)",
       majorRestrictions: { note: "Admitted by college/major; College of Engineering and CS majors are capped/selective, more competitive than the campus overall rate." },
       honors: "College of Creative Studies (separate application) and college honors programs" }),
   V({ id: "110653", url: "https://admissions.uci.edu/", ed: false, ea: false, rd: true,
-      deadlines: { "UC application": "Nov 1–30 filing period" }, testing: "Test-blind (SAT/ACT not considered)",
+      deadlines: { "UC application": "Nov 1-30 filing period" }, testing: "Test-blind (SAT/ACT not considered)",
       recs: "Not required (letters not part of standard UC review)", essays: "4 UC Personal Insight Questions",
       css: "Not required (FAFSA/California Dream Act)",
       majorRestrictions: { note: "Admitted by school/major; CS (Donald Bren School) is a capped, highly competitive major relative to the campus overall rate." },

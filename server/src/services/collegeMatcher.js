@@ -12,7 +12,7 @@
 //      string-similarity re-rank, so a family typing a school's real full
 //      name (or a name close to one) still works even though it was never
 //      hand-curated.
-// NEVER guesses when uncertain -- callers (routes/collegeImport.js) apply the
+// NEVER guesses when uncertain. Callers (routes/collegeImport.js) apply the
 // confidence rules (high/medium/low/ambiguous/no-match) and only high
 // confidence is auto-add-eligible.
 import { searchColleges } from "./scorecard.js";
@@ -24,7 +24,7 @@ export function normalizeName(s) {
     .toLowerCase()
     .replace(/&/g, " and ")
     .replace(/[.'’]/g, "")
-    .replace(/[-–-]/g, " ")
+    .replace(/[---]/g, " ")
     .replace(/[^a-z0-9 ]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
@@ -32,7 +32,7 @@ export function normalizeName(s) {
 
 // Classic Levenshtein edit distance, then converted to a 0..1 similarity
 // ratio (1 = identical). Used ONLY for local, deterministic fuzzy correction
-// -- no ML, no external service, same "never invent, only compute" style as
+//, no ML, no external service, same "never invent, only compute" style as
 // the rest of the app's scoring code.
 function levenshtein(a, b) {
   const m = a.length, n = b.length;
@@ -62,7 +62,7 @@ export function similarity(a, b) {
 // nicknames, abbreviations, and hand-picked common misspellings. A value is
 // either a single official-name string (resolves unambiguously) or an array
 // of { name, campusLabel } when the short form is genuinely ambiguous across
-// multiple real campuses -- those always require the family to pick.
+// multiple real campuses. Those always require the family to pick.
 // Official names are written to match College Scorecard's own school.name
 // field as closely as possible; the live search step re-verifies the match
 // against the real record rather than trusting this list blindly.
@@ -87,7 +87,7 @@ export const ALIASES = {
   "georgia tech": "Georgia Institute of Technology-Main Campus",
   "gt": "Georgia Institute of Technology-Main Campus",
   "gatech": "Georgia Institute of Technology-Main Campus",
-  // Ambiguous multi-campus systems -- always shown as choices, never guessed.
+  // Ambiguous multi-campus systems, always shown as choices, never guessed.
   "rutgers": [
     { name: "Rutgers University-New Brunswick", campusLabel: "New Brunswick" },
     { name: "Rutgers University-Newark", campusLabel: "Newark" },
@@ -227,7 +227,7 @@ export const ALIASES = {
 const MISSPELLING_ALIAS_KEYS = new Set(["uc berkley", "cornel"]);
 
 // Fuzzy-fallback reference pool for misspellings NOT explicitly listed above
-// -- every alias key/value already in ALIASES, deduped. Kept as a derived
+//. Every alias key/value already in ALIASES, deduped. Kept as a derived
 // constant (not hand-duplicated) so it never drifts out of sync with ALIASES.
 function buildReferencePool() {
   const pool = new Set();
@@ -245,7 +245,7 @@ const REFERENCE_POOL = buildReferencePool();
 // a raw input name falls into, WITHOUT touching the network. The route layer
 // (routes/collegeImport.js) takes this and, for anything with a concrete
 // candidate name, verifies it against live College Scorecard data before
-// finalizing a confidence level -- classifyName alone never claims a college
+// finalizing a confidence level. ClassifyName alone never claims a college
 // is real.
 // ---------------------------------------------------------------------------
 export function classifyName(rawName) {
@@ -266,7 +266,7 @@ export function classifyName(rawName) {
   if (exactRef) return { tier: "alias-exact", candidates: [{ name: exactRef, similarity: 1 }] };
 
   // 3. Fuzzy correction against alias keys + reference pool (misspellings of
-  // known short names or known official names -- e.g. a typo of "Cornell").
+  // known short names or known official names. E.g. a typo of "Cornell").
   const scored = REFERENCE_POOL
     .map((r) => ({ name: ALIASES[r] && !Array.isArray(ALIASES[r]) ? ALIASES[r] : r, sim: similarity(norm, r) }))
     .filter((x) => x.sim >= 0.55)
@@ -287,7 +287,7 @@ export function classifyName(rawName) {
     }
   }
 
-  // 4. Unknown to the curated layer entirely -- hand off to live search.
+  // 4. Unknown to the curated layer entirely. Hand off to live search.
   return { tier: "freeform", candidates: [] };
 }
 
@@ -340,7 +340,7 @@ export async function matchOneName(rawName, { state } = {}) {
         note: error ? `Matched to "${target}" but could not verify it against live College Scorecard data right now.` : `"${target}" was not found in current College Scorecard data.` };
     }
     // "alias-exact" is a deliberate nickname/abbreviation (e.g. CMU, MIT,
-    // UIUC) -- not a spelling fix, so it's NOT flagged as "corrected" even
+    // UIUC), not a spelling fix, so it's NOT flagged as "corrected" even
     // though the text differs. "alias-misspelling" and "fuzzy-corrected" ARE
     // spelling fixes (e.g. "UC Berkley" -> Berkeley, "Cornel" -> Cornell).
     const corrected = cls.tier !== "alias-exact";
@@ -353,7 +353,7 @@ export async function matchOneName(rawName, { state } = {}) {
 
   if (cls.tier === "fuzzy-weak") {
     // Several plausible names, none confident enough to call a single best
-    // match -- surface as ambiguous-ish choices rather than guessing, but at
+    // match. Surface as ambiguous-ish choices rather than guessing, but at
     // LOW confidence overall (per spec: low confidence is never auto-added).
     const options = [];
     for (const c of cls.candidates) {
@@ -382,7 +382,7 @@ export async function matchNames(names, { state } = {}) {
 }
 
 async function matchOneNameFreeform(originalName, verify) {
-  // freeform: no curated hit at all -- fall back fully to live Scorecard
+  // freeform: no curated hit at all. Fall back fully to live Scorecard
   // search on the raw name, then locally re-rank by string similarity.
   const { results, error } = await verify(originalName);
   if (error) return { originalName, confidence: CONFIDENCE.NONE, tier: "error", note: `Could not check College Scorecard for "${originalName}": ${error}` };

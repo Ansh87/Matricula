@@ -72,7 +72,7 @@ export const TOP_STEM = [
   S("182670", "Dartmouth", 80, "Strong STEM", ["engineering (Thayer)", "CS"]),
   S("186584", "Stevens Institute of Technology", 80, "Strong STEM", ["engineering", "CS", "co-op"]),
   S("110653", "UC Irvine", 80, "Strong STEM", ["CS", "engineering", "data science"]),
-  S("240444", "UW–Madison", 82, "Strong STEM", ["CS", "engineering", "data science"]),
+  S("240444", "UW-Madison", 82, "Strong STEM", ["CS", "engineering", "data science"]),
   S("167358", "Northeastern University", 80, "Strong STEM", ["CS", "engineering", "co-op"]),
   S("236948", "University of Washington", 87, "Top STEM", ["CS (Allen School)", "engineering", "research"]),
   S("227757", "Rice University", 83, "Strong STEM", ["CS", "engineering", "applied math"]),

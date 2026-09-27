@@ -11,7 +11,7 @@ const SYSTEM_GUARDRAILS = `You are Matricula's college advisor for a single high
 Rules you MUST follow:
 - Never guarantee admission or say the student "will" or "won't" get in. Admissions are holistic and unpredictable.
 - Use ONLY the data provided in context (the student's profile and their scored college list). Do NOT invent college facts, admission rates, deadlines, or scholarships.
-- For essay prompts and sample essays specifically: use ONLY what's listed in STUDENT'S ESSAY DATA below, quoted exactly as given. Never invent, paraphrase from memory, or guess a college's actual essay prompt wording, even if you believe you know it. If the student asks about a college with no tracked prompts listed, say plainly that none are tracked yet and point them to the Essay Center's "Find prompts" feature for that college -- do not fill the gap with a guess.
+- For essay prompts and sample essays specifically: use ONLY what's listed in STUDENT'S ESSAY DATA below, quoted exactly as given. Never invent, paraphrase from memory, or guess a college's actual essay prompt wording, even if you believe you know it. If the student asks about a college with no tracked prompts listed, say plainly that none are tracked yet and point them to the Essay Center's "Find prompts" feature for that college. Do not fill the gap with a guess.
 - Separate facts (from official data) from estimates (fit scores, categories). Say when something is an estimate.
 - Be concrete and personal: reference the student's actual numbers and their actual list when relevant.
 - Encourage an authentic student voice; never write dishonest essays or suggest fake activities.
@@ -31,7 +31,7 @@ const DISCLAIMER = "Planning aid only. Not a substitute for your school counselo
 // ---------------------------------------------------------------------------
 // Essay grounding (so "what essays do I need for X" answers real, sourced
 // data instead of the model inventing or half-remembering prompt text).
-// Reuses the same tables/lists Essay Center itself reads from -- never a
+// Reuses the same tables/lists Essay Center itself reads from, never a
 // second, separate essay data source that could drift out of sync.
 // ---------------------------------------------------------------------------
 function normalizeCollegeName(s) {
@@ -95,7 +95,7 @@ ${JSON.stringify(prof)}
 STUDENT'S SCORED COLLEGE LIST (JSON, estimates from official data):
 ${JSON.stringify(list)}
 
-STUDENT'S ESSAY DATA (JSON) -- per saved college: prompts already tracked in the Essay Center (trackedPrompts, exact text as entered/found), and any officially-published sample-essay links (publishedExampleLinks). If a college here has an empty trackedPrompts array, none are tracked yet -- say so and suggest the Essay Center's "Find prompts" feature instead of guessing what the prompts might be:
+STUDENT'S ESSAY DATA (JSON), per saved college: prompts already tracked in the Essay Center (trackedPrompts, exact text as entered/found), and any officially-published sample-essay links (publishedExampleLinks). If a college here has an empty trackedPrompts array, none are tracked yet, say so and suggest the Essay Center's "Find prompts" feature instead of guessing what the prompts might be:
 ${JSON.stringify(essayContext || { colleges: [] })}
 
 STUDENT QUESTION: "${question}"
@@ -124,7 +124,7 @@ Remember: estimates not guarantees; recommend counselor review for big decisions
 }
 
 // Generic words that show up in lots of college names AND in ordinary
-// questions about essays/applications -- excluded from the single-word
+// questions about essays/applications. Excluded from the single-word
 // fallback match so a question like "what essays do I need" doesn't
 // accidentally "name" a college whose name happens to contain "college" or
 // "essay" (e.g. a saved program literally titled with those words).
@@ -156,7 +156,7 @@ function keywordAnswer({ question, profile, recommendations, essayContext }) {
   }
   if (/reach|hard|selective/.test(q)) {
     const r = withCat("Reach").slice(0, 5).map((x) => x.college.name);
-    return r.length ? `These are Reach schools given published admission rates: ${r.join(", ")}. Keep 2–4 reaches balanced with targets and safeties.`
+    return r.length ? `These are Reach schools given published admission rates: ${r.join(", ")}. Keep 2-4 reaches balanced with targets and safeties.`
       : "No Reach schools currently flagged. If you want to aim higher, add more selective institutions.";
   }
   if (/cost|afford|money|net price|budget/.test(q)) {
@@ -185,15 +185,15 @@ function keywordAnswer({ question, profile, recommendations, essayContext }) {
     const withExamples = focus.filter((c) => c.publishedExampleLinks.length);
     const parts = [];
     if (withPrompts.length) {
-      parts.push(withPrompts.map((c) => `${c.collegeName} -- ${c.trackedPrompts.slice(0, 3).map((p) => `"${p.text}"${p.wordLimit ? ` (${p.wordLimit})` : ""}`).join(" / ")}`).join(" | "));
+      parts.push(withPrompts.map((c) => `${c.collegeName}, ${c.trackedPrompts.slice(0, 3).map((p) => `"${p.text}"${p.wordLimit ? ` (${p.wordLimit})` : ""}`).join(" / ")}`).join(" | "));
     } else {
       parts.push(named ? `No essay prompts are tracked yet for ${named.collegeName}.` : "No essay prompts are tracked yet for your saved colleges.");
     }
     if (withExamples.length) {
-      parts.push(`Officially published sample essays: ${withExamples.map((c) => `${c.collegeName} -- ${c.publishedExampleLinks.map((e) => e.url).join(", ")}`).join("; ")}.`);
+      parts.push(`Officially published sample essays: ${withExamples.map((c) => `${c.collegeName}, ${c.publishedExampleLinks.map((e) => e.url).join(", ")}`).join("; ")}.`);
     }
     parts.push('Open the Essay Center and use "Find prompts" to pull real prompts for any college, and see the full sample-essay list under Published Examples.');
     return parts.join(" ");
   }
-  return "I can explain your Reach/Target/Safety split, estimated net costs (from College Scorecard), BLS career outcomes for your major, application-round strategy, and essay prompts already tracked for your saved colleges. Ask about any of those. I only use data actually available for your list -- I'll never guess a college's essay prompt wording. For a fuller conversation, add a free Gemini key on the server.";
+  return "I can explain your Reach/Target/Safety split, estimated net costs (from College Scorecard), BLS career outcomes for your major, application-round strategy, and essay prompts already tracked for your saved colleges. Ask about any of those. I only use data actually available for your list. I'll never guess a college's essay prompt wording. For a fuller conversation, add a free Gemini key on the server.";
 }

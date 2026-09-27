@@ -141,11 +141,11 @@ export function generateStrategyNotes({ item, profile = {}, programs = [], check
 }
 
 // ---------------------------------------------------------------------------
-// Final List Health Check (Feature 2) -- deterministic guidance messages
+// Final List Health Check (Feature 2). Deterministic guidance messages
 // layered on top of the Decision Plan's existing summary counts (byAdmission
 // Category, needsVerification, unresolvedCostRisk, missingNetPriceCalc, plus
 // the essay/timeline coverage counts passed in from the Essay Center and
-// Application Timeline summaries). Never an admissions guarantee -- every
+// Application Timeline summaries). Never an admissions guarantee. Every
 // message is phrased as planning guidance, not a prediction of outcomes.
 // Purely a function of counts the caller already computed; no new data
 // source, no invented facts, no scoring/ranking logic touched.
@@ -165,19 +165,19 @@ export function buildFinalListGuidance({
   const financialSafety = byAdmissionCategory?.["Financial Safety"] || 0;
   const inStateAnchor = byAdmissionCategory?.["In-state Anchor"] || 0;
 
-  if (reach > target + safety) messages.push("This list may be too reach-heavy -- consider adding more Target or Safety schools before finalizing.");
-  if (target === 0) messages.push("Not enough Target schools -- this list currently has none recorded.");
-  if (safety === 0) messages.push("Not enough Safety schools -- this list currently has none recorded.");
-  if (financialSafety === 0) messages.push("This list still needs financial-safety confirmation -- no college is marked \"Financial Safety.\"");
+  if (reach > target + safety) messages.push("This list may be too reach-heavy. Consider adding more Target or Safety schools before finalizing.");
+  if (target === 0) messages.push("Not enough Target schools. This list currently has none recorded.");
+  if (safety === 0) messages.push("Not enough Safety schools. This list currently has none recorded.");
+  if (financialSafety === 0) messages.push("This list still needs financial-safety confirmation, no college is marked \"Financial Safety.\"");
   if (inStateAnchor === 0) messages.push("No in-state anchor recorded. If in-state affordability matters for your family, consider adding one.");
-  if (needsVerification > totalColleges / 2) messages.push("This list has too many unverified program assumptions -- more than half the colleges still need program verification.");
-  if (unresolvedCostRisk > 0) messages.push(`${unresolvedCostRisk} college(s) have unresolved or high cost risk -- run each one's Net Price Calculator before finalizing.`);
+  if (needsVerification > totalColleges / 2) messages.push("This list has too many unverified program assumptions. More than half the colleges still need program verification.");
+  if (unresolvedCostRisk > 0) messages.push(`${unresolvedCostRisk} college(s) have unresolved or high cost risk. Run each one's Net Price Calculator before finalizing.`);
   if (missingNetPriceCalc > 0) messages.push(`Missing cost verification: ${missingNetPriceCalc} college(s) have not had a Net Price Calculator run yet.`);
-  if (essayCoverageMissing > 0) messages.push(`${essayCoverageMissing} college(s) have no essay prompts tracked yet -- open Essay Center to check requirements.`);
+  if (essayCoverageMissing > 0) messages.push(`${essayCoverageMissing} college(s) have no essay prompts tracked yet. Open Essay Center to check requirements.`);
   if (timelineMissing > 0) messages.push(`Missing timeline verification: ${timelineMissing} college(s) have no application deadlines on file yet.`);
 
   if (!messages.length) {
-    messages.push("This list looks balanced for planning purposes -- Reach/Target/Safety mix, financial safety, and program verification all look reasonable so far.");
+    messages.push("This list looks balanced for planning purposes. Reach/Target/Safety mix, financial safety, and program verification all look reasonable so far.");
     messages.push("Ready for family review.");
   }
 
@@ -186,6 +186,6 @@ export function buildFinalListGuidance({
 
   return {
     messages, overallStatus,
-    disclaimer: "This is planning guidance based on the categories and verification status you've recorded -- not an admissions guarantee or a prediction of acceptance odds.",
+    disclaimer: "This is planning guidance based on the categories and verification status you've recorded, not an admissions guarantee or a prediction of acceptance odds.",
   };
 }

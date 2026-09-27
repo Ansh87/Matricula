@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { api } from "../lib/api.js";
 import { CategoryTag, SetupPlanningButton, InlineSpinner, fmtPct, fmtUSD } from "./ui.jsx";
+import { CircleFilled, Diamond, Triangle } from "./icons.jsx";
 
 function safeParseArray(json) {
   if (!json) return [];
@@ -14,7 +15,7 @@ const norm = (s) => String(s || "").toLowerCase().trim();
 function verificationKey(collegeId, primary, secondary) { return `${collegeId}::${norm(primary)}::${norm(secondary)}`; }
 
 export function SavedList({ studentId, saved, profile, onOpen, onRemove, onClearAll, onEvaluated }) {
-  // Issue 2: "Evaluate Against My Profile" -- re-scores every college
+  // Issue 2: "Evaluate Against My Profile". Re-scores every college
   // already on My List against the CURRENT student profile, using the exact
   // same scoring/classification logic every other page uses (server route
   // POST /students/:id/list/evaluate). Never invents missing data: colleges
@@ -35,7 +36,7 @@ export function SavedList({ studentId, saved, profile, onOpen, onRemove, onClear
         programVerificationNeeded: r.programVerificationNeeded || 0,
       });
     } catch (e) {
-      // Keep whatever My List already had on screen -- a failed evaluation
+      // Keep whatever My List already had on screen, a failed evaluation
       // never clears or corrupts existing data.
       setEvalError(e.message || "Couldn't evaluate your list against your profile right now. Your saved colleges are unchanged.");
     } finally {
@@ -63,7 +64,7 @@ export function SavedList({ studentId, saved, profile, onOpen, onRemove, onClear
   const byCat = { Reach: [], Target: [], Safety: [], Unknown: [] };
   saved.forEach((s) => { (byCat[s.category] || byCat.Unknown).push(s); });
 
-  // Client-side export -- the full list is already in memory (no extra round
+  // Client-side export, the full list is already in memory (no extra round
   // trip needed), same csvEscape approach Compare.jsx uses.
   const csvEscape = (v) => { const s = v === null || v === undefined ? "" : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
   const exportCsv = () => {
@@ -122,7 +123,7 @@ export function SavedList({ studentId, saved, profile, onOpen, onRemove, onClear
           <button className="btn ghost" onClick={exportCsv}>Export CSV</button>
           {onClearAll && (
             <button className="btn ghost" style={{ color: "var(--reach)" }}
-              onClick={() => { if (confirm(`Remove all ${saved.length} colleges from your list? Your profile and application tracker are NOT affected.`)) onClearAll(); }}>
+              onClick={() => { if (confirm(`Remove all ${saved.length} colleges from your list? Your profile and application tracker are not affected.`)) onClearAll(); }}>
               Clear my list
             </button>
           )}
@@ -150,9 +151,9 @@ export function SavedList({ studentId, saved, profile, onOpen, onRemove, onClear
 
       <div className="kpis">
         <div className="kpi"><div className="n">{saved.length}</div><div className="l">Saved</div></div>
-        <div className="kpi"><div className="n" style={{ color: "var(--reach)" }}>{byCat.Reach.length}</div><div className="l">▲ Reach</div></div>
-        <div className="kpi"><div className="n" style={{ color: "var(--target)" }}>{byCat.Target.length}</div><div className="l">◆ Target</div></div>
-        <div className="kpi"><div className="n" style={{ color: "var(--safety)" }}>{byCat.Safety.length}</div><div className="l">● Safety</div></div>
+        <div className="kpi"><div className="n" style={{ color: "var(--reach)" }}>{byCat.Reach.length}</div><div className="l"><Triangle /> Reach</div></div>
+        <div className="kpi"><div className="n" style={{ color: "var(--target)" }}>{byCat.Target.length}</div><div className="l"><Diamond /> Target</div></div>
+        <div className="kpi"><div className="n" style={{ color: "var(--safety)" }}>{byCat.Safety.length}</div><div className="l"><CircleFilled /> Safety</div></div>
       </div>
 
       <div className="stack">
@@ -212,8 +213,8 @@ export function SavedList({ studentId, saved, profile, onOpen, onRemove, onClear
               <div className="row wrap" style={{ gap: 6 }}>
                 {isDoubleMajor && (() => {
                   // Feature 4: never show a plain "Double Major" badge. The badge
-                  // reflects whichever pathway is furthest along -- confirmed beats
-                  // in-progress beats bare interest -- across ALL of this college's
+                  // reflects whichever pathway is furthest along. Confirmed beats
+                  // in-progress beats bare interest. Across ALL of this college's
                   // saved pathways, not just the most-recently-added one.
                   const pList = pathways.length ? pathways : (s.primary_major ? [{ primaryMajor: s.primary_major, secondaryMajor: s.secondary_major }] : []);
                   const vers = pList.map((p) => dmVerByKey.get(verificationKey(s.college_id, p.primaryMajor, p.secondaryMajor)));
@@ -243,12 +244,12 @@ export function SavedList({ studentId, saved, profile, onOpen, onRemove, onClear
                       <div>Official second program: {ver?.secondary_official_program_name || "Not verified"}</div>
                       <div>Double-major policy: {ver?.official_policy_name || "Not verified"}</div>
                       <div>Verification: {confirmed ? ver.verification_status : "Needs official source"}</div>
-                      <div>Action: {confirmed ? "None -- confirmed" : "Verify double-major rules"}</div>
+                      <div>Action: {confirmed ? "None. Confirmed" : "Verify double-major rules"}</div>
                     </div>
                   );
                 })}
                 <div className="note" style={{ fontSize: 11, color: "var(--muted)", marginTop: 8 }}>
-                  College Scorecard confirms both fields exist, not that a formal double major is allowed -- confirm
+                  College Scorecard confirms both fields exist, not that a formal double major is allowed. Confirm
                   with the college's advising office or catalog. Use the Double Major Search page's "Confirm with an
                   official source" action to record the official policy once you have it.
                 </div>

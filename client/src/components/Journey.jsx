@@ -1,16 +1,17 @@
-// Journey.jsx -- the family's roadmap: a 10-stage overview of where things
+// Journey.jsx, the family's roadmap: a 10-stage overview of where things
 // stand right now (computed from the family's own saved data, never
 // invented), plus a default senior-year timeline with one-click task
 // creation into the Decision Plan's Timeline & Tasks list.
 import React, { useEffect, useMemo, useState } from "react";
 import { api } from "../lib/api.js";
 import { Spinner } from "./ui.jsx";
+import { Arrow, Check, CircleHalf, CircleOpen, Warning } from "./icons.jsx";
 
 const STATUS_STYLE = {
-  "Not started": { color: "var(--muted)", glyph: "○" },
-  "In progress": { color: "var(--target)", glyph: "◐" },
-  "Needs verification": { color: "var(--reach)", glyph: "!" },
-  "Complete": { color: "var(--safety)", glyph: "✓" },
+  "Not started": { color: "var(--muted)", glyph: <CircleOpen /> },
+  "In progress": { color: "var(--target)", glyph: <CircleHalf /> },
+  "Needs verification": { color: "var(--reach)", glyph: <Warning /> },
+  "Complete": { color: "var(--safety)", glyph: <Check /> },
 };
 
 function StatusPill({ status }) {
@@ -65,7 +66,7 @@ export function Journey({ studentId, profile, saved, onGo }) {
     return () => { cancelled = true; };
   }, [studentId]);
 
-  // Essay prompts still needing verification -- computed here (not a new
+  // Essay prompts still needing verification. Computed here (not a new
   // endpoint) since Journey already loads the full prompt list for the
   // existing "essays" stage above.
   const essayPromptsNeedingVerification = useMemo(
@@ -115,7 +116,7 @@ export function Journey({ studentId, profile, saved, onGo }) {
       {
         key: "profile", title: "1. Build Your Profile",
         status: profileCore ? "Complete" : profileAny ? "In progress" : "Not started",
-        detail: "Academics, budget, interests, and goals -- the foundation every other stage builds on.",
+        detail: "Academics, budget, interests, and goals, the foundation every other stage builds on.",
         action: "Go to Profile", view: "profile",
       },
       {
@@ -133,7 +134,7 @@ export function Journey({ studentId, profile, saved, onGo }) {
       {
         key: "programs", title: "4. Research Programs at Your Colleges",
         status: programs.length === 0 ? "Not started" : allSavedVerified ? "Complete" : anyCollegeVerified ? "Needs verification" : "In progress",
-        detail: "Use \"Research this college\" to pull official majors, minors, and special programs -- always source-labeled, never invented.",
+        detail: "Use \"Research this college\" to pull official majors, minors, and special programs, always source-labeled, never invented.",
         action: "Go to Programs & Opportunities", view: "programs",
       },
       {
@@ -271,7 +272,7 @@ export function Journey({ studentId, profile, saved, onGo }) {
         <div className="eyebrow">Family roadmap</div>
         <h1>Journey</h1>
         <p className="lead">Where things stand right now, computed from your own profile, matches, program research,
-          application platforms, essays, and Decision Plan entries -- and a default senior-year timeline to help you
+          application platforms, essays, and Decision Plan entries, and a default senior-year timeline to help you
           stay ahead of deadlines.</p>
       </div>
 
@@ -285,25 +286,25 @@ export function Journey({ studentId, profile, saved, onGo }) {
               <StatusPill status={s.status} />
             </div>
             <p className="note">{s.detail}</p>
-            <button className="btn ghost sm" style={{ alignSelf: "flex-start" }} onClick={() => onGo(s.view)}>{s.action} →</button>
+            <button className="btn ghost sm" style={{ alignSelf: "flex-start" }} onClick={() => onGo(s.view)}>{s.action} <Arrow /></button>
           </div>
         ))}
       </div>
 
       <div className="card pad stack">
         <h3>Upcoming Deadlines &amp; Verification</h3>
-        <p className="note">Pulled straight from Application Timeline and Essay Center -- nothing here is invented; it just tells you what needs attention next.</p>
+        <p className="note">Pulled straight from Application Timeline and Essay Center. Nothing here is invented; it just tells you what needs attention next.</p>
 
         <div className="grid cols-2">
           <div>
             <div className="note" style={{ fontWeight: 600 }}>Upcoming application deadlines</div>
             {!timelineSummary?.upcomingDeadlines?.length ? (
-              <div className="note">None on file yet -- add deadlines in Application Pathways.</div>
+              <div className="note">None on file yet. Add deadlines in Application Pathways.</div>
             ) : (
               <div className="stack" style={{ gap: 4, marginTop: 6 }}>
                 {timelineSummary.upcomingDeadlines.map((d) => (
                   <div key={d.eventId} className="note">
-                    <strong>{d.collegeName}</strong> -- {d.eventLabel || d.eventType}: {d.eventDate} ({d.nextOccurrenceIso})
+                    <strong>{d.collegeName}</strong>, {d.eventLabel || d.eventType}: {d.eventDate} ({d.nextOccurrenceIso})
                     {d.verificationStatus !== "Official source verified" && d.verificationStatus !== "User verified" ? <span style={{ color: "var(--amber)" }}> · needs verification</span> : null}
                   </div>
                 ))}
@@ -317,7 +318,7 @@ export function Journey({ studentId, profile, saved, onGo }) {
             ) : (
               <div className="stack" style={{ gap: 4, marginTop: 6 }}>
                 {timelineSummary.eventsNeedingVerification.map((e) => (
-                  <div key={e.eventId} className="note"><strong>{e.collegeName}</strong> -- {e.eventType}: {e.eventDate || "no date yet"} ({e.verificationStatus})</div>
+                  <div key={e.eventId} className="note"><strong>{e.collegeName}</strong>, {e.eventType}: {e.eventDate || "no date yet"} ({e.verificationStatus})</div>
                 ))}
               </div>
             )}
@@ -329,7 +330,7 @@ export function Journey({ studentId, profile, saved, onGo }) {
             ) : (
               <div className="stack" style={{ gap: 4, marginTop: 6 }}>
                 {essayPromptsNeedingVerification.slice(0, 10).map((p) => (
-                  <div key={p.prompt_id} className="note"><strong>{p.college_name || "Unknown college"}</strong> -- {p.essay_type} ({p.verification_status})</div>
+                  <div key={p.prompt_id} className="note"><strong>{p.college_name || "Unknown college"}</strong>, {p.essay_type} ({p.verification_status})</div>
                 ))}
                 {essayPromptsNeedingVerification.length > 10 && <div className="note">+ {essayPromptsNeedingVerification.length - 10} more</div>}
               </div>
@@ -344,7 +345,7 @@ export function Journey({ studentId, profile, saved, onGo }) {
                 {timelineSummary.collegesMissingTimeline.map((c) => (
                   <div key={c.collegeId} className="row spread" style={{ gap: 8 }}>
                     <span className="note">{c.collegeName}</span>
-                    <button className="btn ghost sm" onClick={() => onGo("applicationPathways", c.collegeId)}>Add timeline →</button>
+                    <button className="btn ghost sm" onClick={() => onGo("applicationPathways", c.collegeId)}>Add timeline <Arrow /></button>
                   </div>
                 ))}
               </div>
@@ -358,7 +359,7 @@ export function Journey({ studentId, profile, saved, onGo }) {
           <h3>Default senior-year timeline</h3>
           {createdMsg && <span className="note" style={{ color: "var(--safety)" }}>{createdMsg}</span>}
         </div>
-        <p className="note">A general planning timeline, not specific facts about any college -- confirm every real
+        <p className="note">A general planning timeline, not specific facts about any college. Confirm every real
           deadline with each college's official site. Suggested dates below are placeholders for the upcoming cycle;
           adjust them to match your student's actual grade and each college's real deadlines.</p>
         {timeline.map((period) => (
@@ -380,7 +381,7 @@ export function Journey({ studentId, profile, saved, onGo }) {
       </div>
 
       <div className="disclaimer">
-        Journey status is computed only from what your family has entered or verified elsewhere in the app -- it
+        Journey status is computed only from what your family has entered or verified elsewhere in the app. It
         never assumes or invents facts about a specific college. Program discovery and admissions details may be
         incomplete; always verify final decisions on official college websites.
       </div>

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { api } from "../lib/api.js";
 import { Spinner } from "./ui.jsx";
+import { Arrow, Check } from "./icons.jsx";
 
 function downloadReport(s, profile) {
   const lines = [];
@@ -10,20 +11,20 @@ function downloadReport(s, profile) {
   lines.push(new Date().toLocaleDateString());
   if (profile.name) lines.push(`Student: ${profile.name}`);
   lines.push("");
-  lines.push("LIST BALANCE");
+  lines.push("List balance");
   lines.push(s.summary);
   lines.push(`  Reach: ${s.counts.Reach} (ideal ${s.ideal.reach[0]}-${s.ideal.reach[1]})`);
   lines.push(`  Target: ${s.counts.Target} (ideal ${s.ideal.target[0]}-${s.ideal.target[1]})`);
   lines.push(`  Safety: ${s.counts.Safety} (ideal ${s.ideal.safety[0]}-${s.ideal.safety[1]})`);
   lines.push("");
   if (s.issues.length) {
-    lines.push("RECOMMENDED ADJUSTMENTS");
+    lines.push("Recommended adjustments");
     s.issues.forEach((i) => lines.push("  - " + i));
     lines.push("");
   }
-  if (s.edPick) { lines.push("BEST EARLY DECISION PICK"); lines.push(`  ${s.edPick.name} - ${s.edPick.why}`); lines.push(""); }
-  lines.push("TEST SUBMISSION PLAN"); lines.push("  " + s.testPlan); lines.push("");
-  lines.push(`RECOMMENDED NUMBER OF APPLICATIONS: ~${s.recommendedApplications}`); lines.push("");
+  if (s.edPick) { lines.push("Best Early Decision pick"); lines.push(`  ${s.edPick.name} - ${s.edPick.why}`); lines.push(""); }
+  lines.push("Test submission plan"); lines.push("  " + s.testPlan); lines.push("");
+  lines.push(`Recommended number of applications: ~${s.recommendedApplications}`); lines.push("");
   lines.push(s.disclaimer);
   const blob = new Blob([lines.join("\n")], { type: "text/plain" });
   const url = URL.createObjectURL(blob);
@@ -68,8 +69,8 @@ export function Strategy({ studentId, profile, onGo }) {
     const ok = count >= range[0] && count <= range[1];
     return (
       <div style={{ marginBottom: 10 }}>
-        <div className="row spread"><span className="note">{label} <span style={{ color }}>({range[0]}–{range[1]} ideal)</span></span>
-          <span className="mono" style={{ color: ok ? "var(--safety)" : "var(--reach)" }}>{count}{ok ? " ✓" : ""}</span></div>
+        <div className="row spread"><span className="note">{label} <span style={{ color }}>({range[0]}-{range[1]} ideal)</span></span>
+          <span className="mono" style={{ color: ok ? "var(--safety)" : "var(--reach)" }}>{count}{ok ? <> <Check /></> : ""}</span></div>
         <div style={{ height: 8, background: "var(--line-2)", borderRadius: 4, overflow: "hidden" }}>
           <div style={{ width: `${Math.min(count / (range[1] + 2) * 100, 100)}%`, height: "100%", background: color }} />
         </div>
@@ -123,7 +124,7 @@ export function Strategy({ studentId, profile, onGo }) {
             <div className="pill" style={{ background: "var(--amber-b)", margin: "8px 0" }}>{s.edPick.name}</div>
             <p className="note">{s.edPick.why}</p>
             {s.edPick.collegeId && (
-              <button className="btn sm ghost" style={{ marginTop: 6 }} onClick={setAsEdPick}>Set as ED in Decision Plan →</button>
+              <button className="btn sm ghost" style={{ marginTop: 6 }} onClick={setAsEdPick}>Set as ED in Decision Plan <Arrow /></button>
             )}
             {edMsg && <div className="note" style={{ marginTop: 6, color: edMsg.ok ? "var(--safety)" : "var(--reach)" }}>{edMsg.text}</div>}
           </div>

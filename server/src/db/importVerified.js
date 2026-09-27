@@ -140,7 +140,7 @@ const insertSelection = db.prepare(
 // This module used to only run when invoked directly (`npm run import:verified`).
 // That meant a fresh/reset database (e.g. a new Railway deploy, or any restart
 // that lands on a database without this data yet) silently had NO verified
-// admissions profiles at all -- every college's "Admissions details" card
+// admissions profiles at all. Every college's "Admissions details" card
 // showed the honest-but-unhelpful "No verified admissions profile on file"
 // empty state, including ones like MIT that DO have a real, sourced row
 // written right here in this file. The data existed in the codebase; it just
@@ -149,7 +149,7 @@ const insertSelection = db.prepare(
 //
 // Fix: index.js now imports this module on every server boot. All inserts
 // below are upserts (ON CONFLICT ... DO UPDATE), so re-running this on every
-// restart is safe and idempotent -- it just keeps the DB in sync with
+// restart is safe and idempotent. It just keeps the DB in sync with
 // whatever is checked into these seed files, with no risk of duplicating or
 // corrupting rows. Failures are logged, not thrown, so a problem importing
 // this reference data can never take down the whole server.

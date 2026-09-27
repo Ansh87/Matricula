@@ -7,6 +7,7 @@ import { Spinner, ErrorNote, RestoredNote } from "./ui.jsx";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
 import { useSubscription } from "../subscription/SubscriptionProvider.jsx";
 import { UnlockMatriculaButton, MatriculaBadge } from "../subscription/PremiumGate.jsx";
+import { Arrow, CircleFilled, Diamond, Triangle } from "./icons.jsx";
 
 const SIZES = [10, 20, 30];
 const CATS = ["Reach", "Target", "Safety"];
@@ -251,7 +252,7 @@ export function Matches({
     return (
       <div className="empty">
         Complete your profile to see colleges that fit you.
-        <div style={{ marginTop: 8 }}><button className="btn amber sm" onClick={onGoProfile}>Go to Profile →</button></div>
+        <div style={{ marginTop: 8 }}><button className="btn amber sm" onClick={onGoProfile}>Go to Profile <Arrow /></button></div>
       </div>
     );
   }
@@ -397,9 +398,9 @@ export function Matches({
           <div className="n">{shown.length}</div>
           <div className="l">{tab === "balanced" ? "in Balanced List" : "Best Fit displayed"}</div>
         </div>
-        <div className="kpi"><div className="n" style={{ color: "var(--reach)" }}>{counts.Reach}</div><div className="l">▲ Reach</div></div>
-        <div className="kpi"><div className="n" style={{ color: "var(--target)" }}>{counts.Target}</div><div className="l">◆ Target</div></div>
-        <div className="kpi"><div className="n" style={{ color: "var(--safety)" }}>{counts.Safety}</div><div className="l">● Safety</div></div>
+        <div className="kpi"><div className="n" style={{ color: "var(--reach)" }}>{counts.Reach}</div><div className="l"><Triangle /> Reach</div></div>
+        <div className="kpi"><div className="n" style={{ color: "var(--target)" }}>{counts.Target}</div><div className="l"><Diamond /> Target</div></div>
+        <div className="kpi"><div className="n" style={{ color: "var(--safety)" }}>{counts.Safety}</div><div className="l"><CircleFilled /> Safety</div></div>
         {counts.value > 0 && <div className="kpi"><div className="n">{counts.value}</div><div className="l">$ Affordable/Value</div></div>}
       </div>
 

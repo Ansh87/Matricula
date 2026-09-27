@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { api } from "../lib/api.js";
 import { Spinner, CategoryTag, SourceBadge, fmtUSD, fmtPct } from "./ui.jsx";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
+import { Check, CircleFilled, Diamond, Triangle } from "./icons.jsx";
 
 const SIZES = [10, 20, 30, 50];
 
@@ -14,7 +15,7 @@ export function TopList({ kind, title, blurb, profile, onOpen, savedIds, onToggl
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
 
-  // Persist the Top 10/20/30/50 size per list (STEM/Finance/Business) -- the
+  // Persist the Top 10/20/30/50 size per list (STEM/Finance/Business), the
   // list itself always re-fetches live (it's not a saved result set), but
   // the family's chosen size shouldn't reset every time they navigate back.
   usePersistedSearch(studentId, `topList:${kind}`, { limit }, (r) => {
@@ -62,9 +63,9 @@ export function TopList({ kind, title, blurb, profile, onOpen, savedIds, onToggl
       {!loading && colleges.length > 0 && (
         <div className="kpis">
           <div className="kpi"><div className="n">{colleges.length}</div><div className="l">Colleges shown</div></div>
-          <div className="kpi"><div className="n" style={{ color: "var(--reach)" }}>{count(isReach)}</div><div className="l">▲ Reach</div></div>
-          <div className="kpi"><div className="n" style={{ color: "var(--target)" }}>{count(isTarget)}</div><div className="l">◆ Target</div></div>
-          <div className="kpi"><div className="n" style={{ color: "var(--safety)" }}>{count(isSafety)}</div><div className="l">● Safety</div></div>
+          <div className="kpi"><div className="n" style={{ color: "var(--reach)" }}>{count(isReach)}</div><div className="l"><Triangle /> Reach</div></div>
+          <div className="kpi"><div className="n" style={{ color: "var(--target)" }}>{count(isTarget)}</div><div className="l"><Diamond /> Target</div></div>
+          <div className="kpi"><div className="n" style={{ color: "var(--safety)" }}>{count(isSafety)}</div><div className="l"><CircleFilled /> Safety</div></div>
           <div className="kpi"><div className="n">{count((c) => savedIds?.has(String(c.id)))}</div><div className="l">On my list</div></div>
         </div>
       )}
@@ -159,7 +160,7 @@ function TopListCard({ c, profile, onOpen, savedIds, onToggleSave }) {
           <button className={`btn sm ${savedIds?.has(String(c.id)) ? "ghost" : "amber"}`}
             onClick={() => onToggleSave({ college: { id: String(c.id), name: c.name, state: o?.state },
               admission: scored ? { category: scored.coarseCategory } : null, overall: scored?.overall ?? null })}>
-            {savedIds?.has(String(c.id)) ? "Saved ✓" : "+ List"}
+            {savedIds?.has(String(c.id)) ? <>Saved <Check /></> : "+ List"}
           </button>
         </div>
       </div>

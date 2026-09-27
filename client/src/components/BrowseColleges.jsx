@@ -6,6 +6,7 @@ import { TopList } from "./TopList.jsx";
 import { Spinner, SourceBadge, fmtUSD, fmtPct, RestoredNote, ClearSearchButton, useAutocompleteSearch } from "./ui.jsx";
 import { US_STATES } from "../lib/states.js";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
+import { Check } from "./icons.jsx";
 
 const SUBS = [
   ["all", "All Colleges"],
@@ -67,7 +68,7 @@ function AllColleges({ profile, onOpen, savedIds, onToggleSave, studentId }) {
   const [searched, setSearched] = useState(false);
 
   // Issue 1: keep the search text, filters, and results on screen until the
-  // family explicitly clears them -- restores on navigation back to this
+  // family explicitly clears them. Restores on navigation back to this
   // page, on browser refresh (localStorage), and after logout/login on a
   // fresh browser (server). Never re-runs the search itself; it just
   // restores what was already on screen.
@@ -87,7 +88,7 @@ function AllColleges({ profile, onOpen, savedIds, onToggleSave, studentId }) {
 
   // Quick-jump suggestions: a type-ahead dropdown layered on top of the name
   // box below, reusing the exact same /api/colleges/search endpoint (and the
-  // shared useAutocompleteSearch hook -- see EssayCenter's CollegeAutocomplete
+  // shared useAutocompleteSearch hook. See EssayCenter's CollegeAutocomplete
   // and Explorer's MajorAutocomplete for the other two places this hook
   // powers) so results are the same College Scorecard-backed college IDs as
   // everywhere else. Purely additive: the existing name+filters+Search
@@ -260,7 +261,7 @@ function BrowseCard({ c, profile, saved, onOpen, onToggleSave }) {
           <button className="btn ghost sm" onClick={() => onOpen(c.id)}>Details</button>
           <button className={`btn sm ${saved ? "ghost" : "amber"}`}
             onClick={() => onToggleSave({ college: { id: String(c.id), name: c.name, state: c.state }, admission: null, overall: null })}>
-            {saved ? "Saved ✓" : "+ My List"}
+            {saved ? <>Saved <Check /></> : "+ My List"}
           </button>
         </div>
       </div>

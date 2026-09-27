@@ -48,7 +48,7 @@ export const TOP_BUSINESS = [
   B("164988", "Boston University (Questrom)", 77, "Solid Business", ["business admin", "marketing"]),
   B("214777", "Penn State (Smeal)", 78, "Solid Business", ["supply chain", "marketing"]),
   B("204796", "Ohio State (Fisher)", 76, "Solid Business", ["business admin", "logistics"]),
-  B("240444", "UW–Madison", 78, "Solid Business", ["marketing", "real estate", "risk management"]),
+  B("240444", "UW-Madison", 78, "Solid Business", ["marketing", "real estate", "risk management"]),
   B("163286", "University of Maryland (Smith)", 76, "Solid Business", ["business analytics", "supply chain"]),
   B("186380", "Rutgers-New Brunswick", 74, "Solid Business", ["business analytics", "supply chain", "marketing"]),
   B("110662", "UCLA", 82, "Strong Business", ["business economics", "management"]),

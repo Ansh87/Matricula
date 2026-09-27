@@ -45,7 +45,7 @@ documentsRouter.post("/:studentId/:docId/parse", async (req, res) => {
     .get(req.params.studentId, req.params.docId);
   if (!row) return res.status(404).json({ error: "not_found" });
   // Use the FULL extracted text (up to 50k chars) for parsing, not the 4k-char
-  // preview excerpt -- text_excerpt is a UI preview only and was truncating
+  // preview excerpt. Text_excerpt is a UI preview only and was truncating
   // longer resumes/portfolios before Gemini ever saw the rest of the document.
   const fullText = row.extracted_text || row.text_excerpt;
   const result = await parseWithGemini(fullText, row.kind);

@@ -53,7 +53,7 @@ export const TOP_FINANCE = [
   F("164988", "Boston University (Questrom)", 76, "Solid Finance", ["finance", "business"]),
   F("214777", "Penn State (Smeal)", 76, "Solid Finance", ["finance (Smeal)", "risk management"]),
   F("204796", "Ohio State (Fisher)", 74, "Solid Finance", ["finance", "business"]),
-  F("240444", "UW–Madison", 76, "Solid Finance", ["finance", "actuarial science", "risk management"]),
+  F("240444", "UW-Madison", 76, "Solid Finance", ["finance", "actuarial science", "risk management"]),
   F("145637", "UIUC (Gies)", 78, "Solid Finance", ["finance (Gies)", "accountancy"]),
   F("155317", "University of Kansas", 66, "Emerging Finance", ["finance", "business"]),
   F("134130", "University of Florida (Warrington)", 79, "Strong Finance", ["finance", "business"]),

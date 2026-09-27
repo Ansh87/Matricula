@@ -1,4 +1,4 @@
-// routes/essayCenter.js -- the "Essay Center" tab API. Mounted behind
+// routes/essayCenter.js, the "Essay Center" tab API. Mounted behind
 // requireAuth in index.js; router.param("id") forces the :id segment to the
 // authenticated Firebase UID (identical pattern to every other per-student
 // router in this app), so a user can never read or write another family's
@@ -7,7 +7,7 @@
 // Safety notes (see services/essayCenter.js for the full rationale):
 //  - No route here ever generates or returns a finished essay for submission.
 //  - No route auto-submits anything to any application platform.
-//  - Draft text itself is never required or logged by this router -- only
+//  - Draft text itself is never required or logged by this router, only
 //    lightweight planning fields (draft_title, outline_notes, story angle,
 //    status) are stored, and nothing here writes essay content to server logs.
 import express from "express";
@@ -50,7 +50,7 @@ essaysRouter.get("/:id/meta", (_req, res) => {
 // Saved Colleges (My List / Matches) and the Decision Plan's own list,
 // de-duplicated by college_id (falling back to a normalized name for
 // manually-entered colleges with no College Scorecard match). Manual free-
-// text entry is always available in the UI on top of this list -- this
+// text entry is always available in the UI on top of this list. This
 // route only covers the two "already in the app somewhere" sources so the
 // family doesn't have to retype a college they've already saved.
 essaysRouter.get("/:id/college-options", (req, res) => {
@@ -77,7 +77,7 @@ essaysRouter.get("/:id/sample-structures", (_req, res) => {
   res.json(SAMPLE_STRUCTURES);
 });
 
-// Real, officially-published example essays -- see services/essayCenter.js
+// Real, officially-published example essays. See services/essayCenter.js
 // for why this list is short, hand-verified, and official-sources-only.
 essaysRouter.get("/:id/example-essay-links", (_req, res) => {
   res.json({ links: PUBLISHED_EXAMPLE_ESSAYS, disclaimer: PUBLISHED_EXAMPLE_ESSAYS_DISCLAIMER });
@@ -93,7 +93,7 @@ essaysRouter.get("/:id/prompts", (req, res) => {
 });
 
 // Normalizes a program/school label for loose matching ("Drama/Music" vs
-// "Drama", "School of Computer Science" vs "Computer Science") -- exact
+// "Drama", "School of Computer Science" vs "Computer Science"). Exact
 // match or either string containing the other, case/whitespace-insensitive.
 function normalizeLabel(s) { return String(s || "").toLowerCase().replace(/\s+/g, " ").trim(); }
 function programLabelsRelated(a, b) {
@@ -106,7 +106,7 @@ function programLabelsRelated(a, b) {
 // including its own matched Application Timeline deadline (Part L).
 //
 // Bug fixed here (previously reported with Carnegie Mellon): a college can
-// have MULTIPLE deadlines sharing the same event type/round -- e.g. CMU's
+// have MULTIPLE deadlines sharing the same event type/round. E.g. CMU's
 // general "Regular Decision deadline" (Jan 4, no program) and its separate
 // "Regular Decision deadline (Drama/Music)" (Dec 1, program-specific). The
 // old logic picked whichever deadline was chronologically earliest as a
@@ -118,7 +118,7 @@ function programLabelsRelated(a, b) {
 //
 //   1. If the prompt itself is program-specific (program_label or
 //      school_or_program set), only match a deadline whose own program_label
-//      relates to it -- preferring one that also shares the prompt's
+//      relates to it. Preferring one that also shares the prompt's
 //      application_round when the prompt has one. If no matching
 //      program-specific deadline exists on file, this prompt gets NO
 //      deadline (never falls back to a different program's deadline, and
@@ -134,7 +134,7 @@ function programLabelsRelated(a, b) {
 //      never a guess.
 //
 // Read-only cross-reference, same don't-merge-two-systems pattern as
-// everywhere else in this app -- never written back into essay_prompts.
+// everywhere else in this app, never written back into essay_prompts.
 function attachEssayDeadline(prompt, deadlineRows, earliestGeneralDeadline) {
   const promptProgram = prompt.program_label || prompt.school_or_program || null;
   const promptRound = prompt.application_round || null;
@@ -144,7 +144,7 @@ function attachEssayDeadline(prompt, deadlineRows, earliestGeneralDeadline) {
   if (promptProgram) {
     // Program-specific prompt (e.g. a Drama/Music, portfolio, or honors
     // essay): only ever match a deadline that is ITSELF tagged for a related
-    // program -- never a different program's deadline, and never a silent
+    // program, never a different program's deadline, and never a silent
     // fallback to the general deadline.
     let candidates = deadlineRows.filter((d) => d.program_label && programLabelsRelated(d.program_label, promptProgram));
     if (promptRound) {
@@ -177,11 +177,11 @@ function attachEssayDeadline(prompt, deadlineRows, earliestGeneralDeadline) {
   };
 }
 
-// Essay Prompt Overview (Part B) -- for one selected college: current-cycle
+// Essay Prompt Overview (Part B), for one selected college: current-cycle
 // prompts, previous-year prompts (if any were kept), and unknown/needs-
 // verification prompts, grouped explicitly so the family never mistakes a
 // previous-year prompt for the current one. Also cross-references Application
-// Timeline (Part L) for each prompt's matching deadline, read-only -- never
+// Timeline (Part L) for each prompt's matching deadline, read-only, never
 // merged into essay_prompts itself, same don't-merge-two-systems pattern
 // used by Decision Plan's CSV export. Accepts either a collegeId (saved/
 // Decision Plan college with a College Scorecard match) or a collegeName
@@ -200,7 +200,7 @@ essaysRouter.get("/:id/prompts/overview", (req, res) => {
   deadlineRows.sort((a, b) => String(a.event_date).localeCompare(String(b.event_date)));
   // The college-wide "applicationTimeline" summary below must never surface
   // a program-specific deadline (Drama/Music, portfolio, honors, etc.) as
-  // if it were the college's general deadline -- restrict to general-only
+  // if it were the college's general deadline. Restrict to general-only
   // rows (program_label empty/null) for this headline figure, same fix as
   // attachEssayDeadline above.
   const earliestDeadline = deadlineRows.filter((d) => !d.program_label)[0] || null;
@@ -228,7 +228,7 @@ essaysRouter.get("/:id/prompts/overview", (req, res) => {
   });
 });
 
-// Part C/G field list -- covers every field the manual-entry form and the
+// Part C/G field list. Covers every field the manual-entry form and the
 // prompt-editing panel can set. sourceType/promptStatus are intentionally
 // left out of direct client control for automatic writes (they're derived
 // below via derivePromptStatus/defaulted to "User entered"), but a family
@@ -245,7 +245,7 @@ const PROMPT_FIELD_MAP = {
   sourceUrl: "source_url", sourceLabel: "source_label", sourceType: "source_type", promptStatus: "prompt_status",
 };
 
-// "Add a prompt manually" (Part G) -- for prompts that only appear inside a
+// "Add a prompt manually" (Part G), for prompts that only appear inside a
 // logged-in application portal, or that a family found some other way. cycle
 // type defaults to "Current cycle" (the family is entering what they believe
 // is this year's prompt) but is always editable; source type defaults to
@@ -351,12 +351,12 @@ essaysRouter.post("/:id/prompts/find", async (req, res) => {
   }
 });
 
-// "Find essay requirements for all my colleges" -- runs the same reference-
+// "Find essay requirements for all my colleges". Runs the same reference-
 // first/live-discovery-fallback lookup once per college across Saved
 // Colleges AND the Decision Plan list (not just whichever single college the
 // family happened to pick in the dashboard), so a family doesn't have to
 // visit every college one at a time to build out their prompt archive.
-// Sequential and can take a while for a long list -- the client shows a busy
+// Sequential and can take a while for a long list, the client shows a busy
 // state and a per-college result summary when it's done.
 essaysRouter.post("/:id/prompts/find-all", async (req, res) => {
   try {
@@ -439,9 +439,9 @@ essaysRouter.delete("/:id/story-bank/:storyId", (req, res) => {
   res.json({ ok: true });
 });
 
-// Suggested story matches (Part J) -- for one prompt, ranks the family's own
+// Suggested story matches (Part J), for one prompt, ranks the family's own
 // Story Bank entries by overlap with that prompt's text/track. Never writes
-// or generates anything -- purely a ranked view over material the family
+// or generates anything. Purely a ranked view over material the family
 // already entered.
 essaysRouter.get("/:id/prompts/:promptId/story-matches", (req, res) => {
   const prompt = db.prepare("SELECT * FROM essay_prompts WHERE student_id=? AND prompt_id=?").get(req.params.id, req.params.promptId);
@@ -450,7 +450,7 @@ essaysRouter.get("/:id/prompts/:promptId/story-matches", (req, res) => {
   res.json({ promptId: prompt.prompt_id, matches });
 });
 
-// "Create essay task" (Part L) -- turns a tracked prompt into a to-do on the
+// "Create essay task" (Part L). Turns a tracked prompt into a to-do on the
 // same application_tasks table Decision Plan already reads from, so essay
 // work shows up in one place with everything else instead of a second,
 // disconnected task list. Due date is taken from the prompt's own matched
@@ -496,7 +496,7 @@ function csvEscape(v) {
 essaysRouter.get("/:id/export.csv", (req, res) => {
   const rows = db.prepare("SELECT * FROM essay_prompts WHERE student_id=? ORDER BY college_name, essay_type").all(req.params.id);
   // Read-only cross-reference to Application Timeline, same don't-merge
-  // pattern used elsewhere -- one earliest general-application deadline per
+  // pattern used elsewhere. One earliest general-application deadline per
   // college, pulled in only for this export column.
   const timelineRows = db.prepare("SELECT college_id, event_type, event_date, application_round FROM college_application_timeline_events WHERE student_id=?").all(req.params.id);
   const deadlineByCollege = {};

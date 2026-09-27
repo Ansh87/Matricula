@@ -1,11 +1,11 @@
-// EssayCenter.jsx -- "Essay Center" tab. Tracks essay prompts per college
+// EssayCenter.jsx. "Essay Center" tab. Tracks essay prompts per college
 // (Common App main essay, Coalition essay, UC Personal Insight Questions,
 // college-specific supplements, honors/scholarship essays, major/program
 // essays), offers a "Find essay prompts" discovery action (official sources
-// only, never invented -- shows "Essay prompts not verified yet" when nothing
+// only, never invented. Shows "Essay prompts not verified yet" when nothing
 // is found), brainstorming-only Strategy by Track and Sample Structures, a
 // reusable Story Bank, and an Essay Workload Planner. This module never
-// writes or generates a final essay for submission -- everything here is
+// writes or generates a final essay for submission. Everything here is
 // planning, brainstorming, and tracking. The student must write every essay
 // themselves, in their own voice, consistent with each college's AI-use policy.
 import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
@@ -13,6 +13,7 @@ import { api } from "../lib/api.js";
 import { auth, firebaseConfigured } from "../lib/firebase.js";
 import { SourceBadge, InlineSpinner, Spinner, SuccessNote, RestoredNote, CollegeAutocomplete } from "./ui.jsx";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
+import { Arrow } from "./icons.jsx";
 
 async function authHeader() {
   try {
@@ -31,7 +32,7 @@ function badgeLevelFor(status) {
 }
 
 // Family-facing color cue for the PROMPT_STATUSES rollup (services/
-// essayCenter.js's derivePromptStatus) -- a single badge that answers
+// essayCenter.js's derivePromptStatus), a single badge that answers
 // "is this the real, current prompt or not" at a glance.
 function promptStatusLevel(status) {
   if (status === "Current-cycle verified") return "official";
@@ -53,14 +54,14 @@ function Sub({ tabs, value, onChange }) {
 
 // Unified college picker (Part B): saved colleges, Decision Plan colleges, or
 // a real debounced search across every college in the app's canonical
-// database (CollegeAutocomplete, in ui.jsx -- the same /api/colleges/search
+// database (CollegeAutocomplete, in ui.jsx, the same /api/colleges/search
 // endpoint Explorer's Browse Colleges page uses). The quick-pick dropdown of
 // already-saved/Decision-Plan colleges is offered above the search box purely
 // as a shortcut (most families reach for a college they've already saved),
 // and disappears once anything is selected; CollegeAutocomplete itself then
 // shows the single "Selected college" state regardless of which path was
 // used to pick it. `value` is always either null or {collegeId, collegeName}
-// (collegeId null for a manually-confirmed name -- essay_prompts already
+// (collegeId null for a manually-confirmed name. Essay_prompts already
 // supports a college_name-only row, same as every other manual-entry flow).
 function CollegeSelect({ options, value, onChange, placeholder }) {
   return (
@@ -83,7 +84,7 @@ function CollegeSelect({ options, value, onChange, placeholder }) {
 
 // One card in the Published Examples tab (Part K). Clearly distinguishes a
 // real admitted-student essay from a college's own staff-written
-// illustrative example (e.g. Illinois) -- both are official, but only one is
+// illustrative example (e.g. Illinois). Both are official, but only one is
 // an actual applicant's work.
 function ExampleCard({ l }) {
   return (
@@ -98,14 +99,14 @@ function ExampleCard({ l }) {
       </div>
       <p className="note" style={{ marginTop: 6 }}>{l.description}</p>
       <div className="row wrap" style={{ marginTop: 10, gap: 10, alignItems: "center" }}>
-        <a href={l.url} target="_blank" rel="noreferrer" className="link">Read on {l.college}'s site →</a>
+        <a href={l.url} target="_blank" rel="noreferrer" className="link">Read on {l.college}'s site <Arrow /></a>
         <span className="note" style={{ fontSize: 11 }}>Checked {l.lastChecked}</span>
       </div>
     </div>
   );
 }
 
-// One grouped section of the Essay Prompt Overview (Part A/B) -- shows every
+// One grouped section of the Essay Prompt Overview (Part A/B). Shows every
 // field a family needs to plan around: essay type, word/character limit,
 // required/optional, prompt cycle/year, essay deadline (matched from the
 // Application Timeline), source, last checked, and the single family-facing
@@ -159,7 +160,7 @@ function OverviewGroup({ title, prompts, emptyText, onCreateTask, onShowStoryMat
               )}
               {storyMatchesFor === p.prompt_id && (
                 <div className="note" style={{ marginTop: 6, fontSize: 12 }}>
-                  {!storyMatches?.length ? "No Story Bank entries overlap with this prompt yet -- add one in the Story Bank tab." : (
+                  {!storyMatches?.length ? "No Story Bank entries overlap with this prompt yet. Add one in the Story Bank tab." : (
                     <>Possible fits: {storyMatches.map((m) => m.story_title).join(", ")}</>
                   )}
                 </div>
@@ -213,7 +214,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
   const [exampleLinks, setExampleLinks] = useState(null);
 
   // Issue 1: persist selected tab, selected college (for the Prompt Overview),
-  // and selected career track -- restoring overviewCollege re-triggers the
+  // and selected career track. Restoring overviewCollege re-triggers the
   // overview fetch effect below automatically. Never persists essay draft
   // text itself (only the college/tab/track selection), per spec.
   const essaySnapshot = { sub, overviewCollege, selectedTrackId };
@@ -245,7 +246,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
   }, [studentId]);
 
   // Coverage summary (Issue 4): a single at-a-glance card of where every
-  // saved/Decision Plan college stands -- current-cycle verified prompts,
+  // saved/Decision Plan college stands. Current-cycle verified prompts,
   // previous-year-only, needs verification, no prompts found yet, and
   // whether the college's application timeline is missing entirely.
   const [coverage, setCoverage] = useState(null);
@@ -281,7 +282,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focusCollegeId]);
 
-  // Load the Essay Prompt Dashboard for the selected college -- server-side
+  // Load the Essay Prompt Dashboard for the selected college. Server-side
   // grouping (current-cycle / previous-year / needs-verification), plus each
   // prompt's own matched Application Timeline deadline (Part L). Works for a
   // real collegeId (saved/Decision Plan college) or a manually-typed college
@@ -292,7 +293,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
       .then(setOverview).catch(() => setOverview(null));
   }, [overviewCollege, studentId, prompts]);
 
-  // Suggested story matches (Part J) -- fetched on demand per prompt so the
+  // Suggested story matches (Part J). Fetched on demand per prompt so the
   // dashboard doesn't have to score every prompt against every story up front.
   const [storyMatches, setStoryMatches] = useState([]);
   const [storyMatchesFor, setStoryMatchesFor] = useState(null);
@@ -305,13 +306,13 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
     } catch { setStoryMatches([]); }
   };
 
-  // "Create essay task" (Part L) -- adds this prompt to the same task list
+  // "Create essay task" (Part L). Adds this prompt to the same task list
   // Decision Plan already reads from, due-dated from the prompt's matched
   // Application Timeline deadline when known.
   const createEssayTask = async (prompt) => {
     try {
       const r = await api.createEssayTask(studentId, prompt.prompt_id);
-      setMsg({ ok: true, text: `Added an essay task for ${prompt.essay_type}${r.task?.due_date ? ` -- due ${r.task.due_date}` : " (no deadline on file yet)"}.` });
+      setMsg({ ok: true, text: `Added an essay task for ${prompt.essay_type}${r.task?.due_date ? `. Due ${r.task.due_date}` : " (no deadline on file yet)"}.` });
     } catch (e) {
       setMsg({ ok: false, text: `Could not create the task: ${e.message}` });
     }
@@ -319,7 +320,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
 
   const [overviewFinding, setOverviewFinding] = useState(false);
   const [overviewFindResult, setOverviewFindResult] = useState(null);
-  // "Find essay requirements" (Part A step 2) -- reference-first, then a
+  // "Find essay requirements" (Part A step 2). Reference-first, then a
   // search of the college's own official site as the fallback; also attaches
   // Common App / UC platform prompts automatically if this college's
   // Application Pathways platform is already set to one of those.
@@ -346,7 +347,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
     promptFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  // "Find essay requirements for all my colleges" -- runs discovery once per
+  // "Find essay requirements for all my colleges". Runs discovery once per
   // college across Saved Colleges + Decision Plan (not just whichever single
   // college happens to be selected above), so the archive doesn't stay
   // limited to just the one or two colleges a family remembered to check.
@@ -364,10 +365,10 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
     } finally { setFindingAll(false); }
   };
 
-  // Bulk clear -- either everything, or just one college's tracked prompts.
+  // Bulk clear. Either everything, or just one college's tracked prompts.
   // Confirmed first since this can't be undone.
   const clearPrompts = async (collegeId, label) => {
-    const what = collegeId ? `all tracked prompts for ${label}` : "ALL tracked essay prompts for every college";
+    const what = collegeId ? `all tracked prompts for ${label}` : "all tracked essay prompts for every college";
     if (!window.confirm(`Remove ${what}? This can't be undone.`)) return;
     try {
       const r = await api.clearEssayPrompts(studentId, collegeId || undefined);
@@ -467,7 +468,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
           <h1>Essay Center</h1>
           <p className="lead">
             Track every essay prompt, brainstorm by track, build a reusable story bank, and see your total essay
-            workload -- all planning and tracking, never a finished essay. The student writes every essay themselves.
+            workload. All planning and tracking, never a finished essay. The student writes every essay themselves.
           </p>
         </div>
         <div>
@@ -523,7 +524,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
 
       {coverage && coverage.totalColleges > 0 && (
         <div className="card pad">
-          <h3>Coverage summary -- what's still missing</h3>
+          <h3>Coverage summary. What's still missing</h3>
           <p className="note">Checked across your {coverage.totalColleges} saved/Decision Plan college(s). This is the fastest way to see what still needs attention before you start writing.</p>
           <div className="kpis">
             <div className="kpi"><div className="n" style={{ color: "var(--safety)" }}>{coverage.currentCycleVerified.length}</div><div className="l">Current-cycle verified prompts</div></div>
@@ -557,7 +558,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
         <div className="stack">
           <div className="card pad" ref={overviewRef}>
             <h3>Essay Prompt Dashboard</h3>
-            <p className="note">Pick a college from your saved list, your Decision Plan, or type a name -- see this year's prompts, saved previous-year prompts, and anything still needing verification, all in one place.</p>
+            <p className="note">Pick a college from your saved list, your Decision Plan, or type a name. See this year's prompts, saved previous-year prompts, and anything still needing verification, all in one place.</p>
             <CollegeSelect options={collegeOptions} value={overviewCollege} onChange={setOverviewCollege} placeholder="Choose a college..." />
 
             {overviewCollege && overview && (
@@ -620,7 +621,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
             <h3>Find essay requirements for all my colleges</h3>
             <p className="note">
               Runs the same official-sources-only search used in the dashboard above, once for every college in your
-              Saved list and Decision Plan -- so you don't have to open each college one at a time to build out your
+              Saved list and Decision Plan, so you don't have to open each college one at a time to build out your
               prompt archive. Nothing is invented; colleges where nothing is found are clearly marked "Not found," and
               anything discovered still needs the usual verification.
             </p>
@@ -740,7 +741,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
                 <button className="btn ghost sm" onClick={() => clearPrompts(null, null)}>Clear all prompts</button>
               )}
             </div>
-            {!prompts.length && <div className="empty" style={{ marginTop: 10 }}>No prompts tracked yet -- use "Find essay requirements" or add one manually above.</div>}
+            {!prompts.length && <div className="empty" style={{ marginTop: 10 }}>No prompts tracked yet. Use "Find essay requirements" or add one manually above.</div>}
             <div className="stack" style={{ marginTop: 10 }}>
               {[...byCollege.entries()].map(([key, rows]) => (
                 <div key={key} className="stack" style={{ gap: 8 }}>
@@ -819,11 +820,11 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
                               <button className="btn sm ghost" onClick={() => createEssayTask(p)}>Create essay task</button>
                               <button className="btn sm ghost" onClick={() => showStoryMatches(p.prompt_id)}>Suggested story matches</button>
                               <button className="btn sm ghost" onClick={() => deletePrompt(p.prompt_id)}>Delete</button>
-                              {onGo && <button className="btn sm ghost" onClick={() => onGo("applications")}>Go to Applications →</button>}
+                              {onGo && <button className="btn sm ghost" onClick={() => onGo("applications")}>Go to Applications <Arrow /></button>}
                             </div>
                             {storyMatchesFor === p.prompt_id && (
                               <div className="note" style={{ marginTop: 6 }}>
-                                {!storyMatches?.length ? "No Story Bank entries overlap with this prompt yet -- add one in the Story Bank tab." : (
+                                {!storyMatches?.length ? "No Story Bank entries overlap with this prompt yet. Add one in the Story Bank tab." : (
                                   <>Possible fits: {storyMatches.map((m) => m.story_title).join(", ")}</>
                                 )}
                               </div>
@@ -956,12 +957,12 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
                 {savedList.length > 0 && (
                   <div className="card pad">
                     <h3>Your saved colleges</h3>
-                    <p className="note">Most colleges don't publish this resource at all -- this checks each of your saved colleges against the small, hand-verified list below.</p>
+                    <p className="note">Most colleges don't publish this resource at all. This checks each of your saved colleges against the small, hand-verified list below.</p>
                     <div className="stack" style={{ gap: 8, marginTop: 8 }}>
                       {perSavedCollege.map(({ collegeId, name, entry }) => (
                         entry ? (
                           <div key={collegeId} className="stack" style={{ gap: 4 }}>
-                            <span className="pill" style={{ alignSelf: "flex-start", background: "var(--safety-bg, #e6f4ea)", color: "var(--safety, #1a7f37)" }}>Official example available -- {name}</span>
+                            <span className="pill" style={{ alignSelf: "flex-start", background: "var(--safety-bg, #e6f4ea)", color: "var(--safety, #1a7f37)" }}>Official example available, {name}</span>
                             <ExampleCard l={entry} />
                           </div>
                         ) : (

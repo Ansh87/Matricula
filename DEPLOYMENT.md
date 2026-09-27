@@ -112,7 +112,7 @@ DB_PATH=/data/matricula.db
 UPLOAD_DIR=/data/uploads
 ```
 (Redeploying an existing project? Keep `DB_PATH` exactly as it's already set --
-e.g. `/data/collegegene-navigator.db` -- renaming it points the app at a new,
+e.g. `/data/collegegene-navigator.db`. Renaming it points the app at a new,
 empty database.)
 
 Railway sets `PORT` automatically - do not override it.
@@ -129,7 +129,7 @@ mount path: `/data`
 Then set `DB_PATH=/data/matricula.db` and `UPLOAD_DIR=/data/uploads` so the
 database and uploads live on the volume. If this is an existing deployment that
 already has `DB_PATH` set to something else (e.g. `/data/collegegene-navigator.db`),
-leave it alone -- that's where your real saved data already lives.
+leave it alone. That's where your real saved data already lives.
 
 ### Build/start
 `railway.json` sets these explicitly:

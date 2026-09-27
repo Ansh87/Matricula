@@ -1,11 +1,11 @@
-// applicationPathways.js -- grouping/aggregation logic for the Application
+// applicationPathways.js. Grouping/aggregation logic for the Application
 // Pathways module (Part A/B/C). Reads the family's saved college list plus
 // whatever application-requirement records they've entered/verified, and
 // produces: (1) the Application Route Planner (colleges grouped by platform,
-// so the family sees real workload -- "these 6 all go through Common App"),
+// so the family sees real workload. "These 6 all go through Common App"),
 // and (2) the Region view (informational-only regional application guidance).
-// Nothing here invents a fact about a specific college -- an unverified
-// college always shows under "Unknown -- needs verification."
+// Nothing here invents a fact about a specific college, an unverified
+// college always shows under "Unknown, needs verification."
 import { db } from "../db/database.js";
 import { regionForState, regionGuidance } from "./regions.js";
 
@@ -49,14 +49,14 @@ function isVerified(req) {
 // (e.g. a UC campus showing Cal State Apply and ApplyTexas-style noise).
 // Patterns cover both the official College Scorecard name ("University of
 // California-Berkeley") AND the common short/abbreviated form ("UC
-// Berkeley") -- some parts of this app (e.g. the Top STEM/Business/Finance
+// Berkeley"). Some parts of this app (e.g. the Top STEM/Business/Finance
 // editorial rankings) save the short form as the college's name, so a
 // pattern that only matched the long official form silently missed those.
 // stateGate is a soft cross-check, not a requirement: if the college's state
 // is on file AND contradicts the pattern (e.g. name matches "UC ..." but the
 // saved state is "TX"), the suggestion is skipped. If state is simply
-// missing -- which turned out to be common, see the /top-stem/fit fix above
-// that was silently leaving it null -- the name pattern alone is trusted,
+// missing, which turned out to be common, see the /top-stem/fit fix above
+// that was silently leaving it null, the name pattern alone is trusted,
 // since "University of California" / "UC <campus>" is specific enough on
 // its own to not need a state to confirm it.
 const SYSTEM_PATTERNS = [
@@ -72,7 +72,7 @@ const SYSTEM_PATTERNS = [
 // Massachusetts"), each hand-verified directly against the college's own
 // admissions page rather than assumed from reputation. Deliberately narrow --
 // only colleges actually checked are listed here; everything else still
-// falls through to "Unknown -- needs verification" rather than guessing.
+// falls through to "Unknown, needs verification" rather than guessing.
 // Two of these entries (MIT, Georgetown) exist specifically to say a college
 // does NOT use a shared platform, since assuming Common App for every
 // selective school is a common and easy mistake.
@@ -88,8 +88,8 @@ const COLLEGE_PATTERNS = [
   { re: /\bcarnegie mellon\b/i, platformId: "common_app", reason: "Carnegie Mellon uses the Common App exclusively. Verified against cmu.edu/admission." },
   { re: /\bgeorgia institute of technology\b|\bgeorgia tech\b/i, platformId: "common_app", reason: "Georgia Tech exclusively uses the Common App for first-year admission. Verified verbatim against admission.gatech.edu." },
   { re: /\buniversity of chicago\b|\buchicago\b/i, platformId: "common_app", reason: "UChicago accepts the Common App or the Coalition App. Verified against collegeadmissions.uchicago.edu." },
-  { re: /\bmassachusetts institute of technology\b|^mit$/i, platformId: "college_specific", reason: "MIT does NOT use the Common App -- it uses its own application system (myMIT). Verified against mitadmissions.org." },
-  { re: /\bgeorgetown university\b/i, platformId: "college_specific", reason: "Georgetown does NOT use the Common App -- it uses its own application system. Verified against uadmissions.georgetown.edu." },
+  { re: /\bmassachusetts institute of technology\b|^mit$/i, platformId: "college_specific", reason: "MIT does not use the Common App. It uses its own application system (myMIT). Verified against mitadmissions.org." },
+  { re: /\bgeorgetown university\b/i, platformId: "college_specific", reason: "Georgetown does not use the Common App. It uses its own application system. Verified against uadmissions.georgetown.edu." },
   { re: /\buniversity of illinois.*urbana|\buiuc\b/i, platformId: "college_specific", reason: "UIUC's own myIllini application is the primary portal (Coalition and Common App are also accepted, but a myIllini account is created either way). Verified against admissions.illinois.edu." },
 ];
 
@@ -116,11 +116,11 @@ export function buildRoutePlanner(studentId) {
   for (const s of savedColleges) {
     const req = byCollege.get(s.college_id) || null;
     const platformId = req?.platform_id || "unknown";
-    const platformName = req?.platform_name || "Unknown -- needs verification";
+    const platformName = req?.platform_name || "Unknown, needs verification";
     if (!groups.has(platformId)) groups.set(platformId, { platformId, platformName, colleges: [] });
     // For colleges with no record yet, attach a name-pattern suggestion (e.g.
     // a "University of California, X" college suggests the UC Application)
-    // so "Unknown" isn't a dead end -- it's shown as a one-click starting point.
+    // so "Unknown" isn't a dead end. It's shown as a one-click starting point.
     const suggestion = !req ? suggestPlatform(s.college_name, s.state) : null;
     groups.get(platformId).colleges.push({
       collegeId: s.college_id,
@@ -159,7 +159,7 @@ export function buildRegionSummary(studentId) {
   const platformNames = new Map(db.prepare("SELECT platform_id, platform_name FROM application_platforms").all().map((p) => [p.platform_id, p.platform_name]));
   const groups = new Map();
   for (const s of savedColleges) {
-    const regionKey = regionForState(s.state) || "Unknown region -- state not set";
+    const regionKey = regionForState(s.state) || "Unknown region. State not set";
     if (!groups.has(regionKey)) groups.set(regionKey, []);
     // Per-college suggestion (see suggestPlatform above) so an individual
     // college shows its own likely route instead of the full list of every

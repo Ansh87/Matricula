@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { api } from "../lib/api.js";
 import { SourceBadge } from "./ui.jsx";
+import { Arrow, Check } from "./icons.jsx";
 
 const KINDS = [
   ["transcript", "Transcript"],
@@ -171,7 +172,7 @@ export function Documents({ studentId, onApplyParsed, embedded }) {
               ? "Reads all your documents together and fills your profile - you review before applying."
               : "Needs a free Gemini key on the server. Click to see setup details, or enter fields manually."}</div>
           </div>
-          <button className="btn amber" onClick={buildProfile} disabled={busy}>Build profile →</button>
+          <button className="btn amber" onClick={buildProfile} disabled={busy}>Build profile <Arrow /></button>
         </div>
       )}
 
@@ -190,7 +191,7 @@ export function Documents({ studentId, onApplyParsed, embedded }) {
           {Array.isArray(built.projects) && built.projects.length > 0 && (
             <div className="note">Projects: {built.projects.map((a) => a.name).filter(Boolean).join(", ")}</div>
           )}
-          <button className="btn primary sm" style={{ marginTop: 10 }} onClick={() => onApplyParsed(built)}>Apply to my profile →</button>
+          <button className="btn primary sm" style={{ marginTop: 10 }} onClick={() => onApplyParsed(built)}>Apply to my profile <Arrow /></button>
           <div className="note" style={{ marginTop: 6 }}>Review before applying. You can edit everything in the form.</div>
         </div>
       )}
@@ -200,8 +201,8 @@ export function Documents({ studentId, onApplyParsed, embedded }) {
         <strong>How document reading works.</strong> Your files are stored on your own computer and the text is
         read locally - nothing is sent anywhere by default.{" "}
         {parsingEnabled
-          ? "AI auto-fill is ENABLED: when you build your profile or auto-fill, the extracted text is sent to Google Gemini to pull out fields. On Google's free tier, Google may use inputs to improve their models."
-          : "AI auto-fill is OFF (no Gemini key set), so you'll confirm fields yourself. To enable optional auto-fill later, add a free GEMINI_API_KEY on the server."}
+          ? "AI auto-fill is enabled: when you build your profile or auto-fill, the extracted text is sent to Google Gemini to pull out fields. On Google's free tier, Google may use inputs to improve their models."
+          : "AI auto-fill is off (no Gemini key set), so you'll confirm fields yourself. To enable optional auto-fill later, add a free GEMINI_API_KEY on the server."}
         {" "}Always review anything extracted before trusting it.
       </div>
 
@@ -219,7 +220,7 @@ export function Documents({ studentId, onApplyParsed, embedded }) {
                   </div>
                   <div className="note" style={{ marginTop: 4 }}>
                     {d.text_excerpt
-                      ? `Text read locally ✓ - ${(d.full_text_length ?? d.text_excerpt.length).toLocaleString()} characters captured and used for auto-fill`
+                      ? <><Check /> Text read locally, {(d.full_text_length ?? d.text_excerpt.length).toLocaleString()} characters captured and used for auto-fill</>
                       : "No text extracted (scanned image or unsupported)"}
                   </div>
                 </div>
@@ -243,7 +244,7 @@ export function Documents({ studentId, onApplyParsed, embedded }) {
                     <div className="note">Activities found: {d.parsed.activities.map((a) => a.name).filter(Boolean).join(", ")}</div>
                   )}
                   <button className="btn primary sm" style={{ marginTop: 10 }} onClick={() => onApplyParsed(d.parsed)}>
-                    Apply these to my profile →
+                    Apply these to my profile <Arrow />
                   </button>
                   <div className="note" style={{ marginTop: 6 }}>Review before applying. You can edit everything in the Profile tab.</div>
                 </div>

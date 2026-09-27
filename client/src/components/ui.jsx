@@ -3,16 +3,21 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { api } from "../lib/api.js";
 import { searchMajors } from "../lib/majors.js";
+import { Arrow, Check, CircleFilled, CircleOpen, Diamond, Triangle } from "./icons.jsx";
 
 export const fmtPct = (v) => (v == null ? null : `${(v * 100).toFixed(1)}%`);
 export const fmtUSD = (v) => (v == null ? null : `$${Number(v).toLocaleString()}`);
 export const fmtNum = (v) => (v == null ? null : Number(v).toLocaleString());
 
-// SourceBadge: Official | Verified | Estimated | Unavailable
+// SourceBadge: provenance TEXT, not a tag. The old oval "Official /
+// Verified / Estimated / Unavailable" pills were removed app-wide. A badge
+// with no children said nothing but its own level, so it now renders
+// nothing at all; one that carries real text (a source name, a verification
+// status) renders that text plainly, colour-coded by level.
 export function SourceBadge({ level, children }) {
+  if (children === null || children === undefined || children === false || children === "") return null;
   const l = (level || "unavailable").toLowerCase();
-  const label = children || l[0].toUpperCase() + l.slice(1);
-  return <span className={`src ${l}`}>{label}</span>;
+  return <span className={`src ${l}`}>{children}</span>;
 }
 
 // DataField: label + value + provenance. If value is null/undefined, renders the
@@ -23,7 +28,6 @@ export function DataField({ label, value, level = "official", source, na = "Data
     <div className="field">
       <div className="field-row">
         <span className="k">{label}</span>
-        <SourceBadge level={missing ? "unavailable" : level} />
       </div>
       {missing
         ? <span className="v na">{na}</span>
@@ -33,7 +37,7 @@ export function DataField({ label, value, level = "official", source, na = "Data
   );
 }
 
-const GLYPH = { Reach: "▲", Target: "◆", Safety: "●", Unknown: "○" };
+const GLYPH = { Reach: <Triangle />, Target: <Diamond />, Safety: <CircleFilled />, Unknown: <CircleOpen /> };
 export function CategoryTag({ category, label, range }) {
   const c = category || "Unknown";
   return (
@@ -65,8 +69,8 @@ export function InlineSpinner() {
 // useAutocompleteSearch: the ONE debounced, race-guarded type-ahead search
 // engine behind every autocomplete in Matricula (CollegeAutocomplete below,
 // MajorAutocomplete below, and any future *Autocomplete). Takes a `search(q)`
-// function -- async or sync, network-backed (api.searchColleges) or a plain
-// in-memory filter (searchMajors) -- and handles everything that's specific
+// function. Async or sync, network-backed (api.searchColleges) or a plain
+// in-memory filter (searchMajors), and handles everything that's specific
 // to type-ahead UX so callers never re-implement it:
 //  - Fires NO request while the box is empty or on mount.
 //  - Only searches once the trimmed query is >= minChars (default 2).
@@ -107,7 +111,7 @@ export function useAutocompleteSearch(search, { minChars = 2, debounceMs = 350 }
         setResults([]);
       })
       .finally(() => {
-        if (requestIdRef.current !== myId) return; // stale request finishing late -- don't touch loading
+        if (requestIdRef.current !== myId) return; // stale request finishing late. Don't touch loading
         setLoading(false);
         setSearchedOnce(true);
       });
@@ -169,11 +173,11 @@ export function useAutocompleteSearch(search, { minChars = 2, debounceMs = 350 }
 // useAutocompleteSearch above. Reuses the exact same canonical search the
 // Explorer/Browse Colleges page already uses (api.searchColleges -> GET
 // /api/colleges/search -> the same College Scorecard-backed college
-// records/IDs as everywhere else in the app) -- no separate hardcoded
+// records/IDs as everywhere else in the app), no separate hardcoded
 // college list, no duplicated search logic.
 //
 // `value` is always either null or {collegeId, collegeName} (collegeId can
-// be null for a manually-confirmed name that isn't in Scorecard -- same
+// be null for a manually-confirmed name that isn't in Scorecard. Same
 // shape existing callers already expect).
 export function CollegeAutocomplete({ value, onChange, placeholder }) {
   const search = useCallback((q) => api.searchColleges({ name: q }).then((r) => r.results || []), []);
@@ -246,18 +250,18 @@ export function CollegeAutocomplete({ value, onChange, placeholder }) {
 
 // MajorAutocomplete: the same debounced type-ahead pattern as
 // CollegeAutocomplete, but for majors instead of colleges. Backed by
-// lib/majors.js's ALL_MAJORS -- the same CIP-backed list the Profile page's
+// lib/majors.js's ALL_MAJORS, the same CIP-backed list the Profile page's
 // Intended Major fields and Explorer's Single/Double-Major Planner both
 // already draw from, so results are always Matricula's real major list, not
 // a separate invented one.
 //
-// Unlike colleges (an open-ended real-world list -- any name might be a real
+// Unlike colleges (an open-ended real-world list. Any name might be a real
 // school Scorecard just doesn't have indexed yet), majors are a curated,
 // closed set here, but the underlying search fields historically accepted
 // free text (the server's CIP matching already tolerates phrases like
 // "computer science and engineering"). So this stays a plain, always-editable
-// text field -- `value`/`onChange` mirror every keystroke exactly like a
-// normal input -- with a suggestions dropdown layered on top rather than a
+// text field, `value`/`onChange` mirror every keystroke exactly like a
+// normal input, with a suggestions dropdown layered on top rather than a
 // CollegeAutocomplete-style "select and lock" card. Selecting a suggestion
 // just overwrites the field with the canonical spelling; typing anything
 // else is still accepted and still submitted by the caller's own Search
@@ -319,7 +323,7 @@ export function MajorAutocomplete({ value, onChange, placeholder, onEnter }) {
   );
 }
 
-// Part L: "Set up application planning for this college" -- one button
+// Part L: "Set up application planning for this college". One button
 // (used from My List and Decision Plan) that creates a starting application-
 // pathway record, attempts to verify a timeline, finds essay prompts, and
 // adds a verification task, all in one go. Deliberately a click-to-run
@@ -342,7 +346,7 @@ export function SetupPlanningButton({ studentId, collegeId, collegeName, state }
     }
   };
 
-  if (status === "idle") return <button className="btn ghost sm" onClick={run}>Set up application planning →</button>;
+  if (status === "idle") return <button className="btn ghost sm" onClick={run}>Set up application planning <Arrow /></button>;
   if (status === "busy") return <span className="note">Setting up (checking official pages, this can take a bit)...</span>;
   if (status === "error") return <span className="note" style={{ color: "var(--reach)" }}>Couldn't finish setup: {result?.error}</span>;
 
@@ -353,7 +357,7 @@ export function SetupPlanningButton({ studentId, collegeId, collegeName, state }
   if (result.taskCreated) parts.push("added a verification task");
   return (
     <span className="note">
-      {parts.length ? `Done: ${parts.join(", ")}. ` : "Already set up -- nothing new to add. "}
+      {parts.length ? `Done: ${parts.join(", ")}. ` : "Already set up. Nothing new to add. "}
       Everything is still marked "Needs manual verification" until confirmed.
     </span>
   );
@@ -365,7 +369,7 @@ export function SetupPlanningButton({ studentId, collegeId, collegeName, state }
 export function SuccessNote({ children }) {
   return (
     <div className="note" style={{ color: "var(--safety)", fontWeight: 600, marginTop: 6 }}>
-      ✓ {children}
+      <Check /> {children}
     </div>
   );
 }
@@ -382,7 +386,7 @@ export function ErrorNote({ children, onRetry }) {
 // RestoredNote / SearchStateBar: shared UI for Issue 1 (search/results
 // persistence). Shown wherever a page rehydrated a previous search from
 // localStorage or the server, plus the explicit "Clear search" / "Clear
-// results" / "Start new search" actions the spec requires -- nothing is ever
+// results" / "Start new search" actions the spec requires. Nothing is ever
 // cleared automatically just because the family navigated away and back.
 export function RestoredNote({ restoredFrom }) {
   if (!restoredFrom) return null;

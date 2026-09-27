@@ -1,9 +1,10 @@
-// Compare.jsx - side-by-side comparison of 2–5 saved colleges with adjustable
+// Compare.jsx - side-by-side comparison of 2-5 saved colleges with adjustable
 // weights, plus CSV export. Pulls live official data per college.
 import React, { useState, useEffect, useMemo } from "react";
 import { CompareChart } from "./CompareChart.jsx";
 import { api } from "../lib/api.js";
 import { SourceBadge, Spinner, fmtUSD, fmtPct } from "./ui.jsx";
+import { Star } from "./icons.jsx";
 
 const FACTORS = [
   ["overall", "Overall fit", 25],
@@ -100,7 +101,7 @@ export function Compare({ saved, profile }) {
         <div>
           <div className="eyebrow">Compare</div>
           <h1>Compare colleges side by side</h1>
-          <p className="lead">Pick 2–5 saved colleges. Adjust what matters to you and see a weighted comparison on live official data.</p>
+          <p className="lead">Pick 2-5 saved colleges. Adjust what matters to you and see a weighted comparison on live official data.</p>
         </div>
         <button className="btn ghost" onClick={exportCsv} disabled={!picked.length}>Export CSV</button>
       </div>
@@ -146,7 +147,7 @@ export function Compare({ saved, profile }) {
                 <th>Metric</th>
                 {picked.map((id) => (
                   <th key={id} style={{ color: id === best ? "var(--safety)" : undefined }}>
-                    {nameOf(id)}{id === best ? " ★" : ""}
+                    {nameOf(id)}{id === best ? <> <Star /></> : ""}
                   </th>
                 ))}
               </tr>
@@ -167,7 +168,7 @@ export function Compare({ saved, profile }) {
           </table>
           <div className="row" style={{ gap: 8, marginTop: 12 }}>
             <SourceBadge level="official">Scorecard</SourceBadge>
-            <span className="note">★ = best weighted match for your priorities. Weighted score and culture fit are estimates.</span>
+            <span className="note"><Star /> = best weighted match for your priorities. Weighted score and culture fit are estimates.</span>
           </div>
         </div>
       )}

@@ -1,4 +1,4 @@
-// App.jsx -- top-level shell. Routes between views, loads live recommendations,
+// App.jsx. Top-level shell. Routes between views, loads live recommendations,
 // and persists the student's list to the backend DB.
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { api } from "./lib/api.js";
@@ -47,7 +47,7 @@ function profileSignature(p) {
     actSig, p.gradSchoolInterest, p.incomeGoal, p.riskTolerance,
   ]);
 }
-import { Spinner, ErrorNote, SourceBadge } from "./components/ui.jsx";
+import { Spinner, ErrorNote } from "./components/ui.jsx";
 import { useAuth } from "./auth/AuthProvider.jsx";
 import { isNativeIOS } from "./lib/platform.js";
 import { Subscription } from "./components/Subscription.jsx";
@@ -60,16 +60,16 @@ function Logo() {
   return <img src={matriculaIcon} alt="Matricula" height="30" style={{ display: "block", width: "auto" }} />;
 }
 
-// Grouped top navigation (UX/navigation cleanup -- the old flat 16-item nav
+// Grouped top navigation (UX/navigation cleanup, the old flat 16-item nav
 // collapsed into 7 families: Dashboard, Profile, Explore, My List, Plan,
 // Apply, More). Every OLD "view" key below still works exactly as it did
-// before this reorg -- nothing was renamed, removed, or rewired; pages were
+// before this reorg. Nothing was renamed, removed, or rewired; pages were
 // only re-grouped under a top-level family with a subtab bar underneath it.
 // `view` (below) remains the single source of truth for which page renders;
 // SECTIONS is only used to (a) decide which top-level button + subtab row to
 // highlight, and (b) build the subtab bar. Old buttons/links elsewhere in
 // the app that still call onGo("essays"), onGo("decisionPlan"), etc. keep
-// working unchanged -- see VIEW_TO_GROUP/VIEW_TO_DEFAULT_SUBKEY below.
+// working unchanged. See VIEW_TO_GROUP/VIEW_TO_DEFAULT_SUBKEY below.
 //
 // A few subtabs point at a page that already has its own internal tab/mode
 // switch (Majors.jsx's Single/Double major toggle, DecisionPlan.jsx's Final
@@ -87,7 +87,7 @@ const SECTIONS = [
       { key: "browse", label: "Browse Colleges", view: "browse" },
       { key: "majors", label: "Majors", view: "majors" },
       // "Double Major Search" (nav-consolidation, 2026-07): removed as a
-      // separate top-nav entry -- it showed the same Majors page as
+      // separate top-nav entry. It showed the same Majors page as
       // "Majors" above, just pre-toggled to its internal Double-major mode.
       // The feature itself is unchanged: Majors.jsx still has its own
       // Single/Double major toggle right on the page.
@@ -102,7 +102,7 @@ const SECTIONS = [
     // Nav-consolidation (2026-07): Verification Center / Final List Health
     // Check / Cost / Visits & Interest all pointed at this same Decision
     // Plan page (just a different internal section), so they're removed as
-    // separate top-nav entries here -- nothing was deleted, Decision Plan's
+    // separate top-nav entries here. Nothing was deleted, Decision Plan's
     // own internal tabs still cover all of it.
     subtabs: [
       { key: "decisionPlan", label: "Decision Plan", view: "decisionPlan" },
@@ -119,7 +119,7 @@ const SECTIONS = [
     // into this same page (just auto-scrolled to its Timeline section, which
     // is still right here); "Recommendations" pointed at the same page as
     // "Applications Tracker"; "Portal Tracker" is unchanged and still
-    // reachable from Settings -- none of these pages were removed, just the
+    // reachable from Settings, none of these pages were removed, just the
     // duplicate top-nav shortcuts to them.
     subtabs: [
       { key: "applicationPathways", label: "Application Timeline & Pathways", view: "applicationPathways" },
@@ -140,7 +140,7 @@ const SECTIONS = [
 
 // Native iOS app only: a 5-tab bottom bar (Home / Explore / Plan / Apply /
 // More) instead of 7 top-level buttons. Same pages, same view keys, same
-// subtab rows -- Profile and My List just live under More, next to the new
+// subtab rows. Profile and My List just live under More, next to the new
 // "Matricula" subscription page. The website keeps SECTIONS exactly as-is.
 const NATIVE_SECTIONS = [
   { key: "dashboard", label: "Home", view: "dashboard", icon: "home" },
@@ -193,15 +193,13 @@ NAV_SECTIONS.forEach((sec) => {
     if (!(st.view in VIEW_TO_DEFAULT_SUBKEY)) VIEW_TO_DEFAULT_SUBKEY[st.view] = st.key;
   });
 });
-// Native app: the welcome/landing screen counts as "Home" in the tab bar.
-if (isNativeIOS) VIEW_TO_GROUP.landing = "dashboard";
 
 export default function App() {
   const { user, signOut } = useAuth();
   // Per-user data key: the Firebase UID when signed in, else the dev fallback.
   const STUDENT_ID = user?.uid || FALLBACK_STUDENT_ID;
-  const [view, setView] = useState("landing");
-  // Optional college context carried along with a view switch -- e.g. Decision
+  const [view, setView] = useState("dashboard");
+  // Optional college context carried along with a view switch. E.g. Decision
   // Plan's "View timeline" / "Go to Essay Center" jump straight to that
   // college's section instead of leaving the family to find it again. goTo is
   // passed down as `onGo`; existing onGo(view) calls (no second arg) keep
@@ -234,7 +232,7 @@ export default function App() {
     if (group && subKey) setActiveSub((s) => (s[group] === subKey ? s : { ...s, [group]: subKey }));
   }, [view]);
   // Clears the "just clicked a subtab" flag after every render (not just
-  // ones where `view` changed) -- e.g. clicking between Decision Plan and
+  // ones where `view` changed). E.g. clicking between Decision Plan and
   // Verification Center never changes `view` (both point at "decisionPlan"),
   // so the effect above never runs to consume the flag itself. Without this,
   // the flag could stay stuck "true" and incorrectly suppress the next
@@ -254,7 +252,7 @@ export default function App() {
   }, [goTo]);
 
   // Top-level button click: groups with subtabs jump to their first/default
-  // subtab (unless that group is already active -- then it's a no-op, the
+  // subtab (unless that group is already active. Then it's a no-op, the
   // subtab bar is already showing); standalone tabs (Dashboard/Profile/My
   // List) navigate directly.
   const openTopLevel = useCallback((sec) => {
@@ -266,13 +264,13 @@ export default function App() {
     }
   }, [currentGroupKey, openSection, goTo]);
   const [profile, setProfile] = useState(BLANK_PROFILE);
-  // Track id requested from Advisor's "Run Matches for this track" -- preselects
+  // Track id requested from Advisor's "Run Matches for this track". Preselects
   // the scenario when Matches opens.
   const [advisorTrackId, setAdvisorTrackId] = useState(null);
-  // Track id requested from Advisor's "See course & prep plan" -- preselects
+  // Track id requested from Advisor's "See course & prep plan". Preselects
   // the track when Courses opens on the "By Career Track" sub-tab.
   const [courseTrackId, setCourseTrackId] = useState(null);
-  // Explicit version counter -- bumped whenever the profile is replaced from
+  // Explicit version counter. Bumped whenever the profile is replaced from
   // outside the form (saved load, parsed docs, reset, sample). ProfileForm
   // re-syncs on this, which is far more reliable than a JSON signature.
   const [profileVersion, setProfileVersion] = useState(0);
@@ -297,7 +295,7 @@ export default function App() {
     return m;
   }, [recs, saved]);
 
-  // hydrate saved list + profile -- re-runs when the signed-in user changes so
+  // hydrate saved list + profile. Re-runs when the signed-in user changes so
   // each user loads only their own data.
   useEffect(() => { api.getList(STUDENT_ID).then((r) => setSaved(r.list || [])).catch(() => {}); }, [STUDENT_ID]);
   useEffect(() => {
@@ -375,7 +373,7 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
   //     `context` should be one of the SELECTION_CONTEXTS labels (see
   //     server/src/services/selectionContext.js); the server merges it into
   //     the college's accumulated selection_contexts rather than overwriting.
-  //   forceAdd: when true, never removes an already-saved college -- used by
+  //   forceAdd: when true, never removes an already-saved college. Used by
   //     "Add as double-major option" so re-adding a college that's already on
   //     the list (from a different search) merges in the new pathway instead
   //     of toggling it off.
@@ -415,7 +413,7 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
     } catch { /* saved list keeps the optimistic row; next load will reconcile */ }
   };
 
-  // Direct remove (used by My list) -- avoids relying on a full scored object.
+  // Direct remove (used by My list). Avoids relying on a full scored object.
   const removeFromList = (cid) => {
     setSaved((s) => s.filter((x) => x.college_id !== cid));
     api.removeListItem(STUDENT_ID, cid).catch(() => {});
@@ -428,7 +426,7 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
     ids.forEach((cid) => api.removeListItem(STUDENT_ID, cid).catch(() => {}));
   };
 
-  // Re-fetch the saved list from the server -- used after Import College List
+  // Re-fetch the saved list from the server. Used after Import College List
   // confirms a batch (the server already wrote merged rows; this just
   // reconciles local state with what actually landed in the database, same
   // as toggleSave's own re-fetch above).
@@ -444,7 +442,7 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
       <header className="topbar">
         <div className="topbar-inner topbar-stack">
           <div className="row spread" style={{ width: "100%", alignItems: "center" }}>
-            <div className="brand" role="button" onClick={() => setView("landing")} style={{ cursor: "pointer" }}>
+            <div className="brand" role="button" onClick={() => goTo("dashboard")} style={{ cursor: "pointer" }}>
               <Logo />
               <span>Matricula
                 <small className="brand-desc-desktop">A College, Program, Course, and Application Strategy Platform</small>
@@ -470,7 +468,7 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
 
           {/* Nav + sign-in/out share one row on desktop (space-between keeps nav
               left-aligned and the user-menu pinned to the far right) instead of
-              stacking as two separate rows -- mobile is unaffected: its own
+              stacking as two separate rows. Mobile is unaffected: its own
               media-query override on .nav.nav-row below still fully controls
               width/scrolling there, and .topbar .user-menu is already
               display:none on mobile regardless of this wrapper. */}
@@ -508,7 +506,6 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
           </nav>
         )}
         <ErrorBoundary resetKey={view}>
-          {view === "landing" && <Landing onStart={() => setView("profile")} onAbout={() => setView("about")} />}
           {view === "about" && <About onGo={setView} />}
           {view === "disclaimer" && <Disclaimer />}
           {view === "journey" && <Journey studentId={STUDENT_ID} profile={profile} saved={saved} onGo={goTo} />}
@@ -516,7 +513,7 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
             onSave={(p) => { setProfile(p); api.saveStudent(STUDENT_ID, p).catch(() => {}); }}
             onResetProfile={(blank) => { bumpProfile(blank); api.saveStudent(STUDENT_ID, blank).catch(() => {}); }} />}
           {view === "courses" && <Courses onOpen={setDetailId} studentId={STUDENT_ID} profile={profile} initialTrackId={courseTrackId} />}
-          {/* Old "info" links still work -- Info's own subtabs (Career Planner,
+          {/* Old "info" links still work. Info's own subtabs (Career Planner,
               Careers BLS) now live under Plan; its "About" subtab is this page. */}
           {view === "info" && <About onGo={setView} />}
           {view === "dashboard" && <Dashboard profile={profile} saved={saved} recs={recs} studentId={STUDENT_ID} onGo={goTo} />}
@@ -592,7 +589,7 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
         <nav className="native-tabbar" aria-label="Main">
           {NAV_SECTIONS.map((sec) => (
             <button key={sec.key} type="button"
-              className={(currentGroupKey || (view === "landing" ? "dashboard" : null)) === sec.key ? "active" : ""}
+              className={currentGroupKey === sec.key ? "active" : ""}
               aria-current={currentGroupKey === sec.key ? "page" : undefined}
               onClick={() => { openTopLevel(sec); window.scrollTo(0, 0); }}>
               <TabIcon name={sec.icon} />
@@ -607,47 +604,6 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
           <CollegeDetail collegeId={detailId} profile={profile} fallbackName={collegeNames[detailId]} onClose={() => setDetailId(null)} onOpenOther={(id) => setDetailId(id)} />
         </ErrorBoundary>
       )}
-    </div>
-  );
-}
-
-function Landing({ onStart, onAbout }) {
-  return (
-    <div className="stack">
-      <div className="banner">
-        <div className="hero-content">
-          <div className="eyebrow">College planning, grounded in data</div>
-          <h1>College planning, backed by real data.</h1>
-          <p className="lead">Find colleges that fit your profile, explore majors and career outcomes, and manage
-            your application plan - using trusted U.S. education and labor data.</p>
-          <div className="row" style={{ marginTop: 14, gap: 14 }}>
-            <button className="btn amber" onClick={onStart}>Start your profile -&gt;</button>
-            <button className="btn ghost" onClick={onAbout} style={{ color: "#dbe6ef", borderColor: "#3a5670" }}>How it works</button>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid cols-3">
-        {[
-          ["Official college data", "Admission rates, cost, net price, graduation and earnings -- live from the U.S. Department of Education."],
-          ["What each college wants", "For 28 seeded colleges: how they select, what they weight (from the Common Data Set), and their culture."],
-          ["Your culture & selection fit", "See where your profile aligns with what a specific college actually rewards -- and where to strengthen."],
-          ["What-if simulator", "SAT +100, add research, apply early -> watch your estimated category and fit shift in real time."],
-          ["Top 10 / 20 / 30", "Ranked lists plus Reach / Target / Safety, estimated as ranges -- never false precision."],
-          ["Application tracker", "Deadlines, forms, essays, and student + parent notes, exportable to CSV."],
-        ].map(([t, d]) => (
-          <div key={t} className="card pad">
-            <div className="row spread" style={{ marginBottom: 8 }}>
-              <h3>{t}</h3><SourceBadge level={t === "Honest labels" ? "verified" : "official"} />
-            </div>
-            <p className="note">{d}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="note" style={{ textAlign: "center" }}>
-        Planning aid only, not a guarantee. <button className="link" onClick={onAbout}>Read how it works &amp; full disclaimer -&gt;</button>
-      </div>
     </div>
   );
 }

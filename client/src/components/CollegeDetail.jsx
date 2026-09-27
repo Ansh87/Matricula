@@ -3,8 +3,9 @@
 // show "Not publicly available" when the college doesn't officially publish them.
 import React, { useEffect, useState } from "react";
 import { api } from "../lib/api.js";
-import { DataField, SourceBadge, Spinner, ErrorNote, CategoryTag, fmtUSD, fmtPct, fmtNum } from "./ui.jsx";
+import { DataField, Spinner, ErrorNote, CategoryTag, fmtUSD, fmtPct, fmtNum } from "./ui.jsx";
 import { Simulator } from "./Simulator.jsx";
+import { Close, ExternalArrow } from "./icons.jsx";
 
 function pctRound(v) { return v == null ? null : Math.round(v * 100) + "%"; }
 function fixUrl(u) { return u ? (/^https?:/.test(u) ? u : `https://${u}`) : u; }
@@ -52,7 +53,7 @@ export function CollegeDetail({ collegeId, profile, onClose, onOpenOther, fallba
               {[c.city, c.state].filter(Boolean).join(", ")} · {c.controlType || "-"} · {c.region || ""}
             </div>}
           </div>
-          <button className="x" onClick={onClose}>✕</button>
+          <button className="x" onClick={onClose}><Close /></button>
         </div>
 
         <div className="modal-body stack">
@@ -67,17 +68,17 @@ export function CollegeDetail({ collegeId, profile, onClose, onOpenOther, fallba
               <div className="grid cols-2">
                 <div className="card pad">
                   <div className="row spread" style={{ marginBottom: 6 }}>
-                    <h3>Official data</h3><SourceBadge level="official" />
+                    <h3>Official data</h3>
                   </div>
                   <div className="note" style={{ marginBottom: 8 }}>Source: {c.source}, {c.sourceYear}</div>
                   <DataField label="Admission rate" value={fmtPct(c.admissionRate)} level="official" />
                   <DataField label="SAT midpoint" value={fmtNum(c.satMidpoint)} level="official" />
-                  <DataField label="SAT range (25–75%)" value={c.sat25 && c.sat75 ? `${c.sat25}–${c.sat75}` : null} level="official" />
+                  <DataField label="SAT range (25-75%)" value={c.sat25 && c.sat75 ? `${c.sat25}-${c.sat75}` : null} level="official" />
                   <DataField label="ACT midpoint" value={fmtNum(c.actMidpoint)} level="official" />
-                  <DataField label="ACT range (25–75%)" value={c.act25 && c.act75 ? `${c.act25}–${c.act75}` : null} level="official" />
+                  <DataField label="ACT range (25-75%)" value={c.act25 && c.act75 ? `${c.act25}-${c.act75}` : null} level="official" />
                   <DataField label="Test policy" value={c.testPolicy} level="official" />
                   <DataField label="Campus setting" value={c.setting} level="official" />
-                  <DataField label="Student–faculty ratio" value={c.studentFacultyRatio ? `${c.studentFacultyRatio}:1` : null} level="official" />
+                  <DataField label="Student-faculty ratio" value={c.studentFacultyRatio ? `${c.studentFacultyRatio}:1` : null} level="official" />
                   <DataField label="Religious affiliation" value={c.religiousAffiliation} level="official" />
                   <DataField label="Average net price" value={fmtUSD(c.averageNetPrice)} level="official" />
                   <DataField label="Total cost of attendance" value={fmtUSD(c.costOfAttendance)} level="official" />
@@ -92,7 +93,7 @@ export function CollegeDetail({ collegeId, profile, onClose, onOpenOther, fallba
                   {c.netPriceCalculatorUrl && (
                     <div className="field">
                       <span className="k">Official net price calculator</span>
-                      <a className="link" href={/^https?:/.test(c.netPriceCalculatorUrl) ? c.netPriceCalculatorUrl : `https://${c.netPriceCalculatorUrl}`} target="_blank" rel="noreferrer">Open on college site ↗</a>
+                      <a className="link" href={/^https?:/.test(c.netPriceCalculatorUrl) ? c.netPriceCalculatorUrl : `https://${c.netPriceCalculatorUrl}`} target="_blank" rel="noreferrer">Open on college site <ExternalArrow /></a>
                     </div>
                   )}
                 </div>
@@ -100,13 +101,12 @@ export function CollegeDetail({ collegeId, profile, onClose, onOpenOther, fallba
                 <div className="card pad">
                   <div className="row spread" style={{ marginBottom: 6 }}>
                     <h3>Admissions details</h3>
-                    <SourceBadge level={v?.available ? (v.source?.confidence || "verified") : "unavailable"} />
                   </div>
                   {v?.available ? (
                     <>
                       {v.source?.url ? (
                         <div className="note" style={{ marginBottom: 8 }}>
-                          Source: <a className="link" href={v.source.url} target="_blank" rel="noreferrer">official admissions site ↗</a>{v.source.year ? `, ${v.source.year}` : ""}{v.source.lastReviewed ? ` · reviewed ${v.source.lastReviewed}` : ""}
+                          Source: <a className="link" href={v.source.url} target="_blank" rel="noreferrer">official admissions site <ExternalArrow /></a>{v.source.year ? `, ${v.source.year}` : ""}{v.source.lastReviewed ? ` · reviewed ${v.source.lastReviewed}` : ""}
                         </div>
                       ) : null}
                       <DataField label="Testing policy" value={v.testingPolicy} level="verified" />
@@ -144,7 +144,6 @@ export function CollegeDetail({ collegeId, profile, onClose, onOpenOther, fallba
                 <div className="card pad stack">
                   <div className="row spread">
                     <h3>Verified deadlines &amp; aid dates</h3>
-                    <SourceBadge level={deadlines.confidence === "official" ? "official" : deadlines.confidence === "estimated" ? "estimated" : "verified"} />
                   </div>
                   {deadlines.applicationDeadlines && (
                     <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 8 }}>
@@ -166,8 +165,8 @@ export function CollegeDetail({ collegeId, profile, onClose, onOpenOther, fallba
                   </div>
                   {deadlines.notes && <p className="note">{deadlines.notes}</p>}
                   <div className="row wrap" style={{ gap: 10 }}>
-                    {deadlines.deadlineSourceUrl && <a className="link" href={deadlines.deadlineSourceUrl} target="_blank" rel="noreferrer">Official deadlines ↗</a>}
-                    {deadlines.fafsaSourceUrl && <a className="link" href={deadlines.fafsaSourceUrl} target="_blank" rel="noreferrer">Financial aid ↗</a>}
+                    {deadlines.deadlineSourceUrl && <a className="link" href={deadlines.deadlineSourceUrl} target="_blank" rel="noreferrer">Official deadlines <ExternalArrow /></a>}
+                    {deadlines.fafsaSourceUrl && <a className="link" href={deadlines.fafsaSourceUrl} target="_blank" rel="noreferrer">Financial aid <ExternalArrow /></a>}
                     {deadlines.lastReviewed && <span className="note">Last reviewed: {deadlines.lastReviewed}</span>}
                   </div>
                   <div className="note" style={{ fontSize: 11, color: "var(--muted)" }}>{deadlines.disclaimer}</div>
@@ -219,7 +218,6 @@ export function CollegeDetail({ collegeId, profile, onClose, onOpenOther, fallba
               <div className="card pad">
                 <div className="row spread" style={{ marginBottom: 8 }}>
                   <h3>When &amp; where to apply</h3>
-                  <SourceBadge level={v?.available ? "verified" : "unavailable"} />
                 </div>
                 {v?.available && v.applicationDeadlines ? (
                   <div className="stack" style={{ gap: 8 }}>
@@ -238,13 +236,13 @@ export function CollegeDetail({ collegeId, profile, onClose, onOpenOther, fallba
                 )}
                 <div className="row wrap" style={{ gap: 8, marginTop: 12 }}>
                   {c.websiteUrl && (
-                    <a className="btn amber sm" href={fixUrl(c.websiteUrl)} target="_blank" rel="noreferrer">College website ↗</a>
+                    <a className="btn amber sm" href={fixUrl(c.websiteUrl)} target="_blank" rel="noreferrer">College website <ExternalArrow /></a>
                   )}
                   {v?.available && v.source?.url && (
-                    <a className="btn ghost sm" href={v.source.url} target="_blank" rel="noreferrer">Official admissions &amp; apply ↗</a>
+                    <a className="btn ghost sm" href={v.source.url} target="_blank" rel="noreferrer">Official admissions &amp; apply <ExternalArrow /></a>
                   )}
                   {c.netPriceCalculatorUrl && (
-                    <a className="btn ghost sm" href={fixUrl(c.netPriceCalculatorUrl)} target="_blank" rel="noreferrer">Net price calculator ↗</a>
+                    <a className="btn ghost sm" href={fixUrl(c.netPriceCalculatorUrl)} target="_blank" rel="noreferrer">Net price calculator <ExternalArrow /></a>
                   )}
                 </div>
                 <div className="note" style={{ marginTop: 8 }}>Applications are typically submitted through the Common App, Coalition App, or the college's own portal - follow the college website link to apply.</div>
@@ -298,7 +296,7 @@ function SelectionSection({ selection, fit, strategy, scored }) {
   if (!selection?.available) {
     return (
       <div className="card pad">
-        <div className="row spread"><h3>What this college wants</h3><SourceBadge level="unavailable" /></div>
+        <div className="row spread"><h3>What this college wants</h3></div>
         <p className="note" style={{ marginTop: 8 }}>{selection?.note || "No verified selection profile on file yet. Confirm on the college’s official admissions site and Common Data Set."}</p>
       </div>
     );
@@ -308,7 +306,6 @@ function SelectionSection({ selection, fit, strategy, scored }) {
     <div className="stack">
       <div className="row spread">
         <h2>What this college wants</h2>
-        <SourceBadge level={s.source?.confidence || "verified"} />
       </div>
 
       {/* culture fit banner */}
@@ -367,7 +364,7 @@ function SelectionSection({ selection, fit, strategy, scored }) {
         </div>
       )}
 
-      <div className="note">Selection data source: <a className="link" href={s.source?.url} target="_blank" rel="noreferrer">official admissions ↗</a>, {s.source?.year} · reviewed {s.source?.lastReviewed} · confidence: {s.source?.confidence}</div>
+      <div className="note">Selection data source: <a className="link" href={s.source?.url} target="_blank" rel="noreferrer">official admissions <ExternalArrow /></a>, {s.source?.year} · reviewed {s.source?.lastReviewed} · confidence: {s.source?.confidence}</div>
     </div>
   );
 }

@@ -93,7 +93,7 @@ export function cipsForField(field, narrow = false) {
 // --- The career-track scenarios. `id` is the stable key used by the API/UI.
 // Each carries structured metadata so the Career Planner is driven entirely from
 // this single catalog (no drift). Weights/scoring are unchanged; the extra
-// metadata fields are display-only. sourceNotes use BLS OOH 2024–34 figures,
+// metadata fields are display-only. sourceNotes use BLS OOH 2024-34 figures,
 // each labeled with its source, occupation, and a "projection not a guarantee"
 // caveat. No invented numbers.
 export const SCENARIOS = [
@@ -113,7 +113,7 @@ export const SCENARIOS = [
     projectIdeas: ["End-to-end ML model (collect, clean, train, present)", "Data pipeline or dashboard on a public dataset"],
     risks: ["Fast-moving tooling - fundamentals outlast frameworks", "Entry-level bar rising as routine coding automates"],
     sourceNotes: [
-      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Data Scientists", growth: "34%", note: "Projection is for the occupation, not a guarantee for every student." },
+      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024-2034", occupation: "Data Scientists", growth: "34%", note: "Projection is for the occupation, not a guarantee for every student." },
     ],
   },
   {
@@ -132,8 +132,8 @@ export const SCENARIOS = [
     projectIdeas: ["Portfolio-risk model or trading-rule backtest on public data", "Payment/fraud-analytics demo"],
     risks: ["Quant/trading is competitive; top seats often expect a master's", "Finance hiring is cyclical"],
     sourceNotes: [
-      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Data Scientists", growth: "34%", note: "Projection is for the occupation, not a guarantee for every student." },
-      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Operations Research Analysts", growth: "21%", note: "Projection is for the occupation, not a guarantee for every student." },
+      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024-2034", occupation: "Data Scientists", growth: "34%", note: "Projection is for the occupation, not a guarantee for every student." },
+      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024-2034", occupation: "Operations Research Analysts", growth: "21%", note: "Projection is for the occupation, not a guarantee for every student." },
     ],
   },
   {
@@ -152,7 +152,7 @@ export const SCENARIOS = [
     projectIdeas: ["Scheduling or routing optimizer with visualization", "Forecasting model on public data"],
     risks: ["Deepest research roles favor graduate study", "Pure-math paths need a clear applied direction"],
     sourceNotes: [
-      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Operations Research Analysts", growth: "21%", note: "Projection is for the occupation, not a guarantee for every student." },
+      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024-2034", occupation: "Operations Research Analysts", growth: "21%", note: "Projection is for the occupation, not a guarantee for every student." },
     ],
   },
   {
@@ -171,8 +171,8 @@ export const SCENARIOS = [
     projectIdeas: ["Embedded controller (line-following / obstacle avoidance)", "FPGA or microcontroller AI-inference demo"],
     risks: ["Hardware timelines are longer", "Some roles concentrate in specific regions/industries"],
     sourceNotes: [
-      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Electrical & Electronics Engineers", growth: "7%", note: "Projection is for the occupation, not a guarantee for every student." },
-      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Software Developers", growth: "15%", note: "Projection is for the occupation, not a guarantee for every student." },
+      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024-2034", occupation: "Electrical & Electronics Engineers", growth: "7%", note: "Projection is for the occupation, not a guarantee for every student." },
+      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024-2034", occupation: "Software Developers", growth: "15%", note: "Projection is for the occupation, not a guarantee for every student." },
     ],
   },
   {
@@ -191,7 +191,7 @@ export const SCENARIOS = [
     projectIdeas: ["Log-monitoring / intrusion-detection demo", "Secure-coding audit of a small app"],
     risks: ["On-call demands & burnout in some roles", "Entry-level often expects internships or certifications"],
     sourceNotes: [
-      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Information Security Analysts", growth: "29%", note: "Projection is for the occupation, not a guarantee for every student." },
+      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024-2034", occupation: "Information Security Analysts", growth: "29%", note: "Projection is for the occupation, not a guarantee for every student." },
     ],
   },
   {
@@ -210,7 +210,7 @@ export const SCENARIOS = [
     projectIdeas: ["Qubit/gate simulator", "Clear explainer of a quantum algorithm"],
     risks: ["Most quantum roles expect graduate school (often a PhD)", "Rarely a dedicated undergraduate 'Quantum Engineering' major - verify the pathway"],
     sourceNotes: [
-      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Computer & Information Research Scientists", growth: "20%", note: "Projection is for the occupation, not a guarantee for every student." },
+      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024-2034", occupation: "Computer & Information Research Scientists", growth: "20%", note: "Projection is for the occupation, not a guarantee for every student." },
     ],
     // Quantum has no standard undergraduate "Quantum Engineering" CIP; we treat
     // it as a research/pathway fit across physics + EECS + CS instead.
@@ -234,7 +234,7 @@ export const SCENARIOS = [
     projectIdeas: ["Drone flight-control or path-planning simulation", "Rocket/spacecraft trajectory simulator"],
     risks: ["Safety-critical, regulation-heavy; long development cycles", "Defense/aerospace hiring can be clearance- or region-dependent"],
     sourceNotes: [
-      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Aerospace Engineers", growth: "6%", note: "Projection is for the occupation, not a guarantee for every student." },
+      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024-2034", occupation: "Aerospace Engineers", growth: "6%", note: "Projection is for the occupation, not a guarantee for every student." },
     ],
   },
   {
@@ -253,7 +253,7 @@ export const SCENARIOS = [
     projectIdeas: ["Simulated robot arm or mobile robot", "Automation cell / pick-and-place demo"],
     risks: ["Physical prototyping is slower and costlier than software", "Autonomous-vehicle timelines are uncertain"],
     sourceNotes: [
-      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Mechanical Engineers", growth: "9%", note: "Projection is for the occupation, not a guarantee for every student." },
+      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024-2034", occupation: "Mechanical Engineers", growth: "9%", note: "Projection is for the occupation, not a guarantee for every student." },
     ],
   },
   {
@@ -272,8 +272,8 @@ export const SCENARIOS = [
     projectIdeas: ["Supply-chain or scheduling optimizer", "Queue/throughput simulation"],
     risks: ["Impact depends on organizational adoption", "Some roles favor a master's for the deepest modeling"],
     sourceNotes: [
-      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Operations Research Analysts", growth: "21%", note: "Projection is for the occupation, not a guarantee for every student." },
-      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Industrial Engineers", growth: "11%", note: "Projection is for the occupation, not a guarantee for every student." },
+      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024-2034", occupation: "Operations Research Analysts", growth: "21%", note: "Projection is for the occupation, not a guarantee for every student." },
+      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024-2034", occupation: "Industrial Engineers", growth: "11%", note: "Projection is for the occupation, not a guarantee for every student." },
     ],
   },
   {
@@ -292,7 +292,7 @@ export const SCENARIOS = [
     projectIdeas: ["Battery or fuel-cell performance model", "Process-optimization analysis on public data"],
     risks: ["Capital-intensive industries; slower iteration", "Some roles concentrate around specific plants/regions"],
     sourceNotes: [
-      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Chemical Engineers", growth: "3%", note: "Projection is for the occupation, not a guarantee for every student." },
+      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024-2034", occupation: "Chemical Engineers", growth: "3%", note: "Projection is for the occupation, not a guarantee for every student." },
     ],
   },
   {
@@ -311,7 +311,7 @@ export const SCENARIOS = [
     projectIdeas: ["Medical-image classifier on a public dataset", "Wearable-sensor signal-analysis demo"],
     risks: ["Regulated (FDA) and clinical-validation heavy", "Some roles expect graduate study"],
     sourceNotes: [
-      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Bioengineers & Biomedical Engineers", growth: "5%", note: "Projection is for the occupation, not a guarantee for every student." },
+      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024-2034", occupation: "Bioengineers & Biomedical Engineers", growth: "5%", note: "Projection is for the occupation, not a guarantee for every student." },
     ],
   },
   {
@@ -330,7 +330,7 @@ export const SCENARIOS = [
     projectIdeas: ["Battery-materials property study", "Semiconductor device or process explainer"],
     risks: ["Capital-intensive; often research/graduate-oriented", "Fab roles concentrate in specific regions"],
     sourceNotes: [
-      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Materials Engineers", growth: "6%", note: "Projection is for the occupation, not a guarantee for every student." },
+      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024-2034", occupation: "Materials Engineers", growth: "6%", note: "Projection is for the occupation, not a guarantee for every student." },
     ],
   },
   {
@@ -349,7 +349,7 @@ export const SCENARIOS = [
     projectIdeas: ["Renewable-energy output model", "Water-quality or emissions dashboard"],
     risks: ["Policy- and funding-dependent in places", "Impact often at slower infrastructure timelines"],
     sourceNotes: [
-      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024–2034", occupation: "Environmental Engineers", growth: "7%", note: "Projection is for the occupation, not a guarantee for every student." },
+      { source: "BLS Occupational Outlook Handbook", projectionPeriod: "2024-2034", occupation: "Environmental Engineers", growth: "7%", note: "Projection is for the occupation, not a guarantee for every student." },
     ],
   },
 ];

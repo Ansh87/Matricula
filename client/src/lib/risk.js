@@ -1,4 +1,4 @@
-// risk.js -- client-side "real risk" labeling helpers for evidence-aware
+// risk.js. Client-side "real risk" labeling helpers for evidence-aware
 // Match cards. This is a presentation-only labeling layer: it never touches
 // fit/admission/cost SCORES computed by the server, and it never invents a
 // school-specific fact. It only reasons from data the family already has
@@ -38,7 +38,7 @@ export function programEvidenceSummary(programs) {
   if (cipOnly.length) {
     return {
       count: list.length, verifiedCount: 0,
-      label: `${cipOnly.length} field-of-study match(es) from College Scorecard -- not yet school-specific verified`,
+      label: `${cipOnly.length} field-of-study match(es) from College Scorecard, not yet school-specific verified`,
       level: "unavailable",
     };
   }
@@ -66,7 +66,7 @@ export function costRiskLabel({ decisionItem }) {
     return { label: decisionItem.cost_risk, level: decisionItem.cost_risk === "Low" ? "safe" : decisionItem.cost_risk === "High" ? "caution" : "watch" };
   }
   if (!decisionItem.npc_completed) {
-    return { label: "Unknown -- run the net price calculator", level: "caution" };
+    return { label: "Unknown. Run the net price calculator", level: "caution" };
   }
   return { label: "Unknown", level: "watch" };
 }

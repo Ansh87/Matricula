@@ -6,6 +6,7 @@ import { Spinner, InlineSpinner, SourceBadge, SuccessNote, RestoredNote, ClearSe
 import { US_STATES } from "../lib/states.js";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
 import { useEntryOverride } from "../lib/entryOverride.js";
+import { Arrow, Bullet, Check } from "./icons.jsx";
 
 const PROGRAM_TYPES = ["Major", "Minor", "Concentration", "Track", "Certificate", "Course cluster", "Graduate-only program", "Unknown"];
 const POLICY_TYPES = ["Double major", "Second major", "Additional major", "Dual degree", "Intercollege dual degree", "Major + minor", "Concentration only", "Not allowed", "Unknown"];
@@ -36,7 +37,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
   // so the family can see which options are most/least selective at a glance.
   const [majorSort, setMajorSort] = useState("selectivity");
   // Deep search (up to 2,000 candidate colleges) is an explicit, opt-in,
-  // advanced option -- it never runs automatically. Standard search (up to
+  // advanced option. It never runs automatically. Standard search (up to
   // 500 candidates) is the default for every search.
   const [deepSearch, setDeepSearch] = useState(false);
   // How many of the scored/verified colleges to display at once. Starts at
@@ -49,7 +50,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
   // persist the search text(es), state filter, combo mode, sort, deep-search
   // flag, results, and Top20/30/50 + Load Next 25 display count so returning
   // to Majors (or refreshing, or logging back in) restores exactly what was
-  // there. Restoring never re-runs or re-scores the search -- it just puts
+  // there. Restoring never re-runs or re-scores the search. It just puts
   // the previous results back on screen.
   const majorsSnapshot = {
     majorQuery, major2Query, stateFilter, majorColleges, comboMode, searchMeta,
@@ -99,7 +100,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
   }, [profile?.primaryMajor, profile?.secondaryMajor]);
 
   // Explore navigation: the "Double Major Search" / "Majors" subtabs both
-  // open this same page (they always have -- Single/Double major is a toggle
+  // open this same page (they always have. Single/Double major is a toggle
   // right here, not a separate page) but each subtab click can request a
   // specific mode so the family lands on what they actually clicked. Runs
   // once per explicit subtab click (see lib/entryOverride.js); never fires
@@ -159,7 +160,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
     api.recommendMajors(profile).then((r) => { setMajors(r.majors || []); setDoubles(r.doubleMajors || []); }).catch(() => { setMajors([]); setDoubles([]); }).finally(() => setLoading(false));
   }, [profile]);
 
-  // Selectivity rank -- computed client-side from admissionRate, which
+  // Selectivity rank. Computed client-side from admissionRate, which
   // College Scorecard already returns on every result but the UI never
   // showed. "Rank" here means admit-rate ordering among the colleges in
   // THIS result set, not a US News-style prestige ranking (this app doesn't
@@ -172,7 +173,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
       const ranked = [...withRate].sort((a, b) => a.admissionRate - b.admissionRate);
       return [...ranked.map((c, i) => ({ ...c, selectivityRank: i + 1 })), ...withoutRate];
     }
-    // "size" (API default order) -- still attach rank numbers so the badge
+    // "size" (API default order), still attach rank numbers so the badge
     // is available in either sort mode, just computed against the same
     // admit-rate ordering rather than reordering the visible list.
     const rankMap = new Map([...withRate].sort((a, b) => a.admissionRate - b.admissionRate).map((c, i) => [c.id, i + 1]));
@@ -215,7 +216,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
                   <p className="note" style={{ marginTop: 6 }}>{d.why}</p>
                   <button className="link" style={{ marginTop: 6 }}
                     onClick={() => useCombo(d.primary, d.partner)}>
-                    Find colleges offering both →
+                    Find colleges offering both <Arrow />
                   </button>
                 </div>
               ))}
@@ -244,7 +245,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
           <div className="disclaimer" style={{ marginTop: 8, marginBottom: 0 }}>
             Do not assume a double major is possible just because a college offers both fields separately. Colleges
             differ widely in whether double majors are allowed, capped, require separate applications, or need
-            special permission -- always confirm the actual policy with the college's advising office or catalog.
+            special permission, always confirm the actual policy with the college's advising office or catalog.
           </div>
         )}
         <div className="row wrap" style={{ gap: 8, marginTop: 8, alignItems: "flex-start" }}>
@@ -265,7 +266,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
           </button>
         </div>
         {/* Selecting the same major on both sides isn't a meaningful double-major
-            search (no college "offers both" a field and itself) -- an inline
+            search (no college "offers both" a field and itself), an inline
             warning rather than a hard block, since the two fields stay fully
             independent text inputs and the family may still be mid-edit. */}
         {comboMode && majorQuery.trim() && major2Query.trim() && majorQuery.trim().toLowerCase() === major2Query.trim().toLowerCase() && (
@@ -348,7 +349,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
                 <div className="row spread wrap" style={{ marginBottom: 8, alignItems: "center" }}>
                   <h3 style={{ margin: 0 }}>
                     {searchMeta?.combo
-                      ? `Colleges offering BOTH ${searchMeta.major1} and ${searchMeta.major2}`
+                      ? `Colleges offering both ${searchMeta.major1} and ${searchMeta.major2}`
                       : `Colleges offering ${searchMeta?.major || majorQuery}`}
                   </h3>
                   <div className="row" style={{ gap: 6, alignItems: "center" }}>
@@ -374,7 +375,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
                   not a US News-style prestige ranking. Colleges with no admission-rate data on file are shown unranked.
                 </div>
                 <div className="note" style={{ fontWeight: 600 }}>
-                  Showing 1–{Math.min(displayCount, sortedMajorColleges.length)} of {sortedMajorColleges.length} scored colleges
+                  Showing 1-{Math.min(displayCount, sortedMajorColleges.length)} of {sortedMajorColleges.length} scored colleges
                 </div>
                 {(() => {
                   const pageSlice = sortedMajorColleges.slice(0, displayCount);
@@ -393,7 +394,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
                   // Feature 8: group combo results into three honest tiers instead
                   // of one undifferentiated list. "Confirmed" only ever comes from
                   // a matching official-source verification record for THIS exact
-                  // primary+secondary pairing at THIS college -- never from
+                  // primary+secondary pairing at THIS college, never from
                   // Scorecard evidence alone.
                   const confirmed = [], related = [], needsVerification = [];
                   for (const c of pageSlice) {
@@ -414,7 +415,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
                       {related.length > 0 && (
                         <div style={{ marginTop: confirmed.length ? 16 : 0 }}>
                           <h4 style={{ margin: "6px 0" }}>Related Program Paths ({related.length})</h4>
-                          <p className="note" style={{ marginBottom: 8 }}>These colleges offer the primary major plus a related minor, concentration, certificate, or track in the second field -- not necessarily a second major.</p>
+                          <p className="note" style={{ marginBottom: 8 }}>These colleges offer the primary major plus a related minor, concentration, certificate, or track in the second field, not necessarily a second major.</p>
                           <div className="stack" style={{ gap: 8 }}>{related.map(card)}</div>
                         </div>
                       )}
@@ -506,7 +507,7 @@ export function Majors({ profile, studentId, onOpen, onToggleSave, savedIds, ent
 // Feature 1: the ONE place in the app that only ever shows a double-major
 // pairing once an official source has confirmed BOTH official program names
 // and the actual double-major/second-major/dual-degree policy. Nothing here
-// is derived from College Scorecard -- every row is a double_major_verifications
+// is derived from College Scorecard. Every row is a double_major_verifications
 // record that passed isConfirmedDoubleMajor() server-side (see the `confirmed`
 // flag the API attaches to every record).
 function ConfirmedDoubleMajorPrograms({ verifications, onOpen, onRefresh, studentId }) {
@@ -518,7 +519,7 @@ function ConfirmedDoubleMajorPrograms({ verifications, onOpen, onRefresh, studen
         <h3 style={{ marginBottom: 6 }}>Confirmed Double-Major Programs</h3>
         <p className="note">
           No college has an official-source-confirmed double major yet. When you search Double Major options and use
-          "Confirm with an official source" on a result, verified pairings will appear here -- and only here, once
+          "Confirm with an official source" on a result, verified pairings will appear here, and only here, once
           they've cleared the confirmation bar.
         </p>
       </div>
@@ -547,7 +548,7 @@ function ConfirmedDoubleMajorPrograms({ verifications, onOpen, onRefresh, studen
           </div>
           {v.restrictions && <div className="note" style={{ marginTop: 4 }}>Restrictions: {v.restrictions}</div>}
           <div className="row" style={{ gap: 10, marginTop: 8 }}>
-            {onOpen && v.college_id && <button className="link" onClick={() => onOpen(v.college_id)}>View college →</button>}
+            {onOpen && v.college_id && <button className="link" onClick={() => onOpen(v.college_id)}>View college <Arrow /></button>}
           </div>
         </div>
       ))}
@@ -559,7 +560,7 @@ function ConfirmedDoubleMajorPrograms({ verifications, onOpen, onRefresh, studen
 // "Evaluate against my profile" action (parity with Browse Colleges).
 // Preserves all existing program/combo display; only adds the evaluate control.
 // `verification` (when present) is this family's OWN double_major_verifications
-// record for this exact college + primary/secondary pairing -- categorically
+// record for this exact college + primary/secondary pairing. Categorically
 // different from c.doubleMajorStatus, which only ever reflects Scorecard
 // evidence. See services/doubleMajorVerification.js on the server.
 function MajorCollegeCard({ c, profile, studentId, searchMeta, onOpen, onToggleSave, savedIds, verification, onVerificationSaved }) {
@@ -573,7 +574,7 @@ function MajorCollegeCard({ c, profile, studentId, searchMeta, onOpen, onToggleS
   const isCombo = !!searchMeta?.combo;
   const isConfirmed = !!verification?.confirmed;
 
-  // Feature 3/5 display label -- never invents a stronger claim than the
+  // Feature 3/5 display label, never invents a stronger claim than the
   // evidence supports. A confirmed verification record always wins; otherwise
   // fall back to the honest Scorecard-tier label the server already computed
   // (c.doubleMajorStatus), which is generic across any major pair.
@@ -611,7 +612,7 @@ function MajorCollegeCard({ c, profile, studentId, searchMeta, onOpen, onToggleS
         sourceContext: "Selected from Double Major Search",
         notes: isConfirmed
           ? `Double major: ${searchMeta.major1} + ${searchMeta.major2}. Officially confirmed via ${verification.source_label || verification.source_url}.`
-          : `Considering a double major: ${searchMeta.major1} + ${searchMeta.major2}. Both fields exist here per College Scorecard, but the double-major policy is not yet verified -- confirm with the college's advising office.`,
+          : `Considering a double major: ${searchMeta.major1} + ${searchMeta.major2}. Both fields exist here per College Scorecard, but the double-major policy is not yet verified. Confirm with the college's advising office.`,
         actionNeeded: isConfirmed ? null : "Verify double-major rules and school-to-school restrictions with the college's advising office or catalog.",
       });
       setComboSaveMsg(isConfirmed
@@ -626,7 +627,7 @@ function MajorCollegeCard({ c, profile, studentId, searchMeta, onOpen, onToggleS
   // through the normal toggle). If the college is already on the list (saved
   // from anywhere else), clicking here should ADD this pathway to the
   // existing card, never remove it or create a second card for the same
-  // college -- forceAdd=true guarantees that.
+  // college. ForceAdd=true guarantees that.
   const addDoubleMajorOption = async () => {
     setListMsg(null);
     try {
@@ -639,7 +640,7 @@ function MajorCollegeCard({ c, profile, studentId, searchMeta, onOpen, onToggleS
           doubleMajorStatus: displayStatus,
           doubleMajorVerificationStatus: isConfirmed ? verification.verification_status : "Needs manual verification",
         },
-        true // forceAdd -- merge in this pathway, don't toggle off an existing save
+        true // forceAdd. Merge in this pathway, don't toggle off an existing save
       );
       setListMsg("Added as double-major option.");
     } catch (e) {
@@ -671,7 +672,7 @@ function MajorCollegeCard({ c, profile, studentId, searchMeta, onOpen, onToggleS
       {c.offersMajor1 != null && (
         <div style={{ marginTop: 8 }}>
           <div className="row wrap" style={{ gap: 6 }}>
-            <span className="pill" style={{ background: "var(--safety-b)" }}>Offers both fields ✓</span>
+            <span className="pill" style={{ background: "var(--safety-b)" }}>Offers both fields <Check /></span>
             <span className="pill" style={{ background: isConfirmed ? "var(--safety-b)" : "var(--target-b)" }}>{displayStatus}</span>
           </div>
           {isConfirmed ? (
@@ -693,20 +694,20 @@ function MajorCollegeCard({ c, profile, studentId, searchMeta, onOpen, onToggleS
             <div>
               <div className="note" style={{ fontWeight: 600 }}>{searchMeta.major1}</div>
               {(c.matchingMajor1Programs || []).slice(0, 3).map((p) => (
-                <div key={p.cipCode} className="note" style={{ fontSize: 11 }}>• {p.title} (CIP {p.cipCode})</div>
+                <div key={p.cipCode} className="note" style={{ fontSize: 11 }}><Bullet /> {p.title} (CIP {p.cipCode})</div>
               ))}
             </div>
             <div>
               <div className="note" style={{ fontWeight: 600 }}>{searchMeta.major2}</div>
               {(c.matchingMajor2Programs || []).slice(0, 3).map((p) => (
-                <div key={p.cipCode} className="note" style={{ fontSize: 11 }}>• {p.title} (CIP {p.cipCode})</div>
+                <div key={p.cipCode} className="note" style={{ fontSize: 11 }}><Bullet /> {p.title} (CIP {p.cipCode})</div>
               ))}
             </div>
           </div>
           {studentId && !isConfirmed && (
             <div style={{ marginTop: 8 }}>
               {!showConfirmForm ? (
-                <button className="link" onClick={() => setShowConfirmForm(true)}>Confirm with an official source →</button>
+                <button className="link" onClick={() => setShowConfirmForm(true)}>Confirm with an official source <Arrow /></button>
               ) : (
                 <ConfirmDoubleMajorForm studentId={studentId} college={c} searchMeta={searchMeta}
                   onSaved={() => { setShowConfirmForm(false); onVerificationSaved && onVerificationSaved(); }}
@@ -734,7 +735,7 @@ function MajorCollegeCard({ c, profile, studentId, searchMeta, onOpen, onToggleS
       {listMsg && <div className="note" style={{ marginTop: 6, color: "var(--safety)" }}>{listMsg}</div>}
 
       <div className="row" style={{ gap: 10, marginTop: 6 }}>
-        <button className="link" onClick={() => onOpen && onOpen(c.id)}>View college →</button>
+        <button className="link" onClick={() => onOpen && onOpen(c.id)}>View college <Arrow /></button>
         {!scored && (
           <button className="link" onClick={evaluate} disabled={evaluating}>
             {evaluating ? "Evaluating…" : "Evaluate against my profile"}
@@ -742,7 +743,7 @@ function MajorCollegeCard({ c, profile, studentId, searchMeta, onOpen, onToggleS
         )}
         {c.offersMajor1 != null && studentId && (
           <button className="link" onClick={saveComboToDecisionPlan} disabled={comboSaving}>
-            {comboSaving ? "Saving to Decision Plan…" : "Save as double-major consideration →"}
+            {comboSaving ? "Saving to Decision Plan…" : <>Save as double-major consideration <Arrow /></>}
           </button>
         )}
         {onToggleSave && !isCombo && (
@@ -750,7 +751,7 @@ function MajorCollegeCard({ c, profile, studentId, searchMeta, onOpen, onToggleS
             { college: { id: c.id, name: c.name, city: c.city, state: c.state }, admission: null, overall: null },
             { context: "Selected from Single Major Search" }
           )}>
-            {savedIds?.has(c.id) ? "Saved ✓" : "+ List"}
+            {savedIds?.has(c.id) ? <>Saved <Check /></> : "+ List"}
           </button>
         )}
         {onToggleSave && isCombo && !savedIds?.has(c.id) && (
@@ -766,7 +767,7 @@ function MajorCollegeCard({ c, profile, studentId, searchMeta, onOpen, onToggleS
           )}>+ List</button>
         )}
         {onToggleSave && isCombo && savedIds?.has(c.id) && (
-          <button className="link" onClick={addDoubleMajorOption}>Add as double-major option →</button>
+          <button className="link" onClick={addDoubleMajorOption}>Add as double-major option <Arrow /></button>
         )}
       </div>
     </div>

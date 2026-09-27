@@ -1,4 +1,4 @@
-// routes/applicationTimeline.js -- the "Application Timeline" tab API.
+// routes/applicationTimeline.js, the "Application Timeline" tab API.
 // Mounted behind requireAuth in index.js; router.param("id") forces the :id
 // segment to the authenticated Firebase UID (same pattern as every other
 // per-student router), so a user can never read or write another family's
@@ -46,7 +46,7 @@ const EVENT_FIELD_MAP = {
   sourceUrl: "source_url", sourceLabel: "source_label", verificationStatus: "verification_status", notes: "notes",
 };
 
-// Part F -- manual timeline entry. Every field the family can enter directly;
+// Part F. Manual timeline entry. Every field the family can enter directly;
 // event_type must be one of the fixed vocabulary so downstream summaries
 // (Decision Plan / Journey) can rely on it, but "Other" is always available
 // for anything that doesn't fit.
@@ -101,7 +101,7 @@ applicationTimelineRouter.delete("/:id/events/:eventId", (req, res) => {
 // ---------- "Auto-fill official dates" ----------
 // Read-only check (used to decide whether to show the button/badge) and the
 // actual write. Both use the same name-pattern-matched reference data as
-// suggestPlatform -- see TIMELINE_AUTOFILL_PROFILES in db/deadlineSeed.js.
+// suggestPlatform. See TIMELINE_AUTOFILL_PROFILES in db/deadlineSeed.js.
 applicationTimelineRouter.get("/:id/autofill-preview", (req, res) => {
   const { collegeName } = req.query;
   const profile = findAutofillCandidate(collegeName);
@@ -114,7 +114,7 @@ applicationTimelineRouter.get("/:id/autofill-preview", (req, res) => {
 
 // The real pull: tries verified reference data first (instant), and if this
 // college isn't one of those, automatically falls through to a live search
-// of the college's own official site -- so a newly-added college still gets
+// of the college's own official site, so a newly-added college still gets
 // a real attempt, not just "Unknown."
 applicationTimelineRouter.post("/:id/events/autofill", async (req, res) => {
   const b = req.body || {};
@@ -190,7 +190,7 @@ applicationTimelineRouter.post("/:id/setup-planning", async (req, res) => {
   const ts = now();
   const summary = { collegeId, collegeName, requirementCreated: false, timelineDiscovery: null, essayDiscovery: null, taskCreated: false };
 
-  // 1) Application pathway record -- only if none exists yet for this college.
+  // 1) Application pathway record, only if none exists yet for this college.
   const existingReq = collegeId
     ? db.prepare("SELECT requirement_id FROM college_application_requirements WHERE student_id=? AND college_id=? LIMIT 1").get(studentId, collegeId)
     : null;
@@ -207,13 +207,13 @@ applicationTimelineRouter.post("/:id/setup-planning", async (req, res) => {
         requirement_id: requirementId, student_id: studentId, college_id: collegeId || null, college_name: collegeName || null,
         platform_id: platform?.platform_id || null, platform_name: platform?.platform_name || null, application_url: platform?.official_url || null,
         verification_status: "Needs manual verification",
-        notes: platform ? `Starting point from "Set up application planning": ${suggestion.reason} Please verify.` : "Starting point from \"Set up application planning\" -- platform not yet known, please fill in.",
+        notes: platform ? `Starting point from "Set up application planning": ${suggestion.reason} Please verify.` : "Starting point from \"Set up application planning\". Platform not yet known, please fill in.",
         created_at: ts, updated_at: ts, last_checked: ts,
       });
     summary.requirementCreated = true;
   }
 
-  // 2) Timeline checklist -- attempt a bounded "verify deadlines" discovery
+  // 2) Timeline checklist. Attempt a bounded "verify deadlines" discovery
   // pass so the family has something to review instead of a blank tab.
   try {
     summary.timelineDiscovery = await findTimelineEvents(studentId, { collegeId, collegeName });
@@ -221,14 +221,14 @@ applicationTimelineRouter.post("/:id/setup-planning", async (req, res) => {
     summary.timelineDiscovery = { error: err.message, eventsFound: 0 };
   }
 
-  // 3) Find essay prompts -- same official-domain discovery Essay Center uses.
+  // 3) Find essay prompts. Same official-domain discovery Essay Center uses.
   try {
     summary.essayDiscovery = await findEssayPrompts(studentId, { collegeId, collegeName });
   } catch (err) {
     summary.essayDiscovery = { error: err.message, promptsFound: 0 };
   }
 
-  // 4) Verification task -- only if one isn't already open for this college.
+  // 4) Verification task, only if one isn't already open for this college.
   const existingTask = collegeId
     ? db.prepare("SELECT task_id FROM application_tasks WHERE student_id=? AND college_id=? AND task_type='application_timeline_verification' AND status!='Done' LIMIT 1").get(studentId, collegeId)
     : null;

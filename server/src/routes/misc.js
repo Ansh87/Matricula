@@ -143,7 +143,7 @@ const upsertList = db.prepare(`
     matched_official_name=excluded.matched_official_name,match_confidence=excluded.match_confidence,
     profile_score_at_import=excluded.profile_score_at_import,admission_category_at_import=excluded.admission_category_at_import`);
 
-// Shared "add or merge a college into My List" logic -- used by the normal
+// Shared "add or merge a college into My List" logic. Used by the normal
 // single-college save (PUT /:id/list/:collegeId below) AND by Import College
 // List's confirm step (routes/collegeImport.js), so both paths behave
 // IDENTICALLY: same merge-not-duplicate rule, same accumulated selection
@@ -252,7 +252,7 @@ studentRouter.delete("/:id/scholarships/:sid", (req, res) => {
   res.json({ ok: true });
 });
 
-// CSV export -- same pattern as Programs/Decision Plan/Essay Center/
+// CSV export. Same pattern as Programs/Decision Plan/Essay Center/
 // Application Timeline, so the Scholarship Tracker isn't the one list in the
 // app a family can't take with them.
 function scholCsvEscape(v) {
@@ -314,14 +314,14 @@ studentRouter.get("/:id/list", (req, res) => {
   res.json({ list: rows });
 });
 
-// POST /api/students/:id/list/evaluate { profile } -- "Evaluate Against My
+// POST /api/students/:id/list/evaluate { profile }. "Evaluate Against My
 // Profile" (Issue 2). Re-scores every college already on My List against the
 // CURRENT profile, using the exact same scoreCollege()/classify() every other
-// save flow uses -- no new formula, no new admissions-category logic. Only
+// save flow uses, no new formula, no new admissions-category logic. Only
 // the score-derived columns are touched (category, range, overall/academic/
-// career/financial fit, updated_at); everything else on the row -- source
+// career/financial fit, updated_at); everything else on the row. Source
 // context(s), imported-list provenance, double-major pathway/verification
-// status, decision status, notes -- is left exactly as it was. Matching
+// status, decision status, notes. Is left exactly as it was. Matching
 // Decision Plan items get their admission_category refreshed too (mirroring
 // what already happens when a college is first added from My List), but
 // their family-entered decision_status, notes, major_risk, cost_risk,
@@ -362,7 +362,7 @@ studentRouter.post("/:id/list/evaluate", async (req, res) => {
 
     if (!college) {
       // Can't re-check this college right now (removed from Scorecard, or a
-      // live-lookup failure) -- leave its existing score/category untouched
+      // live-lookup failure). Leave its existing score/category untouched
       // rather than guessing, and flag it for the family to look at.
       needsReview++;
       const plan = planByCollege.get(row.college_id);
@@ -422,7 +422,7 @@ studentRouter.delete("/:id/list/:collegeId", (req, res) => {
 // fields exist" to "an official college source confirms the policy." See
 // services/doubleMajorVerification.js for the field list and the single
 // isConfirmedDoubleMajor() gate every caller (My List badges, Decision Plan,
-// Verification Center) relies on -- nothing here decides "confirmed" on its
+// Verification Center) relies on. Nothing here decides "confirmed" on its
 // own.
 studentRouter.get("/:id/double-major-verifications", (req, res) => {
   const collegeId = req.query.collegeId || null;
@@ -449,7 +449,7 @@ studentRouter.delete("/:id/double-major-verifications/:verificationId", (req, re
 
 // ---------- Search/results persistence (Issue 1) ----------
 // One JSON "state" blob per (student, page_key). The client fully owns the
-// shape of state -- these routes just store/return it, isolated by Firebase
+// shape of state. These routes just store/return it, isolated by Firebase
 // UID via the studentRouter.param("id", ...) override above (same guarantee
 // every other student-scoped route in this file relies on). Nothing here
 // reads or interprets search results, so it can never go stale relative to
@@ -476,7 +476,7 @@ studentRouter.put("/:id/search-state/:pageKey", (req, res) => {
   const state = (req.body && Object.prototype.hasOwnProperty.call(req.body, "state")) ? req.body.state : null;
   const now = Date.now();
   upsertSearchState.run({
-    id: `sss_${req.params.id}_${req.params.pageKey}`, // deterministic -- one row per (student, page)
+    id: `sss_${req.params.id}_${req.params.pageKey}`, // deterministic. One row per (student, page)
     student_id: req.params.id, page_key: req.params.pageKey,
     state_json: JSON.stringify(state ?? null), now,
   });
@@ -494,11 +494,11 @@ studentRouter.delete("/:id/search-state/:pageKey", (req, res) => {
 // auto-adds anything below High confidence), and only writes to My List once
 // the family confirms. See services/collegeMatcher.js (matching + confidence)
 // and services/collegeImportParse.js (paste/CSV/text -> name list). Nothing
-// here is a separate matching/scoring formula -- college scoring reuses the
+// here is a separate matching/scoring formula. College scoring reuses the
 // exact same scoreCollege() used by every other page.
 const importUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
 
-// POST /api/students/:id/import/parse -- multipart file (CSV/txt) OR JSON { text }.
+// POST /api/students/:id/import/parse. Multipart file (CSV/txt) OR JSON { text }.
 studentRouter.post("/:id/import/parse", importUpload.single("file"), (req, res) => {
   try {
     let names;
@@ -517,7 +517,7 @@ studentRouter.post("/:id/import/parse", importUpload.single("file"), (req, res) 
 });
 
 // Same canonical Profile matching-interest list used by /api/colleges routes
-// (primary major + second major + interests, deduped) -- duplicated here in
+// (primary major + second major + interests, deduped). Duplicated here in
 // one small function rather than importing from routes/colleges.js, to avoid
 // a route-to-route dependency. Not a new formula: scoreCollege() itself is
 // unchanged, this only shapes the `interests` array fed into it, exactly like
@@ -530,7 +530,7 @@ function importScoringProfile(profile) {
 }
 
 // Score one matched college_id against the family's profile, for the review
-// screen's "Suggested Reach/Target/Safety category" column -- the EXACT same
+// screen's "Suggested Reach/Target/Safety category" column, the EXACT same
 // scoreCollege() used everywhere else in the app, never a new formula. Never
 // throws: a scoring failure just means the review row shows no suggested
 // category yet (honest "needs review" rather than a fake one).
@@ -546,7 +546,7 @@ async function suggestedCategoryFor(collegeId, scoringProfile) {
 
 // POST /api/students/:id/import/match  { names: [...], state?, profile? } ->
 // per-name match results with confidence, for the review screen. Never
-// writes to the database -- matching is read-only until the family confirms.
+// writes to the database. Matching is read-only until the family confirms.
 // When `profile` is supplied, each matched college_id (including ambiguous/
 // low-confidence OPTIONS) also gets a suggested admission category so the
 // review table can show it before anything is added.
@@ -616,7 +616,7 @@ studentRouter.post("/:id/import/confirm", async (req, res) => {
       const found = await getCollegeById(row.collegeId);
       official = found?.college || null;
       if (official) scored = scoreCollege(scoringProfile, official);
-    } catch { /* degrade to unscored add below -- never block the add on a scoring failure */ }
+    } catch { /* degrade to unscored add below, never block the add on a scoring failure */ }
 
     upsertListItem(req.params.id, row.collegeId, {
       name: official?.name || row.officialName, city: official?.city || null, state: official?.state || null,
@@ -637,7 +637,7 @@ studentRouter.post("/:id/import/confirm", async (req, res) => {
     if (existing) {
       summary.alreadyInList++;
       results.push({ originalName, matchedName: official?.name || row.officialName, result: "Already in My List",
-        reason: "This college was already on your list -- we added \"Added from Imported List\" to it instead of creating a duplicate.", nextAction: null });
+        reason: "This college was already on your list. We added \"Added from Imported List\" to it instead of creating a duplicate.", nextAction: null });
     } else if (row.corrected) {
       summary.correctedAndAdded++;
       results.push({ originalName, matchedName: official?.name || row.officialName, result: "Corrected and added",
@@ -680,7 +680,7 @@ export const advisorRouter = express.Router();
 
 // Answers using ONLY the passed data (scored recs + profile) plus the
 // signed-in student's own saved-college essay data (tracked prompts +
-// officially-published sample-essay links) -- read from req.user.uid, never
+// officially-published sample-essay links). Read from req.user.uid, never
 // trusted from the client, same as every other per-student route. Uses
 // Gemini when configured (with guardrails), otherwise a deterministic
 // keyword fallback.

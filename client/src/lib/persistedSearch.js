@@ -1,18 +1,18 @@
-// persistedSearch.js -- Issue 1: keep search inputs, filters, tabs, and
+// persistedSearch.js. Issue 1: keep search inputs, filters, tabs, and
 // results on screen until the family explicitly clears them, across
 // navigation, page refresh, and logout/login.
 //
 // Two layers, exactly as specced:
-//   1. localStorage -- instant restore when switching tabs or refreshing the
+//   1. localStorage. Instant restore when switching tabs or refreshing the
 //      browser, no network round trip needed.
-//   2. Server (saved_search_sessions, see routes/misc.js) -- restores the
+//   2. Server (saved_search_sessions, see routes/misc.js). Restores the
 //      same search on a different browser/device, or after clearing local
 //      storage, as long as the family signs back in with the same Firebase
 //      UID. Isolated per UID exactly like every other student-scoped table.
 //
 // This module only ever stores/restores plain UI-state objects that each
 // page already builds for itself (search text, filters, results, pagination,
-// selected tab). It never touches scoring, matching, or ranking -- those
+// selected tab). It never touches scoring, matching, or ranking. Those
 // stay exactly as they were.
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "./api.js";
@@ -27,7 +27,7 @@ function readLocal(uid, pageKey) {
   } catch { return undefined; }
 }
 function writeLocal(uid, pageKey, value) {
-  try { localStorage.setItem(lsKey(uid, pageKey), JSON.stringify(value)); } catch { /* storage unavailable/full -- server layer still covers logout/login */ }
+  try { localStorage.setItem(lsKey(uid, pageKey), JSON.stringify(value)); } catch { /* storage unavailable/full. Server layer still covers logout/login */ }
 }
 function removeLocal(uid, pageKey) {
   try { localStorage.removeItem(lsKey(uid, pageKey)); } catch { /* ignore */ }
@@ -44,7 +44,7 @@ function removeLocal(uid, pageKey) {
 //                   caller can push it back into its own useState values.
 //
 // Returns { restoredFrom: "local" | "server" | null, clear() }. `clear()`
-// removes both layers and resets restoredFrom -- the caller is still
+// removes both layers and resets restoredFrom, the caller is still
 // responsible for resetting its own visible state (Clear search / Clear
 // results / Reset filters buttons call the caller's own reset function too).
 export function usePersistedSearch(studentId, pageKey, snapshot, applySnapshot) {
@@ -78,7 +78,7 @@ export function usePersistedSearch(studentId, pageKey, snapshot, applySnapshot) 
         writeLocal(studentId, pageKey, r.state);
         setRestoredFrom("server");
       }
-    }).catch(() => { /* no saved state reachable -- page just starts blank */ });
+    }).catch(() => { /* no saved state reachable. Page just starts blank */ });
     return () => { cancelled = true; };
   }, [studentId, pageKey]);
 
@@ -119,7 +119,7 @@ export function restoredNoteText(restoredFrom) {
 // Settings -> Local Saved Searches: a device-only clear, deliberately
 // separate from the hook's own clear() above. clear() (used by each page's
 // own "Clear search" button) removes BOTH layers, including the server copy
-// -- appropriate when the family is on that page and means it. This helper
+//. Appropriate when the family is on that page and means it. This helper
 // only ever removes the localStorage copy on THIS browser/device, exactly
 // matching Settings' "controls search results saved on this device" scope --
 // it never touches the server-side saved_search_sessions row, so the same

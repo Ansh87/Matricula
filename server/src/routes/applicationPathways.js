@@ -1,4 +1,4 @@
-// routes/applicationPathways.js -- the "Application Pathways" tab API.
+// routes/applicationPathways.js, the "Application Pathways" tab API.
 // Mounted behind requireAuth in index.js; router.param("id") forces the :id
 // segment to the authenticated Firebase UID (same pattern as every other
 // per-student router), so a user can never read or write another family's
@@ -102,7 +102,7 @@ applicationPathwaysRouter.delete("/:id/requirements/:reqId", (req, res) => {
 // the same hand-verified reference profiles used for Application Timeline
 // dates (deadlineSeed.js). Only fields still at their default "Unknown" or
 // blank are touched, so a family's own edits are never overwritten. No live
-// crawl fallback here, unlike dates/essays -- these details vary by program
+// crawl fallback here, unlike dates/essays. These details vary by program
 // and change often enough that guessing them from crawled page text would be
 // unreliable, so only verified reference data is used; the response says
 // plainly when nothing is available yet for a college.
@@ -133,7 +133,7 @@ applicationPathwaysRouter.post("/:id/requirements/:reqId/autofill-details", (req
     filledFields.push(camel);
   }
   if (!Object.keys(updates).length) {
-    return res.json({ filled: false, reason: "All application-detail fields already have a value for this record -- nothing to fill." });
+    return res.json({ filled: false, reason: "All application-detail fields already have a value for this record. Nothing to fill." });
   }
   updates.updated_at = now();
   updates.last_checked = now();
@@ -145,13 +145,13 @@ applicationPathwaysRouter.post("/:id/requirements/:reqId/autofill-details", (req
     filled: true, filledFields,
     requirement: db.prepare("SELECT * FROM college_application_requirements WHERE requirement_id=?").get(req.params.reqId),
     sourceUrl: profile.sourceUrl, confidence: profile.confidence,
-    notice: "Application-detail fields auto-filled from hand-verified reference data -- always confirm on the official application portal, since these details can change by cycle or by specific program.",
+    notice: "Application-detail fields auto-filled from hand-verified reference data, always confirm on the official application portal, since these details can change by cycle or by specific program.",
   });
 });
 
 // A lightweight, name-pattern-based platform suggestion (e.g. "University of
 // California, X" -> UC Application) for the "Add an application record" form
-// -- always a suggestion to review/edit, never applied automatically and
+//, always a suggestion to review/edit, never applied automatically and
 // never marked verified.
 applicationPathwaysRouter.get("/:id/platform-suggestion", (req, res) => {
   const { collegeName, state } = req.query;
@@ -179,7 +179,7 @@ function csvEscape(v) {
 
 applicationPathwaysRouter.get("/:id/export.csv", (req, res) => {
   const rows = db.prepare("SELECT * FROM college_application_requirements WHERE student_id=? ORDER BY college_name").all(req.params.id);
-  // Read-only cross-reference to Application Timeline -- earliest deadline
+  // Read-only cross-reference to Application Timeline. Earliest deadline
   // event per college, pulled in only for this export column (same
   // don't-merge-two-systems pattern used elsewhere in this app).
   const timelineRows = db.prepare("SELECT college_id, event_type, event_label, event_date, application_round, cycle_year, verification_status FROM college_application_timeline_events WHERE student_id=?").all(req.params.id);

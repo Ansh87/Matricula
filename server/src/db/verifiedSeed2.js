@@ -35,7 +35,7 @@ export const VERIFIED_SEED_2 = [
       honors: "Program-specific honors/research; no single honors college" }),
   // UC Berkeley
   V({ id: "110635", url: "https://admissions.berkeley.edu/", ed: false, ea: false, rd: true,
-      deadlines: { "UC application": "Nov 1–30 filing period" }, testing: "Test-blind (SAT/ACT not considered)",
+      deadlines: { "UC application": "Nov 1-30 filing period" }, testing: "Test-blind (SAT/ACT not considered)",
       recs: "Not required (letters not part of standard UC review)", essays: "4 UC Personal Insight Questions",
       css: "Not required (FAFSA/California Dream Act)", majorRestrictions: { note: "EECS/CS and other majors far more competitive; admitted by college/major" },
       honors: "Regents' & Chancellor's Scholarship; college honors programs" }),
@@ -156,7 +156,7 @@ export const VERIFIED_SEED_2 = [
       honors: "N/A (entire curriculum is rigorous)" }),
   // UCLA
   V({ id: "110662", url: "https://admission.ucla.edu/", ed: false, ea: false, rd: true,
-      deadlines: { "UC application": "Nov 1–30 filing period" }, testing: "Test-blind (SAT/ACT not considered)",
+      deadlines: { "UC application": "Nov 1-30 filing period" }, testing: "Test-blind (SAT/ACT not considered)",
       recs: "Not required (standard UC review)", essays: "4 UC Personal Insight Questions",
       css: "Not required (FAFSA/California Dream Act)", majorRestrictions: { note: "CS/engineering (Samueli) among hardest admits; admitted by college/major; impacted-major transfer is GPA-gated" },
       honors: "College Honors Program; Regents Scholarship" }),

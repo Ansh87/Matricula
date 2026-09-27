@@ -617,7 +617,7 @@ collegesRouter.get("/:id/programs", async (req, res) => {
     try {
       const found = await getCollegeById(req.params.id);
       officialWebsiteUrl = found?.college?.websiteUrl || null;
-    } catch { /* non-critical -- program list still renders without the link */ }
+    } catch { /* non-critical. Program list still renders without the link */ }
     res.json({
       available: true,
       id: req.params.id,
@@ -628,7 +628,7 @@ collegesRouter.get("/:id/programs", async (req, res) => {
       suggestedCombinations: official?.programs ? suggestCombinations(official.programs) : [],
       verifiedCombinationNotes: notes || null,
       officialWebsiteUrl,
-      disclaimer: "College Scorecard field-of-study data indicates program availability, but formal double-major rules must be confirmed with the college's official catalog or advising office. This federal CIP list is organized differently than a college's own department/major pages -- both are real, but they won't always match program-for-program.",
+      disclaimer: "College Scorecard field-of-study data indicates program availability, but formal double-major rules must be confirmed with the college's official catalog or advising office. This federal CIP list is organized differently than a college's own department/major pages. Both are real, but they won't always match program-for-program.",
     });
   } catch (err) { honestError(res, err); }
 });

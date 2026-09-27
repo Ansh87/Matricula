@@ -8,6 +8,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { api } from "../lib/api.js";
 import { Spinner } from "./ui.jsx";
+import { Arrow } from "./icons.jsx";
 
 // --- helpers ---------------------------------------------------------------
 const lc = (x) => String(x || "").toLowerCase();
@@ -234,14 +235,14 @@ export function TrackRecommendations({ profile, onRunMatches, onViewCoursePlan }
 
           <div className="row wrap" style={{ marginTop: 8, gap: 8 }}>
             {onRunMatches ? (
-              <button className="btn sm ghost" onClick={() => onRunMatches(sc.id)}>Run Matches for this track →</button>
+              <button className="btn sm ghost" onClick={() => onRunMatches(sc.id)}>Run Matches for this track <Arrow /></button>
             ) : (
               <span className="note" style={{ fontSize: 11, color: "var(--muted)" }}>
                 Select "{sc.scenarioName}" in Matches to rank colleges for this track.
               </span>
             )}
             {onViewCoursePlan && (
-              <button className="btn sm ghost" onClick={() => onViewCoursePlan(sc.id)}>See course &amp; prep plan →</button>
+              <button className="btn sm ghost" onClick={() => onViewCoursePlan(sc.id)}>See course &amp; prep plan <Arrow /></button>
             )}
           </div>
         </div>

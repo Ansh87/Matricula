@@ -16,7 +16,7 @@ const BLS_SOURCE = "U.S. Bureau of Labor Statistics, Occupational Outlook Handbo
 const BLS_YEAR = 2024;
 
 // occupation median pay (annual, national), 2024 OOH values.
-// growth = projected % change 2023–2033. Values transcribed from BLS OOH.
+// growth = projected % change 2023-2033. Values transcribed from BLS OOH.
 const OCCUPATIONS = {
   "software-developers": {
     occupation: "Software Developers", blsCode: "15-1252",
@@ -166,7 +166,7 @@ export function majorToCareers(major) {
   const careers = m.careers.map(careerFor).filter(Boolean);
   const pays = careers.map((c) => c.medianPay);
   const salaryRange = pays.length
-    ? `$${Math.min(...pays).toLocaleString()}–$${Math.max(...pays).toLocaleString()} (national median)`
+    ? `$${Math.min(...pays).toLocaleString()}-$${Math.max(...pays).toLocaleString()} (national median)`
     : "Data unavailable";
   return {
     major,

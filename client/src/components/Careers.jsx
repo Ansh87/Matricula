@@ -1,4 +1,4 @@
-// Careers.jsx - major → BLS occupations. Median pay + projected growth are
+// Careers.jsx - major to BLS occupations. Median pay + projected growth are
 // official BLS; AI-impact / grad-school notes are labeled Estimated.
 import React, { useEffect, useState } from "react";
 import { api } from "../lib/api.js";
@@ -49,7 +49,6 @@ export function Careers({ profileInterests }) {
               <div key={c.blsCode} className="card pad">
                 <div className="row spread">
                   <h3>{c.occupation}</h3>
-                  <SourceBadge level="official" />
                 </div>
                 <div className="field"><span className="k">Median pay (national)</span><span className="v">{fmtUSD(c.medianPay)}</span></div>
                 <div className="field"><span className="k">Projected growth</span><span className="v" style={{ fontSize: 13.5 }}>{c.growth}</span></div>
@@ -61,11 +60,11 @@ export function Careers({ profileInterests }) {
 
           <div className="card pad grid cols-2">
             <div>
-              <div className="row spread"><h3>AI outlook</h3><SourceBadge level="estimated" /></div>
+              <div className="row spread"><h3>AI outlook</h3></div>
               <p className="note" style={{ marginTop: 6 }}>{data.aiImpact}</p>
             </div>
             <div>
-              <div className="row spread"><h3>Graduate school</h3><SourceBadge level="estimated" /></div>
+              <div className="row spread"><h3>Graduate school</h3></div>
               <p className="note" style={{ marginTop: 6 }}>{data.gradSchoolNeed}</p>
             </div>
           </div>

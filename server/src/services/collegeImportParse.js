@@ -1,7 +1,7 @@
 // collegeImportParse.js - Import College List: turns raw pasted text, a CSV
 // file, or a plain text file into a clean, deduped list of candidate college
 // names. Deliberately simple and dependency-free (no CSV library needed for
-// the single-column shape this supports) -- matching/confidence happens
+// the single-column shape this supports). Matching/confidence happens
 // entirely downstream in collegeMatcher.js. This file only ever extracts
 // names; it never decides whether a name is a real college.
 const NAME_COLUMN_HEADERS = ["college", "university", "school", "name", "college name", "school name", "institution"];
@@ -14,7 +14,7 @@ function stripQuotes(s) {
 
 // Minimal CSV line splitter that respects double-quoted fields containing
 // commas. Good enough for the "one column of college names, maybe with a
-// header" shape this feature supports -- not a general CSV parser.
+// header" shape this feature supports, not a general CSV parser.
 function splitCsvLine(line) {
   const out = [];
   let cur = "";
@@ -64,7 +64,7 @@ export function parseCsvText(text) {
   if (nameColIdx !== -1) {
     names = rows.slice(1).map((r) => r[nameColIdx]);
   } else {
-    // No recognizable header -- flatten every cell in every row (handles a
+    // No recognizable header. Flatten every cell in every row (handles a
     // bare single-column list, or a family exporting extra columns we don't
     // understand; empty/very-long cells are filtered downstream).
     names = rows.flat();

@@ -23,7 +23,7 @@ fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 // Single source of truth for how much extracted text is kept/sent for AI
 // parsing. Previously the extraction cap (50k) and the per-document Gemini
 // prompt (hardcoded 12k) had drifted apart, silently truncating anything
-// between 12k-50k chars before Gemini ever saw it -- same class of bug as the
+// between 12k-50k chars before Gemini ever saw it. Same class of bug as the
 // text_excerpt-vs-extracted_text truncation this constant also guards against.
 const MAX_PARSE_CHARS = 50000;
 

@@ -4,6 +4,7 @@ import { Documents } from "./Documents.jsx";
 import { api } from "../lib/api.js";
 import { ALL_MAJORS } from "../lib/majors.js";
 import { MajorAutocomplete } from "./ui.jsx";
+import { Arrow, Check, DocumentIcon } from "./icons.jsx";
 
 const STATES = "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY DC".split(" ");
 // Atomic academic interests only. Composite career TRACKS (e.g. "CS + Finance /
@@ -70,7 +71,7 @@ export function ProfileForm({ initial, onSubmit, studentId, onApplyParsed, onSav
   const ready = missing.length === 0;
 
   // "Detected signals" (Part of transparency pass): what the matching engine
-  // actually picked up from activities/experience checkboxes/awards -- the
+  // actually picked up from activities/experience checkboxes/awards, the
   // same deriveProfileSignals() output that feeds the extracurricular 10% of
   // the Match score, previously computed server-side but never shown
   // anywhere in the app. Debounced so it doesn't fire on every keystroke.
@@ -95,7 +96,7 @@ export function ProfileForm({ initial, onSubmit, studentId, onApplyParsed, onSav
 
       <details className="card pad">
         <summary style={{ cursor: "pointer", fontWeight: 600 }}>
-          📄 Upload transcript, resume &amp; portfolio (optional - speeds this up)
+          <DocumentIcon /> Upload transcript, resume &amp; portfolio (optional - speeds this up)
         </summary>
         <div style={{ marginTop: 14 }}>
           <p className="note" style={{ marginBottom: 12 }}>Upload documents or add a portfolio link. If you have a Gemini key set,
@@ -166,7 +167,7 @@ export function ProfileForm({ initial, onSubmit, studentId, onApplyParsed, onSav
 
       <div className="card pad grid cols-2">
         <div>
-          <label className="lbl">Unweighted GPA (0–4.0)</label>
+          <label className="lbl">Unweighted GPA (0-4.0)</label>
           <input className="inp" type="number" step="0.01" max="4" value={p.gpa || ""} onChange={(e) => set("gpa", +e.target.value || null)} placeholder="e.g. 3.9" />
         </div>
         <div>
@@ -373,18 +374,18 @@ export function ProfileForm({ initial, onSubmit, studentId, onApplyParsed, onSav
           and flex-basis. Desktop keeps this exact DOM order + marginLeft:auto
           push-right layout, untouched. */}
       <div className="row wrap profile-actions" style={{ gap: 10 }}>
-        <button className="btn primary profile-action-submit" onClick={() => onSubmit(p)} disabled={!ready}>See my college matches →</button>
+        <button className="btn primary profile-action-submit" onClick={() => onSubmit(p)} disabled={!ready}>See my college matches <Arrow /></button>
         <button className="btn ghost profile-action-sample" style={{ marginLeft: "auto" }} onClick={() => { const sp = { ...SAMPLE_PROFILE }; setP(sp); onLoadSample ? onLoadSample(sp) : onSave?.(sp); }}>Load sample profile</button>
         <button className="btn ghost profile-action-save" onClick={() => { onSave?.(p); setSavedMsg("Profile saved."); setTimeout(() => setSavedMsg(null), 2500); }}>Save profile</button>
         {onResetProfile && (
           <button className="btn ghost profile-action-reset" style={{ color: "var(--reach)" }}
-            onClick={() => { if (confirm("Reset your profile to blank? This clears the fields you've entered here. Your saved college list and tracker are NOT affected.")) { const blank = { ...BLANK_PROFILE }; setP(blank); onResetProfile(blank); } }}>
+            onClick={() => { if (confirm("Reset your profile to blank? This clears the fields you've entered here. Your saved college list and tracker are not affected.")) { const blank = { ...BLANK_PROFILE }; setP(blank); onResetProfile(blank); } }}>
             Reset profile
           </button>
         )}
       </div>
       {savedMsg && <div className="note" style={{ color: "var(--safety)" }}>{savedMsg}</div>}
-      <span className="note">Pulls live data from College Scorecard. First run scans U.S. colleges and can take 20–60s, then it's cached.</span>
+      <span className="note">Pulls live data from College Scorecard. First run scans U.S. colleges and can take 20-60s, then it's cached.</span>
       {!ready && (
         <div className="disclaimer">
           To generate your college list, please complete: <strong>{missing.join(", ")}</strong>. Uploading documents is optional,
@@ -450,7 +451,7 @@ function InterestPicker({ options, selected, onToggle }) {
                 }}
               >
                 <span>{o}</span>
-                {selected.includes(o) && <span>✓</span>}
+                {selected.includes(o) && <span><Check /></span>}
               </div>
             ))}
           </div>

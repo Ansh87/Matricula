@@ -6,6 +6,7 @@
 // each college's Applications Tracker card) instead of guessing at data that
 // doesn't exist.
 import React from "react";
+import { Arrow } from "./icons.jsx";
 
 export function PortalTracker({ onGo }) {
   return (
@@ -21,7 +22,7 @@ export function PortalTracker({ onGo }) {
         <p className="note">Each saved college's <strong>Applications Tracker</strong> card already tracks its
           Submitted status and decision status. Open it there for now:</p>
         <button className="btn ghost" style={{ alignSelf: "flex-start" }} onClick={() => onGo && onGo("applications")}>
-          Open Applications Tracker →
+          Open Applications Tracker <Arrow />
         </button>
       </div>
       <div className="disclaimer">Needs review: there is no post-submission portal tracker yet.</div>

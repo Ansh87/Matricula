@@ -1,4 +1,4 @@
-// database.js -- SQLite via Node's built-in node:sqlite (Node 22+). No native
+// database.js. SQLite via Node's built-in node:sqlite (Node 22+). No native
 // compilation needed. Implements all spec tables + an api_cache table.
 import { DatabaseSync } from "node:sqlite";
 import fs from "node:fs";
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS college_selection_profiles (
 
 -- Layer 2 raw source records: one row per official URL the family adds, plus
 -- pages picked up by the bounded official-domain crawl (Layer 3). Always kept
--- even if extraction was thin -- the point is an auditable trail of what was
+-- even if extraction was thin, the point is an auditable trail of what was
 -- fetched, when, and what came back.
 CREATE TABLE IF NOT EXISTS program_sources (
   source_id TEXT PRIMARY KEY,
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS program_sources (
 CREATE INDEX IF NOT EXISTS idx_program_sources_student ON program_sources(student_id);
 
 -- Structured program/opportunity records, from any of the 3 discovery layers.
--- "Program" is deliberately broad -- major, minor, concentration, certificate,
+-- "Program" is deliberately broad. Major, minor, concentration, certificate,
 -- honors/scholars/bridge/access program, research program, direct-admit
 -- pipeline, scholarship-linked cohort, etc. (see program_type).
 CREATE TABLE IF NOT EXISTS discovered_programs (
@@ -217,7 +217,7 @@ CREATE TABLE IF NOT EXISTS decision_plan_items (
 );
 CREATE INDEX IF NOT EXISTS idx_decision_plan_items_student ON decision_plan_items(student_id);
 
--- Program Verification Checklist -- one row per decision plan item.
+-- Program Verification Checklist. One row per decision plan item.
 CREATE TABLE IF NOT EXISTS verification_checklists (
   checklist_id TEXT PRIMARY KEY,
   student_id TEXT NOT NULL,
@@ -243,7 +243,7 @@ CREATE TABLE IF NOT EXISTS verification_checklists (
 CREATE INDEX IF NOT EXISTS idx_verification_checklists_student ON verification_checklists(student_id);
 CREATE INDEX IF NOT EXISTS idx_verification_checklists_item ON verification_checklists(item_id);
 
--- Strategy Notes per college/program -- generated from profile + evidence, never
+-- Strategy Notes per college/program. Generated from profile + evidence, never
 -- invented school-specific facts. Unknown fields say "Verify with official source."
 CREATE TABLE IF NOT EXISTS strategy_notes (
   note_id TEXT PRIMARY KEY,
@@ -266,7 +266,7 @@ CREATE INDEX IF NOT EXISTS idx_strategy_notes_student ON strategy_notes(student_
 CREATE INDEX IF NOT EXISTS idx_strategy_notes_item ON strategy_notes(item_id);
 
 -- Course/prep plans: reference content seeded per Career Track (server/src/db/
--- coursePlans.js). Not student-owned -- it's the same evidence-based curriculum
+-- coursePlans.js). Not student-owned. It's the same evidence-based curriculum
 -- guidance for every family, so it is NOT keyed by student_id. Per-student
 -- notes on top of a track's plan are stored in decision_plan_items.notes /
 -- strategy_notes instead, keeping this table a clean, shared reference.
@@ -306,7 +306,7 @@ CREATE INDEX IF NOT EXISTS idx_application_tasks_student ON application_tasks(st
 -- Application Pathways + Essay Center (real-application-process modules).
 -- Same UID-isolation rule as everything above: every row here that is
 -- student-facing is keyed by student_id = the Firebase UID. application_platforms
--- is the one exception -- shared, read-only reference metadata about how the
+-- is the one exception. Shared, read-only reference metadata about how the
 -- major application routes work (Common App, UC App, ApplyTexas, etc.), the
 -- same pattern as course_plans.
 -- ============================================================================
@@ -532,30 +532,30 @@ addColumnIfMissing("documents", "extract_reason", "TEXT");
 addColumnIfMissing("discovered_programs", "action_needed", "TEXT");
 // Previous-Year Essay Prompt Archive: explicit classification of whether a
 // tracked prompt is believed current-cycle, a saved previous-year prompt (kept
-// for planning only), or simply unknown -- separate from prompt_cycle (the
+// for planning only), or simply unknown. Separate from prompt_cycle (the
 // free-text "2026-2027" label) so the UI can group/warn without parsing that
 // string. Defaults to 'Unknown' for every existing row; never inferred or
-// guessed retroactively -- the family (or the discovery notice) sets it.
+// guessed retroactively, the family (or the discovery notice) sets it.
 addColumnIfMissing("essay_prompts", "cycle_type", "TEXT DEFAULT 'Unknown'");
 
 // Essay Center strengthening (real-application-planning upgrade): a few more
 // fields the family-facing prompt dashboard needs, all additive and all
 // defaulted so existing rows/features are unaffected.
-//   application_round   -- which round this prompt applies to (ED/EA/RD/...),
+//   application_round  , which round this prompt applies to (ED/EA/RD/...),
 //                          so a prompt can be tied to the matching Application
 //                          Timeline deadline the same way requirement records are.
-//   school_or_program    -- which specific school/college-within-a-university
+//   school_or_program   , which specific school/college-within-a-university
 //                          this prompt is for (e.g. "Columbia Engineering" vs
 //                          "Columbia College", or "Cornell College of Arts and
-//                          Sciences") -- distinct from program_label, which is
+//                          Sciences"). Distinct from program_label, which is
 //                          used for honors/scholarship/major-specific *tracks*.
-//   character_limit      -- some platforms (e.g. UC) cap by character, not word.
-//   source_label          -- human-readable citation ("MIT Admissions -- Essays,
+//   character_limit. Some platforms (e.g. UC) cap by character, not word.
+//   source_label         , human-readable citation ("MIT Admissions, Essays,
 //                          activities & academics page"), shown next to source_url.
-//   source_type           -- one of PROMPT_SOURCE_TYPES (services/essayCenter.js):
+//   source_type. One of PROMPT_SOURCE_TYPES (services/essayCenter.js):
 //                          distinguishes an official college page from a Common
 //                          App/UC/Coalition platform prompt vs a user entry.
-//   prompt_status         -- one of PROMPT_STATUSES (services/essayCenter.js): a
+//   prompt_status. One of PROMPT_STATUSES (services/essayCenter.js): a
 //                          single, family-facing rollup status ("Current-cycle
 //                          verified", "Previous-year prompt", "Needs manual
 //                          verification", "Outdated / needs recheck", "User
@@ -574,7 +574,7 @@ addColumnIfMissing("essay_prompts", "prompt_status", "TEXT DEFAULT 'Unknown'");
 // college was selected from (Single Major Search, Double Major Search, Career
 // Track Search, Best Fit, Balanced List, or manually), plus double-major
 // context when relevant. A college can be selected from more than one place
-// -- selection_contexts_json holds the full accumulated set so re-adding the
+//. Selection_contexts_json holds the full accumulated set so re-adding the
 // same college from a new place merges into the existing row instead of
 // creating a confusing duplicate card. double_major_pathways_json holds every
 // distinct primary+secondary pairing considered for this college (e.g. CS+AI
@@ -606,7 +606,7 @@ addColumnIfMissing("decision_plan_items", "source_context", "TEXT");
 // have them matched to official College Scorecard records, reviewed, then
 // added to My List. These columns record exactly what was imported and how
 // confident the match was, so "Imported List" badges and CSV exports can be
-// honest about provenance -- separate from (and layered on top of) the
+// honest about provenance. Separate from (and layered on top of) the
 // selection-context columns above, using the same merge-not-duplicate rule.
 // See services/collegeMatcher.js and routes/collegeImport.js.
 addColumnIfMissing("student_college_list", "import_batch_id", "TEXT");
@@ -620,10 +620,10 @@ addColumnIfMissing("student_college_list", "admission_category_at_import", "TEXT
 // and this student's estimated net cost, captured alongside the existing fit
 // scores (overall/academic/major/career/financial_fit_score above) so every
 // My List card can show the same Fit / Admit / Est. cost / Major fit pills
-// MatchCard.jsx already shows on Matches -- same values, same source
+// MatchCard.jsx already shows on Matches. Same values, same source
 // (scoreCollege()), just persisted here so they survive without re-scoring.
 // Null until the college has been scored at least once (add, import, or an
-// Evaluate Against My Profile run) -- never guessed.
+// Evaluate Against My Profile run), never guessed.
 addColumnIfMissing("student_college_list", "admission_rate", "REAL");
 addColumnIfMissing("student_college_list", "estimated_net_cost", "REAL");
 
@@ -702,7 +702,7 @@ cleanupLowQualityDiscoveredPrograms();
 // a single run-on "sentence" ending in "?" and saved as if it were a real
 // essay prompt (e.g. "Admissions and financial aid Ready to start your
 // journey?"). This runs once per boot and only ever deletes rows that were
-// auto-discovered and never reviewed by the family -- never a manually
+// auto-discovered and never reviewed by the family, never a manually
 // entered prompt, and never anything already marked verified. Mirrors the
 // self-contained cleanup pattern above (duplicated, not imported, to avoid a
 // database.js <-> essayCenter.js circular import).

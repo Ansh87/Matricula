@@ -1,4 +1,4 @@
-// api.js -- the browser's only channel to data. Everything goes through our own
+// api.js, the browser's only channel to data. Everything goes through our own
 // /api/* routes; no external API keys ever touch the client.
 import { auth, firebaseConfigured } from "./firebase.js";
 import { isNative, NATIVE_API_BASE_URL } from "./platform.js";
@@ -91,7 +91,7 @@ export const api = {
     }).then(j),
   getStudent: (id) => afetch(`/api/students/${id}`).then(j),
   // What the matching engine actually detected from the profile's free text
-  // (activities/resume/portfolio) -- research/leadership/awards signals and
+  // (activities/resume/portfolio). Research/leadership/awards signals and
   // the resulting extracurricular strength score used in Match. Read-only;
   // never changes what's computed, just shows it.
   getProfileSignals: (id, profile) =>
@@ -146,7 +146,7 @@ export const api = {
   buildProfileFromDocs: (id) => afetch(`/api/documents/${id}/build-profile`, { method: "POST" }).then(j),
   programs: (id) => afetch(`/api/colleges/${id}/programs`).then(j),
   // Live, on-demand scan of the college's OWN website for its department/major
-  // pages -- a direct comparison next to the federal CIP list above. Not
+  // pages, a direct comparison next to the federal CIP list above. Not
   // persisted; re-run any time for a fresh look.
   officialSitePrograms: (id) => afetch(`/api/colleges/${id}/programs/official-site`).then(j),
   similarColleges: (id) => afetch(`/api/colleges/${id}/similar`).then(j),
@@ -431,7 +431,7 @@ export const api = {
 
   // ---------------- Import College List ----------------
   // Paste text goes as JSON; a CSV/text file upload goes as multipart (same
-  // pattern as uploadDocument -- no Content-Type header, so the browser sets
+  // pattern as uploadDocument, no Content-Type header, so the browser sets
   // the multipart boundary itself).
   importParseText: (id, text) =>
     afetch(`/api/students/${id}/import/parse`, {
@@ -452,7 +452,7 @@ export const api = {
     }).then(j),
 
   // ---------------- Search/results persistence (Issue 1) ----------------
-  // One JSON state blob per (student, page key) -- see lib/persistedSearch.js
+  // One JSON state blob per (student, page key). See lib/persistedSearch.js
   // for the hook that reads/writes these on every relevant page.
   getSearchState: (id, pageKey) =>
     afetch(`/api/students/${id}/search-state/${encodeURIComponent(pageKey)}`).then(j),

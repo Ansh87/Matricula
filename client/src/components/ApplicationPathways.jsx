@@ -1,4 +1,4 @@
-// ApplicationPathways.jsx -- "Application Pathways" tab. Tracks, per saved
+// ApplicationPathways.jsx. "Application Pathways" tab. Tracks, per saved
 // college, which application platform it uses (Common App, Coalition/Scoir,
 // UC Application, Cal State Apply, ApplyTexas, applySUNY, CUNY Application,
 // QuestBridge, college-specific, other state/system, or Unknown), every
@@ -16,6 +16,7 @@ import { auth, firebaseConfigured } from "../lib/firebase.js";
 import { SourceBadge, InlineSpinner, RestoredNote } from "./ui.jsx";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
 import { useEntryOverride } from "../lib/entryOverride.js";
+import { Arrow } from "./icons.jsx";
 
 async function authHeader() {
   try {
@@ -35,9 +36,9 @@ function badgeLevelFor(status) {
 }
 
 // Plain-language "what to do about this row" text, derived only from
-// verification status -- never a claim about the date itself.
+// verification status, never a claim about the date itself.
 function timelineActionNeeded(status) {
-  if (status === "Official source verified" || status === "User verified") return "Looks confirmed -- recheck closer to the deadline.";
+  if (status === "Official source verified" || status === "User verified") return "Looks confirmed. Recheck closer to the deadline.";
   if (status === "Outdated / needs recheck") return "Revisit the source and confirm this date is still current.";
   return "Confirm this date on the official application portal.";
 }
@@ -52,7 +53,7 @@ const DEADLINE_FIELDS = [
 ];
 
 // Maps an Application Timeline event's application_round to the matching
-// deadline field on a college_application_requirements row -- lets "Your
+// deadline field on a college_application_requirements row. Lets "Your
 // application records" pull real dates the family already got from
 // Auto-fill/Verify deadlines instead of showing a second, disconnected blank
 // deadline section for the same college. Cross-links the two tables (reads
@@ -65,7 +66,7 @@ const ROUND_TO_DEADLINE_FIELD = {
 
 // Fallback copy of the server's DEADLINE_EVENT_TYPES (services/
 // applicationTimeline.js), used only for the brief window before /meta has
-// loaded -- the server-provided list (timelineMeta.deadlineEventTypes) is
+// loaded, the server-provided list (timelineMeta.deadlineEventTypes) is
 // always preferred once available, so these two lists should never actually
 // drift in a way that matters.
 const DEADLINE_EVENT_TYPES_FALLBACK = [
@@ -116,24 +117,24 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
   const [msg, setMsg] = useState(null);
   // Name-pattern suggestion for whichever college is picked in the add form
   // (e.g. selecting a "University of California, X" campus suggests the UC
-  // Application) -- always shown as a suggestion to review, never applied
+  // Application), always shown as a suggestion to review, never applied
   // automatically, and the verification status still defaults to "Needs
   // manual verification" even when accepted.
   const [suggestion, setSuggestion] = useState(null);
   const addFormRef = useRef(null);
 
   // Jump straight to the "Add an application record" form with a college
-  // pre-selected -- used by the "Set platform" buttons in the Route Planner
+  // pre-selected. Used by the "Set platform" buttons in the Route Planner
   // so there's an obvious, direct answer to "where do I actually set this?"
   // instead of expecting the family to scroll down and find the dropdown.
   // Pre-selects the college in the Add-record form, scrolls to it, AND
   // immediately does the real timeline pull for that college (verified
   // reference data first, live official-site search as the fallback) so the
-  // Deadline fields arrive already filled in -- the family reviews and clicks
+  // Deadline fields arrive already filled in, the family reviews and clicks
   // "Add this application record" instead of typing dates in by hand.
   // Applies a reference profile's application-detail fields (test policy,
   // fee, fee waiver, honors/scholarship/portfolio/interview/recommendations/
-  // transcript required) to the Add-record form -- only for fields still at
+  // transcript required) to the Add-record form, only for fields still at
   // their blank/"Unknown" default, so nothing the family already typed gets
   // overwritten. Mirrors useTimelineDatesInForm's guard against a stale
   // college selection.
@@ -190,13 +191,13 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
   const platformUrl = (id) => platforms.find((p) => p.platform_id === id)?.official_url || "";
 
   // Runs automatically right after a college gets an application record (or
-  // has its platform set) -- the same real pull as the Application Timeline's
+  // has its platform set), the same real pull as the Application Timeline's
   // "Auto-fill official dates" button, just triggered without the family
   // having to remember a separate step. Silent on failure (the family can
   // always still use the Timeline section's own buttons directly); refreshes
   // the cross-reference summary either way so "Your application records" and
   // this form stay in sync with whatever the Timeline knows.
-  // requirementId is optional -- when given (an application record already
+  // requirementId is optional. When given (an application record already
   // exists for this college), the same call also auto-fills that record's
   // application-detail fields (test policy, fee, fee waiver, honors/
   // scholarship/portfolio/interview/recommendations/transcript required)
@@ -235,7 +236,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.collegeId, studentId]);
 
-  // One-click apply from the Route Planner's "Unknown" group -- adds a
+  // One-click apply from the Route Planner's "Unknown" group. Adds a
   // minimal record with just the suggested platform set, still defaulting
   // to "Needs manual verification" so it's clear this still needs confirming.
   const applySuggestionQuick = async (collegeId, collegeName, platformId) => {
@@ -263,7 +264,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
         collegeName,
         platformName: form.platformId ? platformName(form.platformId) : undefined,
       });
-      setMsg({ ok: true, text: `Added an application record for ${collegeName}. Marked "${form.verificationStatus}" -- keep it current as you confirm details. Pulling real application-timeline dates for ${collegeName} now...` });
+      setMsg({ ok: true, text: `Added an application record for ${collegeName}. Marked "${form.verificationStatus}". Keep it current as you confirm details. Pulling real application-timeline dates for ${collegeName} now...` });
       setForm(BLANK_FORM);
       loadRequirements();
       loadPlanner();
@@ -299,14 +300,14 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
 
   // Pulls every Application Timeline event for one college and maps ED/EA/
   // REA/Priority/RD/Rolling rounds onto the matching deadline field. Only
-  // fills fields that are still blank -- never overwrites a date the family
+  // fills fields that are still blank, never overwrites a date the family
   // already entered or edited by hand.
   const fillDeadlinesFromTimeline = async (reqId, collegeId, existingRow) => {
     if (!collegeId) return;
     setFillFromTimelineMsg(null);
     try {
       const r = await api.listTimelineEvents(studentId, collegeId);
-      // Only actual "you must act by this date" deadline events -- excludes
+      // Only actual "you must act by this date" deadline events. Excludes
       // notification dates, enrollment deposits, financial aid dates, etc.,
       // which can share the same application_round (e.g. Columbia's "RD
       // deadline" and "RD notification" are both round "RD") and would
@@ -328,7 +329,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
         filledLabels.push(`${ev.application_round}: ${ev.event_date}`);
       }
       if (!Object.keys(patch).length) {
-        setFillFromTimelineMsg({ ok: false, text: "Nothing to fill -- either the Application Timeline has no matching dates yet for this college, or every deadline field here is already set." });
+        setFillFromTimelineMsg({ ok: false, text: "Nothing to fill. Either the Application Timeline has no matching dates yet for this college, or every deadline field here is already set." });
         return;
       }
       await updateRequirement(reqId, patch);
@@ -339,7 +340,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
   };
 
   // Same idea for the "Add an application record" form, before it's even
-  // saved -- pre-fills blank deadline fields in the form itself from
+  // saved. Pre-fills blank deadline fields in the form itself from
   // whatever the Application Timeline already has for the given college.
   // Takes an explicit collegeId (rather than always reading form.collegeId)
   // so callers like jumpToAddForm can use it right after selecting a college,
@@ -402,7 +403,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
 
   useEffect(() => { api.timelineMeta(studentId).then(setTimelineMeta).catch(() => {}); }, [studentId]);
 
-  // "View timeline →" from Decision Plan (or any other tab) pre-selects the
+  // "View timeline" from Decision Plan (or any other tab) pre-selects the
   // college and scrolls the Application Timeline section into view.
   useEffect(() => {
     if (!focusCollegeId) return;
@@ -411,7 +412,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
   }, [focusCollegeId]);
 
   // Apply -> Timeline subtab: same page as Application Pathways (Timeline is
-  // a section here, not a separate page) -- just scroll straight to it.
+  // a section here, not a separate page), just scroll straight to it.
   useEntryOverride(focusSection === "timeline", focusSectionNonce, () => {
     timelineSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
@@ -433,7 +434,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
   // Checks whether the selected college matches one of the hand-verified
   // reference profiles (same name-pattern technique as the platform
   // suggestion) so the "Auto-fill official dates" button only appears when
-  // there's actually something real to offer -- never a dead click.
+  // there's actually something real to offer, never a dead click.
   useEffect(() => {
     if (!timelineCollegeId) { setTimelineAutofillPreview(null); return; }
     const name = timelineCollegeName(timelineCollegeId);
@@ -547,7 +548,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
           <h1>Application Pathways</h1>
           <p className="lead">
             Track which application platform each college on your list actually uses, every deadline type, and what
-            extra applications (honors, scholarship, program-specific) each one requires -- so nothing gets missed.
+            extra applications (honors, scholarship, program-specific) each one requires, so nothing gets missed.
           </p>
         </div>
         <div>
@@ -560,7 +561,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
 
       <div className="disclaimer">
         Platform and deadline information here is only as good as what you've verified. A record stays "Needs manual
-        verification" until you (or an official source) confirm it -- always check the college's own application
+        verification" until you (or an official source) confirm it, always check the college's own application
         portal before treating a deadline or requirement as final.
       </div>
 
@@ -569,7 +570,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
           <div>
             <h3 style={{ margin: 0 }}>Application Timeline</h3>
             <p className="note" style={{ marginTop: 4 }}>
-              Every deadline and milestone for one college -- application opens, Early Decision / Early Action / Regular
+              Every deadline and milestone for one college. Application opens, Early Decision / Early Action / Regular
               Decision deadlines, scholarship and honors deadlines, financial aid (CSS Profile / FAFSA) deadlines,
               decision notification, and enrollment deposit. Pick a college, then verify deadlines or add one yourself.
             </p>
@@ -646,12 +647,12 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
               <div className="note">
                 Known application-plan dates are available for {timelineAutofillPreview.collegeName}, last checked {timelineAutofillPreview.lastChecked}
                 {timelineAutofillPreview.sourceUrl ? <> (<a href={timelineAutofillPreview.sourceUrl} target="_blank" rel="noreferrer">source</a>)</> : ""}.
-                Click "Auto-fill official dates" to add them as a starting point -- you can edit or remove any of them.
+                Click "Auto-fill official dates" to add them as a starting point. You can edit or remove any of them.
               </div>
             )}
             {!timelineAutofillPreview && !timelineAutofillResult && timelineCollegeId && (
               <div className="note">
-                No pre-checked reference dates for this college yet -- "Auto-fill official dates" will search its own official site live and add whatever it can confidently find.
+                No pre-checked reference dates for this college yet. "Auto-fill official dates" will search its own official site live and add whatever it can confidently find.
               </div>
             )}
             {timelineAutofillResult && (
@@ -701,7 +702,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
                 </thead>
                 <tbody>
                   {!timelineSummary?.events?.length && (
-                    <tr><td colSpan={7} style={{ padding: 12 }} className="note">No timeline events yet -- use "Verify deadlines" or add one manually below.</td></tr>
+                    <tr><td colSpan={7} style={{ padding: 12 }} className="note">No timeline events yet. Use "Verify deadlines" or add one manually below.</td></tr>
                   )}
                   {timelineSummary?.events?.map((ev) => (
                     <tr key={ev.event_id} style={{ borderBottom: "1px solid var(--line-2)" }}>
@@ -773,7 +774,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
 
       <div className="card pad">
         <h3>Application Route Planner</h3>
-        <p className="note">Your saved colleges, grouped by the platform they actually use -- so you can see real workload at a glance.</p>
+        <p className="note">Your saved colleges, grouped by the platform they actually use, so you can see real workload at a glance.</p>
         {!routePlanner || !routePlanner.totalColleges ? (
           <div className="empty" style={{ marginTop: 10 }}>Save some colleges first (Matches, Browse, or My List), then add their application platform below.</div>
         ) : (
@@ -791,7 +792,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
                   <p className="note" style={{ marginTop: 4 }}>
                     You haven't recorded an application platform for these colleges yet. Where we recognize a well-known
                     public university system (like UC, Cal State, SUNY, CUNY, or ApplyTexas campuses), a suggestion is
-                    shown below -- one click adds it as a starting point, still marked "Needs manual verification" until
+                    shown below. One click adds it as a starting point, still marked "Needs manual verification" until
                     you confirm it. For everything else, click <strong>Set platform</strong> to jump to the form below,
                     already filled in with this college and any dates the Application Timeline already knows.
                   </p>
@@ -819,7 +820,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
                           </>
                         )}
                         {g.platformId === "unknown" && (
-                          <button className="btn sm ghost" onClick={() => jumpToAddForm(c.collegeId, c.collegeName)}>Set platform →</button>
+                          <button className="btn sm ghost" onClick={() => jumpToAddForm(c.collegeId, c.collegeName)}>Set platform <Arrow /></button>
                         )}
                       </div>
                     );
@@ -850,7 +851,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
             )}
           </div>
           <div>
-            <label className="lbl">Program / honors label (optional -- leave blank for the main application)</label>
+            <label className="lbl">Program / honors label (optional. Leave blank for the main application)</label>
             <input className="inp" placeholder="e.g. Honors College application" value={form.programLabel} onChange={(e) => setForm((f) => ({ ...f, programLabel: e.target.value }))} />
           </div>
           <div>
@@ -859,7 +860,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
               const platformId = e.target.value;
               setForm((f) => ({ ...f, platformId, applicationUrl: f.applicationUrl || platformUrl(platformId) }));
             }}>
-              <option value="">Unknown -- needs verification</option>
+              <option value="">Unknown, needs verification</option>
               {platforms.map((p) => <option key={p.platform_id} value={p.platform_id}>{p.platform_name}</option>)}
             </select>
             {suggestion && form.platformId === suggestion.platformId && (
@@ -926,7 +927,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
 
       <div className="card pad">
         <h3>Your application records</h3>
-        {!requirements.length && <div className="empty" style={{ marginTop: 10 }}>No application records yet -- add one above.</div>}
+        {!requirements.length && <div className="empty" style={{ marginTop: 10 }}>No application records yet. Add one above.</div>}
         <div className="stack" style={{ marginTop: 10 }}>
           {[...byCollege.entries()].map(([key, rows]) => (
             <div key={key} className="stack" style={{ gap: 8 }}>
@@ -966,14 +967,14 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
                             <select className="inp" value={r.platform_id || ""} onChange={(e) => {
                               const platformId = e.target.value;
                               // Auto-fill the application URL from the platform's official portal
-                              // when the college doesn't already have its own URL on file -- never
+                              // when the college doesn't already have its own URL on file, never
                               // overwrites a URL the family already entered.
                               const patch = { platformId, platformName: platformName(platformId) };
                               if (!r.application_url) patch.applicationUrl = platformUrl(platformId);
                               updateRequirement(r.requirement_id, patch);
                               if (platformId) triggerTimelineAutofillFor(r.college_id, r.college_name, r.requirement_id); // setting a platform -> also pull real timeline dates + detail fields for this college
                             }}>
-                              <option value="">Unknown -- needs verification</option>
+                              <option value="">Unknown, needs verification</option>
                               {platforms.map((p) => <option key={p.platform_id} value={p.platform_id}>{p.platform_name}</option>)}
                             </select>
                           </div>
@@ -1021,7 +1022,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
                             {verificationStatuses.map((o) => <option key={o} value={o}>{o}</option>)}
                           </select>
                           <button className="btn sm ghost" onClick={() => deleteRequirement(r.requirement_id)}>Delete</button>
-                          {onGo && <button className="btn sm ghost" onClick={() => onGo("essays")}>Go to Essay Center →</button>}
+                          {onGo && <button className="btn sm ghost" onClick={() => onGo("essays")}>Go to Essay Center <Arrow /></button>}
                         </div>
                       </div>
                     )}
@@ -1041,7 +1042,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
         {showRegion && (
           <>
             <p className="note">
-              {regionSummary?.disclaimer || "General guidance on how application platforms are typically organized by region -- not a fact about any specific college. Always verify per college."}
+              {regionSummary?.disclaimer || "General guidance on how application platforms are typically organized by region, not a fact about any specific college. Always verify per college."}
             </p>
             {!regionSummary?.regions?.length ? (
               <div className="empty" style={{ marginTop: 10 }}>No saved colleges with a state on file yet.</div>
@@ -1053,7 +1054,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
                     <div className="stack" style={{ gap: 4, marginTop: 6 }}>
                       {rg.colleges.map((c) => (
                         <div key={c.collegeId} className="note">
-                          <strong>{c.collegeName}</strong>{c.suggestedPlatformName ? ` -- likely: ${c.suggestedPlatformName}` : ""}
+                          <strong>{c.collegeName}</strong>{c.suggestedPlatformName ? `. Likely: ${c.suggestedPlatformName}` : ""}
                           {c.suggestedReason ? <span style={{ color: "var(--muted)" }}> ({c.suggestedReason})</span> : null}
                         </div>
                       ))}
@@ -1080,7 +1081,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
           <h3 style={{ margin: 0 }}>Platform reference</h3>
           <button className="link" onClick={() => setShowPlatformRef((v) => !v)}>{showPlatformRef ? "Hide" : "Show"}</button>
         </div>
-        <p className="note">General guidance only -- coverage and rules change; always confirm on the platform's own site or the specific college's admissions page.</p>
+        <p className="note">General guidance only. Coverage and rules change; always confirm on the platform's own site or the specific college's admissions page.</p>
         {showPlatformRef && (
           <div className="grid cols-2" style={{ marginTop: 10 }}>
             {platforms.map((p) => (

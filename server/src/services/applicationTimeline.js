@@ -1,10 +1,10 @@
-// applicationTimeline.js -- the "Application Timeline" backend (per college,
+// applicationTimeline.js, the "Application Timeline" backend (per college,
 // per family). Tracks every deadline/event type a family needs to plan
 // around (application opens, ED/EA/REA/priority/RD/rolling deadlines,
 // scholarship/honors/program-specific/portfolio-audition deadlines, financial
 // aid/CSS Profile/FAFSA priority deadlines, decision notification, enrollment
 // deposit, admitted-student events). Nothing here is ever hardcoded as a
-// permanent "always true" fact for a college -- every row is either entered
+// permanent "always true" fact for a college. Every row is either entered
 // by the family or extracted from one specific official page at one specific
 // time, and always keeps source_url, cycle_year, last_checked, and
 // verification_status so the family can judge how current it is.
@@ -51,7 +51,7 @@ export const EVENT_TYPES = [
 ];
 
 // The subset of event types that represent an actual "you must act by this
-// date" deadline for the main application -- used to compute "earliest
+// date" deadline for the main application. Used to compute "earliest
 // upcoming deadline" for Decision Plan / Journey without pulling in
 // notification dates or informational events.
 export const DEADLINE_EVENT_TYPES = [
@@ -61,7 +61,7 @@ export const DEADLINE_EVENT_TYPES = [
 ];
 
 // A minimal, conservative "expected" checklist used only to tell the family
-// what's still missing for a college -- never auto-filled, never assumed to
+// what's still missing for a college, never auto-filled, never assumed to
 // apply to every college (e.g. not every college has Early Decision).
 export const CORE_EVENT_TYPES_CHECKLIST = [
   "Application opens", "Regular Decision deadline", "Decision notification", "Enrollment deposit deadline",
@@ -89,7 +89,7 @@ const insertEvent = db.prepare(`
 `);
 
 // ---------------------------------------------------------------------------
-// Date parsing helpers -- best-effort only. Never invents a date; if the text
+// Date parsing helpers. Best-effort only. Never invents a date; if the text
 // can't be confidently parsed into a month/day, sorting/next-occurrence
 // helpers simply return null and the event is shown as "date not parseable --
 // verify manually" rather than silently dropped or guessed.
@@ -112,7 +112,7 @@ export function extractMonthDay(text) {
   return { month, day, year: m[5] ? parseInt(m[5], 10) : null };
 }
 
-// Next real-world occurrence of a month/day on/after `today` -- same "roll
+// Next real-world occurrence of a month/day on/after `today`. Same "roll
 // forward to next year if already passed" logic used elsewhere in this app
 // (Journey.jsx's senior-year timeline). Returns an ISO date string or null.
 export function nextOccurrenceIso(monthDay, today = new Date()) {
@@ -129,13 +129,13 @@ export function nextOccurrenceIso(monthDay, today = new Date()) {
 }
 
 // ---------------------------------------------------------------------------
-// Extraction (Part G) -- conservative event-type keyword + nearby date match.
+// Extraction (Part G). Conservative event-type keyword + nearby date match.
 // Reuses the same block-level walk pattern as Essay Center's prompt extractor
 // so unrelated headings/nav copy next to each other don't get concatenated
 // into one false match.
 // ---------------------------------------------------------------------------
 const EVENT_KEYWORD_RULES = [
-  // Order matters -- more specific phrases before generic ones.
+  // Order matters. More specific phrases before generic ones.
   [/restrictive early action|single.choice early action|\brea\b|\bscea\b/i, "REA / SCEA deadline"],
   [/early decision/i, "Early Decision deadline"],
   [/early action/i, "Early Action deadline"],
@@ -179,7 +179,7 @@ function classifyRound(text) {
 // Walk block-level elements (same technique as essayCenter.js's prompt
 // extractor) and look for a text unit that both names an event AND contains
 // a parseable date (or "rolling") close by (same unit, or the immediately
-// adjacent unit). Every match is conservative -- if we can't find both an
+// adjacent unit). Every match is conservative. If we can't find both an
 // event keyword and a date/rolling signal near each other, nothing is
 // recorded for that spot.
 export function extractTimelineEventsFromHtml(html, url) {
@@ -209,7 +209,7 @@ export function extractTimelineEventsFromHtml(html, url) {
     const nearWindow = `${units[i - 1]?.text || ""} ${u.text} ${units[i + 1]?.text || ""}`;
     const monthDay = extractMonthDay(u.text) || extractMonthDay(nearWindow);
     const isRolling = ROLLING_RE.test(u.text) || (eventType.startsWith("Rolling") && ROLLING_RE.test(nearWindow));
-    if (!monthDay && !isRolling) continue; // no confident date signal -- skip rather than guess
+    if (!monthDay && !isRolling) continue; // no confident date signal. Skip rather than guess
 
     const round = classifyRound(u.text) || classifyRound(u.heading) || null;
     const eventDateText = isRolling && !monthDay ? "Rolling" : formatMonthDay(monthDay);
@@ -239,7 +239,7 @@ function formatMonthDay(monthDay) {
 }
 
 // ---------------------------------------------------------------------------
-// "Verify deadlines" -- the one-button family workflow (Part G). Bounded,
+// "Verify deadlines", the one-button family workflow (Part G). Bounded,
 // robots.txt-aware, same-official-domain crawl, hinted toward deadline/date
 // pages. Every stored event keeps its exact source_url and last_checked
 // timestamp; nothing is ever invented. Existing events with the same
@@ -256,7 +256,7 @@ const TIMELINE_URL_HINTS = [
 const CRAWL_MAX_PAGES = 28;
 // A real deadlines page is very often nested three clicks deep from a
 // college's homepage (Home -> Apply -> Application Materials -> Deadlines,
-// for example) -- a depth cap of 2 stops one level short of that and
+// for example), a depth cap of 2 stops one level short of that and
 // silently finds nothing even when the page is perfectly readable. Verified
 // against a real college's site structure (UT Austin) needing depth 3.
 const CRAWL_MAX_DEPTH = 3;
@@ -283,13 +283,13 @@ function findExistingEvent(studentId, collegeId, eventType, applicationRound, ev
 }
 
 // ---------------------------------------------------------------------------
-// "Auto-fill official dates" -- a second, faster path to the same table as
+// "Auto-fill official dates", a second, faster path to the same table as
 // "Verify deadlines," used when the selected college matches one of the
 // hand-verified TIMELINE_AUTOFILL_PROFILES in db/deadlineSeed.js (same
 // name-pattern technique as suggestPlatform in applicationPathways.js).
-// Never invents anything the family hasn't seen sourced -- every inserted
+// Never invents anything the family hasn't seen sourced. Every inserted
 // row keeps its source_url and is stamped with the profile's confidence
-// level, and rows from a "recurring pattern -- confirm" profile are still
+// level, and rows from a "recurring pattern, confirm" profile are still
 // marked "Needs manual verification" rather than "Official source verified,"
 // since the source page itself hadn't been refreshed for the newest cycle
 // at the time it was checked. If no profile matches, nothing is guessed --
@@ -319,7 +319,7 @@ export function autofillTimelineEvents(studentId, { collegeId, collegeName }) {
     const noteParts = [
       ev.notes || null,
       profile.notes || null,
-      "Auto-filled from hand-verified reference data -- always confirm the exact date and cycle on the official application portal before treating it as final.",
+      "Auto-filled from hand-verified reference data, always confirm the exact date and cycle on the official application portal before treating it as final.",
     ].filter(Boolean);
 
     const existing = findExistingEvent(studentId, collegeId, ev.eventType, ev.applicationRound, ev.eventDate);
@@ -355,12 +355,12 @@ export function autofillTimelineEvents(studentId, { collegeId, collegeName }) {
     added, refreshed,
     // Application-detail fields (honors/scholarship/portfolio/interview/
     // recommendations/transcript required, test policy, fee, fee waiver),
-    // when the reference profile has them -- the client applies these to
+    // when the reference profile has them, the client applies these to
     // the Add-record form and/or an existing requirement row, only ever
     // filling fields still at "Unknown"/blank.
     requirements: profile.requirements || null,
     notice: profile.confidence === "verified"
-      ? "Dates auto-filled from a source checked directly against the college's own page. Still confirm before a real deadline -- dates can shift by a day or two each cycle."
+      ? "Dates auto-filled from a source checked directly against the college's own page. Still confirm before a real deadline. Dates can shift by a day or two each cycle."
       : "Dates auto-filled from a recurring pattern seen in recent cycles, but the official page hadn't been refreshed for the newest cycle when last checked. Confirm on the official site before relying on these.",
   };
 }
@@ -376,7 +376,7 @@ export async function findTimelineEvents(studentId, { collegeId, collegeName, do
       const websiteUrl = found?.college?.websiteUrl;
       if (websiteUrl) { cleanDomain = websiteUrl.replace(/^https?:\/\//, "").replace(/\/.*/, ""); resolvedFrom = "college_scorecard"; }
       if (found?.college?.name && !resolvedCollegeName) resolvedCollegeName = found.college.name;
-    } catch { /* Scorecard lookup failed -- proceed without a resolved domain */ }
+    } catch { /* Scorecard lookup failed. Proceed without a resolved domain */ }
   }
 
   if (!cleanDomain) {
@@ -431,7 +431,7 @@ export async function findTimelineEvents(studentId, { collegeId, collegeName, do
             event_date: ev.eventDate, event_month_day: ev.eventMonthDay, cycle_year: ev.cycleYear || cycleYear || null,
             source_url: url, source_label: `Official source (${hostOf(url) || "unknown domain"})`,
             last_checked: ts, verification_status: "Needs manual verification",
-            notes: `Automatically found ("${ev.snippet}") -- confirm this date and cycle on the official application portal before treating it as final.`,
+            notes: `Automatically found ("${ev.snippet}"). Confirm this date and cycle on the official application portal before treating it as final.`,
             created_at: ts, updated_at: ts,
           });
           created.push(db.prepare("SELECT * FROM college_application_timeline_events WHERE event_id=?").get(eventId));
@@ -461,7 +461,7 @@ export async function findTimelineEvents(studentId, { collegeId, collegeName, do
 
   // If every deadline-hinted page we actually managed to fetch came back
   // (almost) empty, this is very likely a JavaScript-rendered site whose
-  // real content only appears after client-side scripts run -- something a
+  // real content only appears after client-side scripts run. Something a
   // server-side fetch can never see. Say so plainly instead of a generic
   // "not found" with no explanation.
   const likelyJsRendered = eventsFound === 0 && contentPagesSeen > 0 && thinPagesSeen === contentPagesSeen;
@@ -470,7 +470,7 @@ export async function findTimelineEvents(studentId, { collegeId, collegeName, do
     domain: cleanDomain, resolvedFrom, pagesFetched, eventsFound, robotsBlocked, offDomainSkipped, pdfSkipped,
     maxPages: CRAWL_MAX_PAGES, maxDepth: CRAWL_MAX_DEPTH, events: created, likelyJsRendered,
     notice: eventsFound > 0
-      ? "Dates found automatically -- always verify the exact date and application cycle on the official application portal before relying on it."
+      ? "Dates found automatically, always verify the exact date and application cycle on the official application portal before relying on it."
       : likelyJsRendered
         ? `This college's pages appear to require JavaScript to display their content, so they can't be read automatically. Check the official page yourself: https://${cleanDomain}/`
         : "Deadlines not verified yet. Check the official application portal.",
@@ -478,17 +478,17 @@ export async function findTimelineEvents(studentId, { collegeId, collegeName, do
 }
 
 // ---------------------------------------------------------------------------
-// Conflict detection (Part E) -- if two rows for the same college share the
+// Conflict detection (Part E). If two rows for the same college share the
 // same event_type + application_round but disagree on event_date, and at
 // least one came from an automatically-discovered or family-entered official
 // source, flag it rather than silently pick one. Purely a same-student, same-
-// college comparison -- never compares across families.
+// college comparison, never compares across families.
 // ---------------------------------------------------------------------------
 export function detectConflicts(studentId, collegeId) {
   const rows = collegeId
     ? db.prepare("SELECT * FROM college_application_timeline_events WHERE student_id=? AND college_id=?").all(studentId, collegeId)
     : db.prepare("SELECT * FROM college_application_timeline_events WHERE student_id=?").all(studentId);
-  // Group by program_label too -- a college can legitimately have two
+  // Group by program_label too, a college can legitimately have two
   // different dates for the same event_type + round (e.g. CMU's Schools of
   // Drama/Music use a Dec 1 Regular Decision deadline instead of the main
   // Jan 4 one). Without program_label in the key, that legitimate variation
@@ -516,7 +516,7 @@ export function detectConflicts(studentId, collegeId) {
 }
 
 // ---------------------------------------------------------------------------
-// Summaries (Parts D, H, I) -- read-only aggregation, never invents anything
+// Summaries (Parts D, H, I). Read-only aggregation, never invents anything
 // beyond what's already stored.
 // ---------------------------------------------------------------------------
 function isVerified(row) {
@@ -603,12 +603,12 @@ export function buildJourneyTimelineSummary(studentId) {
 }
 
 // ---------------------------------------------------------------------------
-// "Auto-fill official dates" (single college) -- the real pull. Tries the
+// "Auto-fill official dates" (single college), the real pull. Tries the
 // instant, hand-verified reference data first; if this college isn't one of
 // those, automatically falls through to a live, bounded, robots.txt-aware
 // crawl of the college's OWN official site (same engine as "Verify
-// deadlines") so a college the family just added -- including one nobody has
-// hand-checked yet -- still gets a real attempt at real dates, not a dead
+// deadlines") so a college the family just added, including one nobody has
+// hand-checked yet, still gets a real attempt at real dates, not a dead
 // end. Still never invents anything: if the live pull can't confidently find
 // a date on the official site, it says so honestly instead of guessing.
 export async function autofillOrDiscoverTimeline(studentId, { collegeId, collegeName }) {
@@ -637,10 +637,10 @@ export async function autofillOrDiscoverTimeline(studentId, { collegeId, college
 }
 
 // ---------------------------------------------------------------------------
-// "Populate timelines for all my saved colleges" -- the same real pull as
+// "Populate timelines for all my saved colleges", the same real pull as
 // above, run once per saved college instead of the family clicking it
 // college by college. Runs sequentially (not in parallel) to stay polite to
-// each college's own server, so a long saved list can take a while -- the
+// each college's own server, so a long saved list can take a while, the
 // caller should show a busy state.
 export async function populateAllTimelines(studentId) {
   const savedColleges = db.prepare("SELECT college_id, college_name FROM student_college_list WHERE student_id=?").all(studentId);
@@ -657,6 +657,6 @@ export async function populateAllTimelines(studentId) {
   return {
     totalColleges: savedColleges.length, autofilledCount, crawledCount, notFoundCount,
     results,
-    notice: "Every date added here still keeps its own source and verification status -- always confirm anything marked \"Needs manual verification\" before relying on it.",
+    notice: "Every date added here still keeps its own source and verification status, always confirm anything marked \"Needs manual verification\" before relying on it.",
   };
 }

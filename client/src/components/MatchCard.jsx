@@ -3,6 +3,7 @@
 import React from "react";
 import { CategoryTag, Meter, SourceBadge, fmtUSD, fmtPct } from "./ui.jsx";
 import { programEvidenceSummary, admissionRiskLabel, costRiskLabel, decisionStatusLabel } from "../lib/risk.js";
+import { Check, Warning } from "./icons.jsx";
 
 function ScoreRow({ label, value }) {
   return (
@@ -19,7 +20,7 @@ export function MatchCard({ scored, saved, onOpen, onToggleSave, decisionItem, p
   const subs = scored.subs || {};
   const mf = scored.majorFit;
 
-  // Evidence-aware summary -- read-only labels derived from the family's own
+  // Evidence-aware summary. Read-only labels derived from the family's own
   // Decision Plan / Program research data. Never touches the fit/admission/
   // cost SCORES above; a high fit score should never hide weak evidence.
   const majorText = profile?.primaryMajor || (profile?.interests || [])[0] || (scored.scenario?.name) || "";
@@ -77,26 +78,23 @@ export function MatchCard({ scored, saved, onOpen, onToggleSave, decisionItem, p
         <div className="row" style={{ gap: 6, marginBottom: 6 }}>
           {mf.status === "verified" ? (
             <>
-              <SourceBadge level="official" />
               <span className="note" style={{ fontSize: 11, color: "var(--safety)" }}>
                 {scored.scenario ? "Program pathway verified for selected Career Track" : "Offers your Profile major / interest area"}
               </span>
             </>
           ) : mf.status === "no-match" ? (
             <>
-              <SourceBadge level="official" />
               <span className="note" style={{ fontSize: 11, color: "var(--reach)" }}>No matching bachelor's program in official data</span>
             </>
           ) : (
             <>
-              <SourceBadge level="unavailable" />
               <span className="note" style={{ fontSize: 11, color: "var(--amber)" }}>Program availability not verified - confirm on official site</span>
             </>
           )}
         </div>
       )}
 
-      {/* Your own research on this college -- only takes up space once you've
+      {/* Your own research on this college, only takes up space once you've
           actually looked into it (Programs & Opportunities / Decision Plan).
           A high fit score should never hide weak evidence, but an unresearched
           card shouldn't be padded with four lines of "not yet assessed" either. */}
@@ -120,7 +118,7 @@ export function MatchCard({ scored, saved, onOpen, onToggleSave, decisionItem, p
           </div>
         </div>
       ) : admitRisk.level === "caution" ? (
-        <div className="note" style={{ fontSize: 11, color: "var(--reach)", marginBottom: 8 }}>⚠ {admitRisk.note}</div>
+        <div className="note" style={{ fontSize: 11, color: "var(--reach)", marginBottom: 8 }}><Warning /> {admitRisk.note}</div>
       ) : null}
 
       {scored.explanation && (scored.explanation.reasons?.length > 0 || scored.explanation.concerns?.length > 0) && (
@@ -163,7 +161,7 @@ export function MatchCard({ scored, saved, onOpen, onToggleSave, decisionItem, p
         <div className="row" style={{ gap: 8 }}>
           <button className="btn ghost sm" onClick={() => onOpen(c.id)}>Details</button>
           <button className={`btn sm ${saved ? "ghost" : "amber"}`} onClick={() => onToggleSave(scored)}>
-            {saved ? "Saved ✓" : "+ My List"}
+            {saved ? <>Saved <Check /></> : "+ My List"}
           </button>
         </div>
       </div>

@@ -13,69 +13,70 @@ import { config } from "../config.js";
 
 const BLS_SOURCE = "U.S. Bureau of Labor Statistics, Occupational Outlook Handbook";
 // Snapshot vintage. Update via a documented refresh; shown to users verbatim.
-const BLS_YEAR = 2024;
+const BLS_YEAR = 2025;
 
-// occupation median pay (annual, national), 2024 OOH values.
-// growth = projected % change 2023-2033. Values transcribed from BLS OOH.
+// Occupation median pay (annual, national, May 2025 OEWS) and projected
+// growth 2025-35, as published in the BLS Occupational Outlook Handbook
+// (updated August 27, 2026). Values transcribed from each OOH profile.
 const OCCUPATIONS = {
   "software-developers": {
     occupation: "Software Developers", blsCode: "15-1252",
-    medianPay: 132270, growth: "17% (much faster than average)",
+    medianPay: 135980, growth: "10% (much faster than average)",
     entryEducation: "Bachelor's degree",
   },
   "data-scientists": {
     occupation: "Data Scientists", blsCode: "15-2051",
-    medianPay: 112590, growth: "36% (much faster than average)",
+    medianPay: 120230, growth: "35% (much faster than average)",
     entryEducation: "Bachelor's degree",
   },
   "information-security-analysts": {
     occupation: "Information Security Analysts", blsCode: "15-1212",
-    medianPay: 124910, growth: "33% (much faster than average)",
+    medianPay: 129180, growth: "21% (much faster than average)",
     entryEducation: "Bachelor's degree",
   },
   "computer-hardware-engineers": {
     occupation: "Computer Hardware Engineers", blsCode: "17-2061",
-    medianPay: 155020, growth: "7% (faster than average)",
+    medianPay: 161740, growth: "9% (much faster than average)",
     entryEducation: "Bachelor's degree",
   },
   "electrical-engineers": {
     occupation: "Electrical Engineers", blsCode: "17-2071",
-    medianPay: 111910, growth: "9% (faster than average)",
+    medianPay: 120630, growth: "10% (much faster than average)",
     entryEducation: "Bachelor's degree",
   },
   "financial-analysts": {
     occupation: "Financial Analysts", blsCode: "13-2051",
-    medianPay: 99890, growth: "9% (faster than average)",
+    medianPay: 102740, growth: "7% (much faster than average)",
     entryEducation: "Bachelor's degree",
   },
   "economists": {
     occupation: "Economists", blsCode: "19-3011",
-    medianPay: 115730, growth: "5% (faster than average)",
+    medianPay: 124720, growth: "5% (faster than average)",
     entryEducation: "Master's degree",
   },
   "operations-research-analysts": {
     occupation: "Operations Research Analysts", blsCode: "15-2031",
-    medianPay: 91290, growth: "23% (much faster than average)",
+    medianPay: 88940, growth: "12% (much faster than average)",
     entryEducation: "Bachelor's degree",
   },
   "biomedical-engineers": {
     occupation: "Biomedical Engineers", blsCode: "17-2031",
-    medianPay: 100730, growth: "7% (faster than average)",
+    medianPay: 109370, growth: "8% (much faster than average)",
     entryEducation: "Bachelor's degree",
   },
   "environmental-engineers": {
     occupation: "Environmental Engineers", blsCode: "17-2081",
-    medianPay: 100090, growth: "7% (faster than average)",
+    medianPay: 107110, growth: "6% (faster than average)",
     entryEducation: "Bachelor's degree",
   },
   "mechanical-engineers": {
     occupation: "Mechanical Engineers", blsCode: "17-2141",
-    medianPay: 99510, growth: "11% (faster than average)",
+    medianPay: 104110, growth: "11% (much faster than average)",
     entryEducation: "Bachelor's degree",
   },
   "management-analysts": {
     occupation: "Management Analysts", blsCode: "13-1111",
-    medianPay: 99410, growth: "11% (faster than average)",
+    medianPay: 101860, growth: "10% (much faster than average)",
     entryEducation: "Bachelor's degree",
   },
 };

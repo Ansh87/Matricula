@@ -113,6 +113,39 @@ export async function saveDocument({ studentId, kind, filename, mimetype, buffer
   };
 }
 
+// One field list for BOTH auto-fill paths: "Auto-fill from this" (a single
+// document) and "Build profile" (all documents together). The single-document
+// prompt used to ask for a much shorter list (no name, high school, city,
+// state, graduation year, leadership/internship/service, projects, or awards
+// detail), so those Profile fields were never filled from one resume or one
+// portfolio link even when the document clearly stated them.
+const PROFILE_FIELDS_SPEC = `{
+  "name": string|null,              // student's full name, if stated
+  "highSchool": string|null,        // high school name
+  "city": string|null,              // student's city
+  "state": string|null,             // 2-letter US state code, e.g. "NJ"
+  "gradYear": number|null,          // expected high-school graduation year
+  "gpa": number|null, "gpaWeighted": number|null,
+  "sat": number|null, "act": number|null,
+  "apCount": number|null, "classRank": number|null, "classSize": number|null,
+  "awards": "none"|"school"|"state"|"national"|"international"|null,
+  "hasResearch": boolean|null, "hasInternship": boolean|null,
+  "hasLeadership": boolean|null, "hasVolunteer": boolean|null,
+  "hasPatent": boolean|null, "hasPublication": boolean|null,
+  "hasFounderExperience": boolean|null,
+  "interests": [string],            // likely intended majors/fields
+  "activities": [ { "name": string, "role": string|null, "category": string|null, "level": "school"|"state"|"national"|"international"|null, "description": string|null } ],
+  "awards_detail": [ { "name": string, "level": string|null, "description": string|null } ],
+  "projects": [ { "name": string, "role": string|null, "category": string|null, "description": string|null } ],
+  "summary": string                 // 2-3 sentence honest summary of the applicant's strengths
+}
+
+IMPORTANT for activities/projects/awards: keep the ROLE, CATEGORY, LEVEL, and a
+short DESCRIPTION. Do NOT reduce an activity to just its name - "Founder" and
+"tutoring nonprofit" carry real signal. If a document is a portfolio page, the
+TITLE/DESCRIPTION/HEADINGS lines are extracted metadata; treat them as content.
+`;
+
 // Optional: parse extracted text into structured profile fields via Gemini.
 // Returns { available:false } if no key. Never invents - asks Gemini to return
 // only fields it can find, and to use null otherwise.
@@ -125,21 +158,8 @@ export async function parseWithGemini(text, kind) {
   }
 
   const prompt = `You are extracting structured data from a student's ${kind || "document"} for a college-planning app.
-Return ONLY a JSON object (no markdown, no prose) with these keys, using null when a value is not clearly present:
-{
-  "gpa": number|null,               // unweighted 4.0 scale
-  "gpaWeighted": number|null,
-  "sat": number|null,               // total
-  "act": number|null,               // composite
-  "apCount": number|null,           // count of AP/IB/honors/college courses
-  "classRank": number|null,
-  "classSize": number|null,
-  "awards": "none"|"school"|"state"|"national"|null,   // highest level seen
-  "hasResearch": boolean|null,
-  "activities": [ { "name": string, "role": string|null, "category": string|null } ],
-  "interests": [ string ]           // likely intended majors/fields, if evident
-}
-Do not guess or invent. If the document is a resume, focus on activities, awards, research. If a transcript, focus on GPA, rigor, rank. Text:
+Return ONLY a JSON object (no markdown, no prose) with these keys, using null/empty when a value is not clearly present:
+${PROFILE_FIELDS_SPEC}Do not guess or invent. Always fill name, high school, city, state and graduation year when the document states them. If the document is a resume, also focus on activities, awards, research. If a transcript, also focus on GPA, rigor, rank. Text:
 """
 ${text.slice(0, MAX_PARSE_CHARS)}
 """`;
@@ -294,32 +314,7 @@ export async function buildProfileFromDocuments(studentId) {
 
   const prompt = `You are building a structured college-applicant profile from a student's documents (transcript, resume, and/or portfolio). Read ALL of them together.
 Return ONLY a JSON object (no markdown) with these keys, using null/empty when not clearly present. Do NOT invent anything.
-{
-  "name": string|null,              // student's full name, if stated
-  "highSchool": string|null,        // high school name
-  "city": string|null,              // student's city
-  "state": string|null,             // 2-letter US state code, e.g. "NJ"
-  "gradYear": number|null,          // expected high-school graduation year
-  "gpa": number|null, "gpaWeighted": number|null,
-  "sat": number|null, "act": number|null,
-  "apCount": number|null, "classRank": number|null, "classSize": number|null,
-  "awards": "none"|"school"|"state"|"national"|"international"|null,
-  "hasResearch": boolean|null, "hasInternship": boolean|null,
-  "hasLeadership": boolean|null, "hasVolunteer": boolean|null,
-  "hasPatent": boolean|null, "hasPublication": boolean|null,
-  "hasFounderExperience": boolean|null,
-  "interests": [string],            // likely intended majors/fields
-  "activities": [ { "name": string, "role": string|null, "category": string|null, "level": "school"|"state"|"national"|"international"|null, "description": string|null } ],
-  "awards_detail": [ { "name": string, "level": string|null, "description": string|null } ],
-  "projects": [ { "name": string, "role": string|null, "category": string|null, "description": string|null } ],
-  "summary": string                 // 2-3 sentence honest summary of the applicant's strengths
-}
-
-IMPORTANT for activities/projects/awards: keep the ROLE, CATEGORY, LEVEL, and a
-short DESCRIPTION. Do NOT reduce an activity to just its name - "Founder" and
-"tutoring nonprofit" carry real signal. If a document is a portfolio page, the
-TITLE/DESCRIPTION/HEADINGS lines are extracted metadata; treat them as content.
-Documents:
+${PROFILE_FIELDS_SPEC}Documents:
 ${combined}`;
 
   const model = config.gemini.model;

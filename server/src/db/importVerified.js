@@ -119,13 +119,13 @@ const insertVerified = db.prepare(
 const insertCareer = db.prepare(
   `INSERT INTO careers (career_id,occupation_name,bls_code,median_pay,projected_growth,typical_entry_education,related_majors_json,source,source_year,last_updated)
    VALUES (@career_id,@occupation_name,@bls_code,@median_pay,@projected_growth,@typical_entry_education,@related_majors_json,@source,@source_year,@last_updated)
-   ON CONFLICT(career_id) DO UPDATE SET median_pay=excluded.median_pay, projected_growth=excluded.projected_growth, last_updated=excluded.last_updated`
+   ON CONFLICT(career_id) DO UPDATE SET median_pay=excluded.median_pay, projected_growth=excluded.projected_growth, source_year=excluded.source_year, last_updated=excluded.last_updated`
 );
 
 const insertMajor = db.prepare(
   `INSERT INTO major_career_mapping (major_name,related_careers_json,salary_range,job_outlook,ai_impact,graduate_school_need,source,last_updated)
    VALUES (@major_name,@related_careers_json,@salary_range,@job_outlook,@ai_impact,@graduate_school_need,@source,@last_updated)
-   ON CONFLICT(major_name) DO UPDATE SET related_careers_json=excluded.related_careers_json, last_updated=excluded.last_updated`
+   ON CONFLICT(major_name) DO UPDATE SET related_careers_json=excluded.related_careers_json, salary_range=excluded.salary_range, last_updated=excluded.last_updated`
 );
 
 const selCols = ["college_id","admit_factors_json","culture_json","what_they_want","how_they_select",

@@ -58,7 +58,7 @@ export function CareerPlanner() {
 
       {/* Career Market Overview - high level, source-labeled */}
       <div className="card pad">
-        <div className="row spread"><h2>Career market overview</h2><SourceBadge level="official">BLS OOH 2024-34</SourceBadge></div>
+        <div className="row spread"><h2>Career market overview</h2><SourceBadge level="official">BLS OOH 2025-35</SourceBadge></div>
         <p className="note" style={{ marginTop: 8, fontSize: 13.5 }}>
           AI and automation are increasing demand for people who can <strong>build, evaluate, secure, and apply</strong>
           {" "}intelligent systems. Roles that apply computing or engineering to a real domain are projected to grow

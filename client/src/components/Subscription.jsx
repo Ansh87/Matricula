@@ -21,7 +21,7 @@ export function Subscription({ onGo }) {
   if (!gatingActive) {
     return (
       <div className="stack" style={{ maxWidth: 640 }}>
-        <div><div className="eyebrow">More</div><h1>Matricula</h1></div>
+        <div><div className="eyebrow">Subscription</div><h1>Matricula</h1></div>
         <div className="card pad note">Subscriptions are managed in the Matricula iOS app. Everything is available here on the website.</div>
       </div>
     );
@@ -33,7 +33,7 @@ export function Subscription({ onGo }) {
   return (
     <div className="stack" style={{ maxWidth: 640 }}>
       <div>
-        <div className="eyebrow">More</div>
+        <div className="eyebrow">Subscription</div>
         <h1>Matricula</h1>
         <p className="lead">From uncertainty to opportunity.</p>
       </div>

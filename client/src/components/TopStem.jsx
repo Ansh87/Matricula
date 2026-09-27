@@ -20,7 +20,7 @@ export function TopStem({ profile, onOpen, savedIds, onToggleSave }) {
     <div className="stack">
       <div className="row spread wrap">
         <div>
-          <div className="eyebrow">Ranked list</div>
+          <div className="eyebrow">Editorial ranking, live official data</div>
           <h1>Top STEM colleges</h1>
           <p className="lead">The strongest undergraduate CS, engineering, and science programs - with your
             estimated fit and live outcome data from College Scorecard on each.</p>
@@ -32,10 +32,6 @@ export function TopStem({ profile, onOpen, savedIds, onToggleSave }) {
         </div>
       </div>
 
-      <div className="disclaimer">
-        STEM strength here is an <strong>editorial ranking</strong> of program reputation and outcomes - not an
-        official government ranking. Admit rate, cost, earnings, and graduation data are live from College Scorecard.
-      </div>
 
       {loading && <div className="card pad"><Spinner label="Ranking STEM colleges…" /></div>}
 

@@ -145,12 +145,6 @@ export function CareerPlanner() {
         </div>
       )}
 
-      <div className="disclaimer">
-        Career outlooks are projections, not guarantees. Students should verify current data and combine market trends
-        with personal strengths, college fit, internships, projects, and long-term interests. Sources: U.S. Bureau of
-        Labor Statistics Occupational Outlook Handbook (OOH), 2024-34 employment projections; U.S. Department of
-        Education College Scorecard for program-level cost and earnings outcomes where available.
-      </div>
     </div>
   );
 }

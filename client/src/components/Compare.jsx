@@ -99,7 +99,7 @@ export function Compare({ saved, profile }) {
     <div className="stack">
       <div className="row spread wrap">
         <div>
-          <div className="eyebrow">Compare</div>
+          <div className="eyebrow">2 to 5 saved colleges, side by side</div>
           <h1>Compare colleges side by side</h1>
           <p className="lead">Pick 2-5 saved colleges. Adjust what matters to you and see a weighted comparison on live official data.</p>
         </div>

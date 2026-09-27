@@ -35,7 +35,7 @@ export function FinancialAid({ studentId, profile, initialTab }) {
   return (
     <div className="stack">
       <div>
-        <div className="eyebrow">Money</div>
+        <div className="eyebrow">FAFSA, CSS Profile and scholarships</div>
         <h1>Financial aid &amp; scholarships</h1>
         <p className="lead">Plan the required aid forms for your list, and track the scholarships you find.</p>
         <div className="row" style={{ gap: 6, marginTop: 10 }}>

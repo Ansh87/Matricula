@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { api } from "../lib/api.js";
 import { Spinner } from "./ui.jsx";
-import { Arrow, Check } from "./icons.jsx";
+import { Check } from "./icons.jsx";
 
 function downloadReport(s, profile) {
   const lines = [];
@@ -35,32 +35,11 @@ function downloadReport(s, profile) {
 export function Strategy({ studentId, profile, onGo }) {
   const [s, setS] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [edMsg, setEdMsg] = useState(null);
 
   useEffect(() => {
     setLoading(true);
     api.strategy(studentId, profile).then(setS).catch(() => setS(null)).finally(() => setLoading(false));
   }, [studentId, profile]);
-
-  const setAsEdPick = async () => {
-    if (!s?.edPick?.collegeId) return;
-    setEdMsg(null);
-    try {
-      const existing = await api.listDecisionItems(studentId).catch(() => ({ items: [] }));
-      const match = (existing.items || []).find((it) => it.college_id === s.edPick.collegeId);
-      if (match) {
-        await api.updateDecisionItem(studentId, match.item_id, { applicationRound: "ED" });
-      } else {
-        await api.addDecisionItem(studentId, {
-          collegeId: s.edPick.collegeId, collegeName: s.edPick.name,
-          admissionCategory: s.edPick.category || undefined, applicationRound: "ED",
-        });
-      }
-      setEdMsg({ ok: true, text: `Set ${s.edPick.name} to Early Decision in your Decision Plan.` });
-    } catch (e) {
-      setEdMsg({ ok: false, text: `Couldn't update Decision Plan: ${e.message}` });
-    }
-  };
 
   if (loading) return <div className="card pad"><Spinner label="Analyzing your list…" /></div>;
   if (!s) return <div className="empty">Save some colleges first, then come back for a strategy read-out.</div>;
@@ -87,10 +66,6 @@ export function Strategy({ studentId, profile, onGo }) {
         <p className="lead">How balanced your list is, what to adjust, and your best early-application play.</p>
         <div className="row wrap" style={{ gap: 10, marginTop: 8, alignItems: "center" }}>
           <button className="btn ghost sm" onClick={() => downloadReport(s, profile)}>Download strategy report</button>
-          <span className="note">
-            Looking for a "why this college / essay angle" writeup for one specific college? That's per-college
-            in <button className="link" onClick={() => onGo && onGo("decisionPlan")}>Decision Plan</button> - this page is your whole-list balance.
-          </span>
         </div>
       </div>
 
@@ -102,19 +77,10 @@ export function Strategy({ studentId, profile, onGo }) {
         <Bar label="Safety" count={s.counts.Safety} range={s.ideal.safety} color="var(--safety)" />
       </div>
 
-      {s.issues.length > 0 && (
-        <div className="card pad">
-          <h3 style={{ marginBottom: 8, color: "var(--reach)" }}>Recommended adjustments</h3>
-          <ul style={{ margin: 0, paddingLeft: 18 }}>
-            {s.issues.map((i, n) => <li key={n} className="note" style={{ marginBottom: 6 }}>{i}</li>)}
-          </ul>
-        </div>
-      )}
-
       {s.balanced && (
         <div className="card pad" style={{ borderLeft: "4px solid var(--safety)" }}>
           <strong style={{ color: "var(--safety)" }}>Your list looks well balanced.</strong>
-          <p className="note" style={{ marginTop: 4 }}>Focus now on essays, deadlines (Tracker), and finalizing your application rounds.</p>
+          <p className="note" style={{ marginTop: 4 }}>Focus now on essays, deadlines, and finalizing your application rounds.</p>
         </div>
       )}
 
@@ -124,23 +90,9 @@ export function Strategy({ studentId, profile, onGo }) {
             <h3>Best Early Decision pick</h3>
             <div className="pill" style={{ background: "var(--amber-b)", margin: "8px 0" }}>{s.edPick.name}</div>
             <p className="note">{s.edPick.why}</p>
-            {s.edPick.collegeId && (
-              <button className="btn sm ghost" style={{ marginTop: 6 }} onClick={setAsEdPick}>Set as ED in Decision Plan <Arrow /></button>
-            )}
-            {edMsg && <div className="note" style={{ marginTop: 6, color: edMsg.ok ? "var(--safety)" : "var(--reach)" }}>{edMsg.text}</div>}
           </div>
         )}
-        <div className="card pad">
-          <h3>Test submission plan</h3>
-          <p className="note">{s.testPlan}</p>
-        </div>
-        <div className="card pad">
-          <h3>How many to apply to</h3>
-          <p className="note">A focused list of about <strong>{s.recommendedApplications}</strong> well-chosen colleges is usually stronger than a scattershot 20+. Quality over quantity.</p>
-        </div>
       </div>
-
-      <div className="disclaimer">{s.disclaimer}</div>
     </div>
   );
 }

@@ -73,7 +73,7 @@ function CollegeSelect({ options, value, onChange, placeholder }) {
           const opt = options.find((o) => o.collegeId === v);
           if (opt) onChange({ collegeId: opt.collegeId, collegeName: opt.collegeName });
         }}>
-          <option value="">Choose from your saved colleges / Decision Plan...</option>
+          <option value="">Choose from your saved colleges...</option>
           {options.map((o) => <option key={o.collegeId} value={o.collegeId}>{o.collegeName}</option>)}
         </select>
       )}
@@ -464,7 +464,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
     <div className="stack">
       <div className="row spread wrap">
         <div>
-          <div className="eyebrow">Essay Center</div>
+          <div className="eyebrow">Prompts, deadlines and your story bank</div>
           <h1>Essay Center</h1>
           <p className="lead">
             Track every essay prompt, brainstorm by track, build a reusable story bank, and see your total essay
@@ -477,11 +477,6 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
           </button>
           {csvErr && <div className="note" style={{ color: "var(--reach)", marginTop: 4 }}>{csvErr}</div>}
         </div>
-      </div>
-
-      <div className="disclaimer">
-        {meta.aiUseDisclaimer || "Matricula helps with brainstorming, outlining, prompt tracking, and revision planning. The student must write the final essay in their own voice and follow each college's AI-use policy."}
-        {" "}This tool never writes or generates a final essay, and never auto-submits anything.
       </div>
 
       {workload && workload.totalEssaysRequired > 0 && (
@@ -525,7 +520,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
       {coverage && coverage.totalColleges > 0 && (
         <div className="card pad">
           <h3>Coverage summary. What's still missing</h3>
-          <p className="note">Checked across your {coverage.totalColleges} saved/Decision Plan college(s). This is the fastest way to see what still needs attention before you start writing.</p>
+          <p className="note">Checked across your {coverage.totalColleges} saved college(s). This is the fastest way to see what still needs attention before you start writing.</p>
           <div className="kpis">
             <div className="kpi"><div className="n" style={{ color: "var(--safety)" }}>{coverage.currentCycleVerified.length}</div><div className="l">Current-cycle verified prompts</div></div>
             <div className="kpi"><div className="n" style={{ color: "var(--amber)" }}>{coverage.previousYearOnly.length}</div><div className="l">Previous-year prompts only</div></div>
@@ -558,7 +553,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
         <div className="stack">
           <div className="card pad" ref={overviewRef}>
             <h3>Essay Prompt Dashboard</h3>
-            <p className="note">Pick a college from your saved list, your Decision Plan, or type a name. See this year's prompts, saved previous-year prompts, and anything still needing verification, all in one place.</p>
+            <p className="note">Pick a college from your saved list, or type a name. See this year's prompts, saved previous-year prompts, and anything still needing verification, all in one place.</p>
             <CollegeSelect options={collegeOptions} value={overviewCollege} onChange={setOverviewCollege} placeholder="Choose a college..." />
 
             {overviewCollege && overview && (
@@ -621,7 +616,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
             <h3>Find essay requirements for all my colleges</h3>
             <p className="note">
               Runs the same official-sources-only search used in the dashboard above, once for every college in your
-              Saved list and Decision Plan, so you don't have to open each college one at a time to build out your
+              saved list, so you don't have to open each college one at a time to build out your
               prompt archive. Nothing is invented; colleges where nothing is found are clearly marked "Not found," and
               anything discovered still needs the usual verification.
             </p>
@@ -921,7 +916,7 @@ export function EssayCenter({ studentId, saved, collegeNames, onGo, initialTrack
 
       {sub === "examples" && (
         <div className="stack">
-          <div className="disclaimer" style={{ fontWeight: 600 }}>
+          <div className="note" style={{ fontWeight: 600 }}>
             Official admitted-student examples are rare. Most colleges do not publish them.
           </div>
           <div className="disclaimer">{exampleLinks?.disclaimer || "Loading..."}</div>

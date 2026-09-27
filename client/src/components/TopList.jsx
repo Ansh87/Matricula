@@ -41,7 +41,7 @@ export function TopList({ kind, title, blurb, profile, onOpen, savedIds, onToggl
   return (
     <div className="stack">
       <div>
-        <div className="eyebrow">Ranked list</div>
+        <div className="eyebrow">Ranked by your overall fit score</div>
         <h1>{title}</h1>
         <p className="lead">{blurb}</p>
       </div>

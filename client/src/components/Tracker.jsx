@@ -114,20 +114,14 @@ export function Tracker({ studentId, list, collegeNames, onGo, compact = false }
         <>
         <div className="row spread wrap">
           <div>
-            <div className="eyebrow">Process tracker</div>
+            <div className="eyebrow">Saves as you type</div>
             <h1>Applications</h1>
             <p className="lead">Enter your real deadlines from each college’s official site. Everything saves automatically.</p>
           </div>
           <button className="btn ghost" onClick={exportCsv}>Export CSV</button>
         </div>
 
-        <div className="disclaimer">Deadlines are blank until you enter them. Always confirm exact dates and required forms on each college’s official admissions and financial-aid pages.</div>
 
-        <div className="note" style={{ padding: "0 2px" }}>
-          This tab is your day-to-day application checklist (essays, recommendations, deadlines, submitted status). For
-          each college's Reach/Target/Safety category, program verification, and major-specific risk, see{" "}
-          <button className="link" onClick={() => onGo && onGo("decisionPlan")}>Decision Plan</button>.
-        </div>
         </>
       )}
 
@@ -145,8 +139,7 @@ export function Tracker({ studentId, list, collegeNames, onGo, compact = false }
                   <div className="note">{r.application_round || "No round set"} · {r.decision_status || "Decision pending"}</div>
                   {dp && (
                     <div className="note" style={{ fontSize: 11, color: "var(--muted)" }}>
-                      Decision Plan: {dp.admission_category || "category not set"} · {dp.decision_status}
-                      {dp.application_round && dp.application_round !== r.application_round ? ` · round set there: ${dp.application_round}` : ""}
+                      {dp.admission_category || "category not set"} · {dp.decision_status}
                     </div>
                   )}
                   <div className="note" style={{ fontSize: 11, color: "var(--muted)" }}>
@@ -163,12 +156,6 @@ export function Tracker({ studentId, list, collegeNames, onGo, compact = false }
 
               {isOpen && (
                 <div className="pad" style={{ borderTop: "1px solid var(--line-2)" }}>
-                  {dp && dp.application_round && r.application_round && dp.application_round !== r.application_round && (
-                    <div className="disclaimer" style={{ borderLeftColor: "var(--amber)", marginBottom: 10 }}>
-                      The application round set here ({r.application_round || "none"}) doesn't match the one in Decision
-                      Plan ({dp.application_round}). Pick whichever is actually correct and update the other.
-                    </div>
-                  )}
                   <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(190px,1fr))" }}>
                     {FIELDS.map(([key, label, type, opts]) => (
                       <div key={key}>
@@ -194,7 +181,6 @@ export function Tracker({ studentId, list, collegeNames, onGo, compact = false }
                     </div>
                   </div>
                   <div className="row wrap" style={{ marginTop: 12, gap: 8 }}>
-                    {dp && <button className="btn sm ghost" onClick={() => onGo && onGo("decisionPlan")}>Open in Decision Plan <Arrow /></button>}
                     <button className="btn sm ghost" onClick={() => onGo && onGo("applicationPathways")}>Open in Application Pathways <Arrow /></button>
                     <button className="btn sm ghost" onClick={() => onGo && onGo("essays")}>Open in Essay Center <Arrow /></button>
                   </div>

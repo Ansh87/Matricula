@@ -219,7 +219,7 @@ export function Results({ recs, meta, savedIds, onOpen, onToggleSave, onRefilter
     <div className="stack">
       <div className="row spread wrap">
         <div>
-          <div className="eyebrow">Live matches</div>
+          <div className="eyebrow">Scored against official data</div>
           <h1>Your college list</h1>
         </div>
         {meta && (

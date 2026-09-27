@@ -265,11 +265,6 @@ export function CollegeDetail({ collegeId, profile, onClose, onOpenOther, fallba
                 </div>
               )}
 
-              <div className="disclaimer">
-                Admissions are holistic and unpredictable; published data describes past classes, not your guaranteed
-                outcome. Costs and aid vary by family - always confirm with each college’s official net price
-                calculator. Fields marked “Data unavailable” are not published in our sources; we don’t estimate them.
-              </div>
             </>
           )}
         </div>

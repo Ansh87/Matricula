@@ -12,7 +12,7 @@ export function PortalTracker({ onGo }) {
   return (
     <div className="stack">
       <div>
-        <div className="eyebrow">Apply</div>
+        <div className="eyebrow">After you hit submit</div>
         <h1>Portal Tracker</h1>
         <p className="lead">A dedicated post-submission portal checklist (decision letters, enrollment deposit,
           housing, orientation, etc.) isn't built yet.</p>
@@ -25,7 +25,7 @@ export function PortalTracker({ onGo }) {
           Open Applications Tracker <Arrow />
         </button>
       </div>
-      <div className="disclaimer">Needs review: there is no post-submission portal tracker yet.</div>
+      <div className="note">Needs review: there is no post-submission portal tracker yet.</div>
     </div>
   );
 }

@@ -516,7 +516,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
     <div className="stack apply-page">
       <div className="row spread wrap">
         <div>
-          <div className="eyebrow">Apply</div>
+          <div className="eyebrow">One college at a time</div>
           <h1>Apply</h1>
           <p className="lead">
             One college at a time: where it stands, which platform it uses, what extra applications (honors,
@@ -532,11 +532,6 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
         </div>
       </div>
 
-      <div className="disclaimer">
-        Platform and deadline information here is only as good as what you've verified. A record stays "Needs manual
-        verification" until you (or an official source) confirm it, always check the college's own application
-        portal before treating a deadline or requirement as final.
-      </div>
 
       <div className="card pad">
         <h3 style={{ margin: 0 }}>Choose a college</h3>

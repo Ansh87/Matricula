@@ -15,7 +15,6 @@ import { Matches } from "./components/Matches.jsx";
 import { BrowseColleges } from "./components/BrowseColleges.jsx";
 import { MyList } from "./components/MyList.jsx";
 import { Programs } from "./components/Programs.jsx";
-import { DecisionPlan } from "./components/DecisionPlan.jsx";
 import { ApplicationPathways } from "./components/ApplicationPathways.jsx";
 import { EssayCenter } from "./components/EssayCenter.jsx";
 import { FinancialAid } from "./components/FinancialAid.jsx";
@@ -94,7 +93,6 @@ const SECTIONS = [
     key: "plan", label: "My List & Plan",
     subtabs: [
       { key: "saved", label: "My List", view: "saved" },
-      { key: "decisionPlan", label: "Decision Plan", view: "decisionPlan" },
       { key: "scholarships", label: "Financial Aid & Scholarships", view: "scholarships" },
       // "Career Planner" and "Careers (BLS)" answered two halves of one
       // question; CareerCenter.jsx now puts both behind one switch.
@@ -136,11 +134,24 @@ const NAV_SECTIONS = isNativeIOS ? NATIVE_SECTIONS : SECTIONS;
 // Settings gear for the header. Drawn here rather than in icons.jsx because
 // it is chrome, not page content, and is sized for the dark topbar.
 function GearIcon() {
+  // A real cog: a toothed ring around a hub. The previous version was a
+  // circle with straight spokes radiating outwards, which reads as a
+  // brightness/sun control rather than settings.
+  const teeth = Array.from({ length: 8 }, (_, i) => {
+    const a = (i * Math.PI) / 4;
+    const cos = Math.cos(a), sin = Math.sin(a);
+    // one tooth: a short trapezoid standing on the rim, rotated into place
+    const r0 = 6.4, r1 = 9.2, half = 1.9;
+    const pts = [[r0, -half], [r1, -half * 0.72], [r1, half * 0.72], [r0, half]]
+      .map(([x, y]) => `${(12 + x * cos - y * sin).toFixed(2)},${(12 + x * sin + y * cos).toFixed(2)}`)
+      .join(" ");
+    return <polygon key={i} points={pts} fill="currentColor" />;
+  });
   return (
-    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
-      <circle cx="12" cy="12" r="3.2" />
-      <path d="M12 2.6v2.6M12 18.8v2.6M21.4 12h-2.6M5.2 12H2.6M18.6 5.4l-1.8 1.8M7.2 16.8l-1.8 1.8M18.6 18.6l-1.8-1.8M7.2 7.2 5.4 5.4" />
+    <svg width="19" height="19" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      {teeth}
+      <circle cx="12" cy="12" r="6.6" fill="none" stroke="currentColor" strokeWidth="2.1" />
+      <circle cx="12" cy="12" r="2.5" fill="none" stroke="currentColor" strokeWidth="1.9" />
     </svg>
   );
 }
@@ -189,6 +200,7 @@ VIEW_TO_DEFAULT_SUBKEY.courses = "matches";
 // every existing onGo("strategy") / onGo("applications") / onGo("disclaimer")
 // call throughout the app lands in the right place without being rewritten.
 const VIEW_ALIASES = {
+  decisionPlan: "saved",                 // Decision Plan is gone; My List is the final list now
   applications: "applicationPathways",   // the tracker is part of the Apply page now
   financialAid: "scholarships",          // same page, one entry point
   careerPlanner: "careers",              // both career pages are one page now
@@ -223,7 +235,6 @@ export default function App() {
   // One-shot "entry" signals for the few subtabs that land on a page's own
   // internal tab/mode rather than a separate page (see lib/entryOverride.js).
   const [majorsEntry, setMajorsEntry] = useState({ mode: null, nonce: 0 });
-  const [decisionPlanEntry, setDecisionPlanEntry] = useState({ sub: null, nonce: 0 });
   const [pathwaysEntry, setPathwaysEntry] = useState({ section: null, nonce: 0 });
   // Which subtab is highlighted within each group's subtab bar, keyed by
   // group. Defaults follow VIEW_TO_DEFAULT_SUBKEY whenever `view` changes;
@@ -255,7 +266,6 @@ export default function App() {
     explicitClickRef.current = true;
     setActiveSub((s) => ({ ...s, [groupKey]: sub.key }));
     if (sub.entry?.mode !== undefined) setMajorsEntry((e) => ({ mode: sub.entry.mode, nonce: e.nonce + 1 }));
-    if (sub.entry?.sub !== undefined) setDecisionPlanEntry((e) => ({ sub: sub.entry.sub, nonce: e.nonce + 1 }));
     if (sub.entry?.section !== undefined) setPathwaysEntry((e) => ({ section: sub.entry.section, nonce: e.nonce + 1 }));
     goTo(sub.view);
   }, [goTo]);
@@ -554,8 +564,6 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
           )}
 
           {view === "programs" && <Programs studentId={STUDENT_ID} profile={profile} saved={saved} />}
-          {view === "decisionPlan" && <DecisionPlan studentId={STUDENT_ID} profile={profile} saved={saved} collegeNames={collegeNames} onGo={goTo}
-            entrySub={decisionPlanEntry.sub} entryNonce={decisionPlanEntry.nonce} />}
           {/* Premium (Matricula) features in the iOS app: Application & Essay
               Planning, Planning Timeline, AI-Powered Planning. PremiumGate is a
               pass-through on the website, so Railway behaves exactly as before. */}

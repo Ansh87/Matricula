@@ -16,22 +16,13 @@ const FEATURES = [
   { t: "Export and review", d: "Download planning data and review saved work from Settings, under Data & Export." },
 ];
 
-const STEPS = [
-  "Complete Profile",
-  "Explore colleges and majors",
-  "Save colleges to My List",
-  "Use Evaluate Against My Profile",
-  "Move serious colleges to Decision Plan",
-  "Verify programs, essays, deadlines, and costs",
-  "Track applications in Apply",
-];
 
 export function About({ onGo }) {
   const go = (view) => (onGo ? () => onGo(view) : undefined);
   return (
     <div className="stack" style={{ maxWidth: 900 }}>
       <div>
-        <div className="eyebrow">Help</div>
+        <div className="eyebrow">What this app does and what it cannot promise</div>
         <h1>How Matricula works</h1>
       </div>
 
@@ -41,7 +32,6 @@ export function About({ onGo }) {
           <button className="btn amber" onClick={go("profile")}>Start with Profile <Arrow /></button>
           <button className="btn ghost" onClick={go("advisor")}>Open Advisor <Arrow /></button>
           <button className="btn ghost" onClick={go("saved")}>Go to My List <Arrow /></button>
-          <button className="btn ghost" onClick={go("decisionPlan")}>Open Decision Plan <Arrow /></button>
         </div>
       )}
 
@@ -53,16 +43,6 @@ export function About({ onGo }) {
             <p className="note" style={{ margin: 0 }}>{f.d}</p>
           </div>
         ))}
-      </div>
-
-      {/* 4. How to use it step-by-step */}
-      <div className="card pad stack">
-        <h3>How to use it</h3>
-        <ol style={{ margin: 0, paddingLeft: 20 }}>
-          {STEPS.map((s) => (
-            <li key={s} className="note" style={{ padding: "3px 0", color: "var(--ink-900)" }}>{s}</li>
-          ))}
-        </ol>
       </div>
 
       {/* 4.5. How Scoring Works. Every number below matches the actual

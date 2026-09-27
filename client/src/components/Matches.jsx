@@ -447,7 +447,7 @@ export function Matches({
         </div>
       )}
       {tab === "balanced" && balanced?.builtFrom?.includes("all scored") && (
-        <div className="disclaimer" style={{ borderLeftColor: "var(--amber)" }}>
+        <div className="note" style={{ borderLeftColor: "var(--amber)" }}>
           Balanced List was built from all scored colleges because too few verified major matches were
           available. Verify program availability before relying on this list.
         </div>

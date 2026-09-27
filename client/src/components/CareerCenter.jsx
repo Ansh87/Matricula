@@ -24,7 +24,7 @@ export function CareerCenter({ profileInterests }) {
   return (
     <div className="stack">
       <div>
-        <div className="eyebrow">Careers</div>
+        <div className="eyebrow">Bureau of Labor Statistics pay and growth</div>
         <h1>Careers and outcomes</h1>
         <p className="lead">Two ways in: start from a career track and work back to the majors that feed it, or
           start from a major and see where it actually leads. Pay and growth figures throughout come from the

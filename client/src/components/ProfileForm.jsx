@@ -88,7 +88,7 @@ export function ProfileForm({ initial, onSubmit, studentId, onApplyParsed, onSav
   return (
     <div className="stack" style={{ maxWidth: 780 }}>
       <div>
-        <div className="eyebrow">Step 1 · Your profile</div>
+        <div className="eyebrow">Everything else is built from this</div>
         <h1>Tell us about you</h1>
         <p className="lead">We use these to match you against real colleges from official federal data.
           Nothing here is shared; it stays in this app.</p>

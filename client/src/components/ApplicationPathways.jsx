@@ -14,6 +14,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { api } from "../lib/api.js";
 import { auth, firebaseConfigured } from "../lib/firebase.js";
 import { SourceBadge, InlineSpinner, RestoredNote } from "./ui.jsx";
+import { Tracker } from "./Tracker.jsx";
 import { usePersistedSearch } from "../lib/persistedSearch.js";
 import { useEntryOverride } from "../lib/entryOverride.js";
 import { Arrow } from "./icons.jsx";
@@ -103,12 +104,8 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
   const [platforms, setPlatforms] = useState([]);
   const [verificationStatuses, setVerificationStatuses] = useState([]);
   const [ynu, setYnu] = useState(["Yes", "No", "Unknown"]);
-  const [routePlanner, setRoutePlanner] = useState(null);
-  const [regionSummary, setRegionSummary] = useState(null);
   const [requirements, setRequirements] = useState([]);
   const [expanded, setExpanded] = useState(null);
-  const [showPlatformRef, setShowPlatformRef] = useState(false);
-  const [showRegion, setShowRegion] = useState(true);
   const [form, setForm] = useState(BLANK_FORM);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -153,21 +150,6 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
     });
   };
 
-  const jumpToAddForm = (collegeId, collegeNameArg) => {
-    const collegeName = collegeNameArg || saved?.find((s) => s.college_id === collegeId)?.college_name || collegeNames?.[collegeId] || collegeId;
-    setForm((f) => ({ ...f, collegeId }));
-    addFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    if (!collegeId) return;
-    api.autofillTimelineEvents(studentId, { collegeId, collegeName })
-      .then((r) => { if (r?.requirements) applyRequirementDetailsToForm(collegeId, r.requirements); })
-      .catch(() => {})
-      .finally(() => {
-        loadTimelineDeadlineSummary();
-        loadTimeline();
-        useTimelineDatesInForm(collegeId);
-      });
-  };
-
   useEffect(() => {
     api.pathwaysPlatforms(studentId).then((r) => {
       setPlatforms(r.platforms || []);
@@ -175,12 +157,6 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
       setYnu(r.ynu || ["Yes", "No", "Unknown"]);
     }).catch(() => {});
   }, [studentId]);
-
-  const loadPlanner = useCallback(() => {
-    api.routePlanner(studentId).then(setRoutePlanner).catch(() => {});
-    api.regionSummary(studentId).then(setRegionSummary).catch(() => {});
-  }, [studentId]);
-  useEffect(() => { loadPlanner(); }, [loadPlanner]);
 
   const loadRequirements = useCallback(() => {
     api.listRequirements(studentId).then((r) => setRequirements(r.requirements || [])).catch(() => {});
@@ -236,24 +212,6 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.collegeId, studentId]);
 
-  // One-click apply from the Route Planner's "Unknown" group. Adds a
-  // minimal record with just the suggested platform set, still defaulting
-  // to "Needs manual verification" so it's clear this still needs confirming.
-  const applySuggestionQuick = async (collegeId, collegeName, platformId) => {
-    setBusy(true); setMsg(null);
-    try {
-      const created = await api.addRequirement(studentId, {
-        collegeId, collegeName, platformId, platformName: platformName(platformId),
-        applicationUrl: platformUrl(platformId) || undefined,
-      });
-      loadRequirements();
-      loadPlanner();
-      triggerTimelineAutofillFor(collegeId, collegeName, created?.requirement_id); // set the platform -> also pull real timeline dates + detail fields for this college
-    } catch (e) {
-      setMsg({ ok: false, text: `Could not apply suggestion: ${e.message}` });
-    } finally { setBusy(false); }
-  };
-
   const addRequirement = async () => {
     if (!form.collegeId) return;
     setBusy(true); setMsg(null);
@@ -267,7 +225,6 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
       setMsg({ ok: true, text: `Added an application record for ${collegeName}. Marked "${form.verificationStatus}". Keep it current as you confirm details. Pulling real application-timeline dates for ${collegeName} now...` });
       setForm(BLANK_FORM);
       loadRequirements();
-      loadPlanner();
       triggerTimelineAutofillFor(form.collegeId, collegeName, created?.requirement_id); // adding the record -> also pull real timeline dates + detail fields for this college
     } catch (e) {
       setMsg({ ok: false, text: `Could not add: ${e.message}` });
@@ -277,13 +234,11 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
   const updateRequirement = async (reqId, patch) => {
     await api.updateRequirement(studentId, reqId, patch).catch(() => {});
     loadRequirements();
-    loadPlanner();
   };
 
   const deleteRequirement = async (reqId) => {
     await api.deleteRequirement(studentId, reqId).catch(() => {});
     loadRequirements();
-    loadPlanner();
   };
 
   // ---------------- Cross-link: Application Timeline -> Application Records ----------------
@@ -343,7 +298,7 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
   // saved. Pre-fills blank deadline fields in the form itself from
   // whatever the Application Timeline already has for the given college.
   // Takes an explicit collegeId (rather than always reading form.collegeId)
-  // so callers like jumpToAddForm can use it right after selecting a college,
+  // so callers can use it right after selecting a college,
   // without waiting on React's async state update to land first.
   const useTimelineDatesInForm = async (collegeIdArg) => {
     const collegeId = collegeIdArg || form.collegeId;
@@ -393,15 +348,18 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
   // reference-panel toggles (Application Pathways + Application Timeline
   // share this one page). Restoring timelineCollegeId re-triggers the
   // summary fetch effect below automatically.
-  const pathwaysSnapshot = { timelineCollegeId, showPlatformRef, showRegion };
+
+  const pathwaysSnapshot = { timelineCollegeId };
   const { restoredFrom: pathwaysRestoredFrom } = usePersistedSearch(studentId, "applicationPathways", pathwaysSnapshot, (r) => {
     if (!r) return;
     if (!focusCollegeId && r.timelineCollegeId !== undefined) setTimelineCollegeId(r.timelineCollegeId);
-    if (r.showPlatformRef !== undefined) setShowPlatformRef(r.showPlatformRef);
-    if (r.showRegion !== undefined) setShowRegion(r.showRegion);
   });
 
   useEffect(() => { api.timelineMeta(studentId).then(setTimelineMeta).catch(() => {}); }, [studentId]);
+
+  // The add-record form no longer has its own college picker: the page-level
+  // selection is the college, so keep the form pointed at it.
+  useEffect(() => { setForm((f) => (f.collegeId === timelineCollegeId ? f : { ...f, collegeId: timelineCollegeId })); }, [timelineCollegeId]);
 
   // "View timeline" from Decision Plan (or any other tab) pre-selects the
   // college and scrolls the Application Timeline section into view.
@@ -533,22 +491,37 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
     } finally { setCsvBusy(false); }
   };
 
-  const byCollege = new Map();
-  for (const r of requirements) {
-    const key = r.college_id || r.college_name || "unknown";
-    if (!byCollege.has(key)) byCollege.set(key, []);
-    byCollege.get(key).push(r);
+  // Everything on this page is scoped to the one college picked at the top,
+  // so the old all-colleges groupings (the Route Planner's platform buckets
+  // and the flat "your application records" list) collapse into a single
+  // per-program grouping for that college. Same records, one view instead of
+  // three overlapping ones.
+  const selectedCollegeName =
+    saved?.find((x) => x.college_id === timelineCollegeId)?.college_name
+    || collegeNames?.[timelineCollegeId]
+    || timelineCollegeId
+    || "this college";
+  const selectedList = timelineCollegeId
+    ? [(saved || []).find((x) => x.college_id === timelineCollegeId) || { college_id: timelineCollegeId, college_name: selectedCollegeName }]
+    : [];
+  const collegeRequirements = requirements.filter((r) => (r.college_id || r.college_name) === timelineCollegeId);
+  const collegeByProgram = new Map();
+  for (const r of collegeRequirements) {
+    const key = r.requirement_id || r.program_label || "main";
+    if (!collegeByProgram.has(key)) collegeByProgram.set(key, []);
+    collegeByProgram.get(key).push(r);
   }
 
   return (
     <div className="stack apply-page">
       <div className="row spread wrap">
         <div>
-          <div className="eyebrow">Application Pathways</div>
-          <h1>Application Pathways</h1>
+          <div className="eyebrow">Apply</div>
+          <h1>Apply</h1>
           <p className="lead">
-            Track which application platform each college on your list actually uses, every deadline type, and what
-            extra applications (honors, scholarship, program-specific) each one requires, so nothing gets missed.
+            One college at a time: where it stands, which platform it uses, what extra applications (honors,
+            scholarship, program-specific) it needs, and every deadline. Pick a college below and everything for it
+            is on this page.
           </p>
         </div>
         <div>
@@ -565,25 +538,12 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
         portal before treating a deadline or requirement as final.
       </div>
 
-      <div className="card pad" ref={timelineSectionRef}>
-        <div className="row spread wrap" style={{ alignItems: "center" }}>
-          <div>
-            <h3 style={{ margin: 0 }}>Application Timeline</h3>
-            <p className="note" style={{ marginTop: 4 }}>
-              Every deadline and milestone for one college. Application opens, Early Decision / Early Action / Regular
-              Decision deadlines, scholarship and honors deadlines, financial aid (CSS Profile / FAFSA) deadlines,
-              decision notification, and enrollment deposit. Pick a college, then verify deadlines or add one yourself.
-            </p>
-          </div>
-          {timelineCollegeId && (
-            <div>
-              <button className="btn ghost sm" onClick={timelineExportCsv} disabled={timelineCsvBusy}>
-                {timelineCsvBusy ? <><InlineSpinner />Saving CSV…</> : "Export timeline CSV"}
-              </button>
-              {timelineCsvErr && <div className="note" style={{ color: "var(--reach)", marginTop: 4 }}>{timelineCsvErr}</div>}
-            </div>
-          )}
-        </div>
+      <div className="card pad">
+        <h3 style={{ margin: 0 }}>Choose a college</h3>
+        <p className="note" style={{ marginTop: 4 }}>
+          Everything below is for the college you pick here: its status and checklist, its application platform and
+          any extra applications it requires, and its full deadline timeline.
+        </p>
 
         <div className="row wrap" style={{ gap: 8, alignItems: "center", marginTop: 8 }}>
           <button className="btn primary sm" disabled={populateAllBusy || !(saved || []).length} onClick={runPopulateAll}>
@@ -626,10 +586,229 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
           {(saved || []).map((s) => <option key={s.college_id} value={s.college_id}>{s.college_name || collegeNames?.[s.college_id] || s.college_id}</option>)}
         </select>
         <RestoredNote restoredFrom={pathwaysRestoredFrom} />
+      </div>
 
-        {!timelineCollegeId ? (
-          <div className="empty" style={{ marginTop: 10 }}>Choose a college above to see or build its application timeline.</div>
-        ) : (
+      {!timelineCollegeId ? (
+        <div className="empty">Choose a college above to see its status, platform, extra applications, and deadlines.</div>
+      ) : (
+        <>
+      <div className="card pad">
+        <h3>Status and checklist</h3>
+        <p className="note" style={{ marginTop: 4 }}>
+          Where {selectedCollegeName} stands right now, and the pieces you still owe it.
+        </p>
+        <Tracker studentId={studentId} list={selectedList} collegeNames={collegeNames || {}} onGo={onGo} compact />
+      </div>
+
+      <div className="card pad">
+        <h3>Platform and extra applications</h3>
+        <p className="note" style={{ marginTop: 4 }}>
+          Which application platform {selectedCollegeName} uses, and every separate application it requires.
+        </p>
+        {!collegeRequirements.length && <div className="empty" style={{ marginTop: 10 }}>Nothing recorded for this college yet. Add its application below.</div>}
+        <div className="stack" style={{ marginTop: 10 }}>
+          {[...collegeByProgram.entries()].map(([key, rows]) => (
+            <div key={key} className="stack" style={{ gap: 8 }}>
+              {rows.map((r) => {
+                const isOpen = expanded === r.requirement_id;
+                return (
+                  <div key={r.requirement_id} className="card">
+                    <div className="pad row spread wrap" style={{ gap: 8 }}>
+                      <div style={{ cursor: "pointer", flex: 1, minWidth: 200 }} onClick={() => setExpanded(isOpen ? null : r.requirement_id)}>
+                        <h3>{r.program_label || "Main application"}</h3>
+                        <div className="note">{r.platform_name || "Platform not set"}</div>
+                        {timelineDeadlineSummary[r.college_id]?.earliestUpcomingDeadline && (
+                          <div className="note" style={{ fontSize: 12 }}>
+                            Application Timeline: {timelineDeadlineSummary[r.college_id].applicationRound || ""}{" "}
+                            {timelineDeadlineSummary[r.college_id].earliestUpcomingDeadline.date} ({timelineDeadlineSummary[r.college_id].timelineStatus})
+                          </div>
+                        )}
+                      </div>
+                      <div className="row wrap" style={{ gap: 6, alignItems: "center" }}>
+                        <SourceBadge level={badgeLevelFor(r.verification_status)}>{r.verification_status}</SourceBadge>
+                        <button className="btn sm ghost" onClick={() => setExpanded(isOpen ? null : r.requirement_id)}>{isOpen ? "Hide" : "Details"}</button>
+                        <button
+                          className="btn sm ghost"
+                          style={{ color: "var(--reach)" }}
+                          onClick={() => { if (window.confirm(`Delete this application record for ${r.college_name || "this college"}?`)) deleteRequirement(r.requirement_id); }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                    {isOpen && (
+                      <div className="pad" style={{ borderTop: "1px solid var(--line-2)" }}>
+                        <div className="grid cols-2">
+                          <div>
+                            <label className="lbl">Platform</label>
+                            <select className="inp" value={r.platform_id || ""} onChange={(e) => {
+                              const platformId = e.target.value;
+                              // Auto-fill the application URL from the platform's official portal
+                              // when the college doesn't already have its own URL on file, never
+                              // overwrites a URL the family already entered.
+                              const patch = { platformId, platformName: platformName(platformId) };
+                              if (!r.application_url) patch.applicationUrl = platformUrl(platformId);
+                              updateRequirement(r.requirement_id, patch);
+                              if (platformId) triggerTimelineAutofillFor(r.college_id, r.college_name, r.requirement_id); // setting a platform -> also pull real timeline dates + detail fields for this college
+                            }}>
+                              <option value="">Unknown, needs verification</option>
+                              {platforms.map((p) => <option key={p.platform_id} value={p.platform_id}>{p.platform_name}</option>)}
+                            </select>
+                          </div>
+                          <div>
+                            <label className="lbl">Application URL</label>
+                            <input key={`url-${r.requirement_id}-${r.application_url || ""}`} className="inp" defaultValue={r.application_url || ""} onBlur={(e) => { if (e.target.value !== (r.application_url || "")) updateRequirement(r.requirement_id, { applicationUrl: e.target.value }); }} />
+                          </div>
+                          <div style={{ gridColumn: "1 / -1" }}>
+                            <button className="btn sm ghost" onClick={() => fillDeadlinesFromTimeline(r.requirement_id, r.college_id, r)}>Fill deadlines from Application Timeline</button>
+                            {fillFromTimelineMsg && (
+                              <div className="note" style={{ fontSize: 12, marginTop: 4, color: fillFromTimelineMsg.ok ? undefined : "var(--reach)" }}>{fillFromTimelineMsg.text}</div>
+                            )}
+                          </div>
+                          {DEADLINE_FIELDS.map(([camel, snake, label]) => (
+                            <div key={snake}>
+                              <label className="lbl">{label}</label>
+                              <input className="inp" defaultValue={r[snake] || ""} onBlur={(e) => { if (e.target.value !== (r[snake] || "")) updateRequirement(r.requirement_id, { [camel]: e.target.value }); }} />
+                            </div>
+                          ))}
+                          {YNU_FIELDS.map(([camel, snake, label]) => (
+                            <div key={snake}>
+                              <label className="lbl">{label}</label>
+                              <select className="inp" value={r[snake] || "Unknown"} onChange={(e) => updateRequirement(r.requirement_id, { [camel]: e.target.value })}>
+                                {ynu.map((o) => <option key={o} value={o}>{o}</option>)}
+                              </select>
+                            </div>
+                          ))}
+                          <div><label className="lbl">Test policy</label><input className="inp" defaultValue={r.test_policy || ""} onBlur={(e) => { if (e.target.value !== (r.test_policy || "")) updateRequirement(r.requirement_id, { testPolicy: e.target.value }); }} /></div>
+                          <div><label className="lbl">Application fee</label><input className="inp" defaultValue={r.application_fee || ""} onBlur={(e) => { if (e.target.value !== (r.application_fee || "")) updateRequirement(r.requirement_id, { applicationFee: e.target.value }); }} /></div>
+                          <div>
+                            <label className="lbl">Fee waiver available?</label>
+                            <select className="inp" value={r.fee_waiver_available || "Unknown"} onChange={(e) => updateRequirement(r.requirement_id, { feeWaiverAvailable: e.target.value })}>
+                              {ynu.map((o) => <option key={o} value={o}>{o}</option>)}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="note" style={{ marginTop: 8 }}>
+                          Source: {r.source_url ? <a href={r.source_url} target="_blank" rel="noreferrer">{r.source_url}</a> : "not set"} ·
+                          {" "}Last checked: {r.last_checked ? new Date(r.last_checked).toLocaleDateString() : "never"}
+                        </div>
+                        <label className="lbl" style={{ marginTop: 8 }}>Notes</label>
+                        <input className="inp" defaultValue={r.notes || ""} onBlur={(e) => { if (e.target.value !== (r.notes || "")) updateRequirement(r.requirement_id, { notes: e.target.value }); }} />
+                        <div className="row wrap" style={{ gap: 8, marginTop: 12 }}>
+                          <select className="inp" style={{ maxWidth: 260 }} value={r.verification_status} onChange={(e) => updateRequirement(r.requirement_id, { verificationStatus: e.target.value, markLastChecked: true })}>
+                            {verificationStatuses.map((o) => <option key={o} value={o}>{o}</option>)}
+                          </select>
+                          <button className="btn sm ghost" onClick={() => deleteRequirement(r.requirement_id)}>Delete</button>
+                          {onGo && <button className="btn sm ghost" onClick={() => onGo("essays")}>Go to Essay Center <Arrow /></button>}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {msg && (
+        <div className="disclaimer" style={!msg.ok ? { borderLeftColor: "var(--reach)", background: "#f7ece8" } : undefined}>{msg.text}</div>
+      )}
+
+      <div className="card pad" style={{ borderColor: "var(--amber)" }} ref={addFormRef}>
+        <h3>Add another application for {selectedCollegeName}</h3>
+        <p className="note" style={{ marginTop: 4 }}>
+          Add one record per application you actually submit to this college: the main application, plus any
+          separate honors, scholarship, or program-specific application it requires.
+        </p>
+        <div className="grid cols-2">
+          <div>
+            <label className="lbl">Program / honors label (optional. Leave blank for the main application)</label>
+            <input className="inp" placeholder="e.g. Honors College application" value={form.programLabel} onChange={(e) => setForm((f) => ({ ...f, programLabel: e.target.value }))} />
+          </div>
+          <div>
+            <label className="lbl">Application platform</label>
+            <select className="inp" value={form.platformId} onChange={(e) => {
+              const platformId = e.target.value;
+              setForm((f) => ({ ...f, platformId, applicationUrl: f.applicationUrl || platformUrl(platformId) }));
+            }}>
+              <option value="">Unknown, needs verification</option>
+              {platforms.map((p) => <option key={p.platform_id} value={p.platform_id}>{p.platform_name}</option>)}
+            </select>
+            {suggestion && form.platformId === suggestion.platformId && (
+              <div className="note" style={{ fontSize: 12, marginTop: 4 }}>Pre-filled suggestion: {suggestion.reason} Please verify and change if wrong.</div>
+            )}
+          </div>
+          <div>
+            <label className="lbl">Application URL</label>
+            <input className="inp" placeholder="https://..." value={form.applicationUrl} onChange={(e) => setForm((f) => ({ ...f, applicationUrl: e.target.value }))} />
+          </div>
+        </div>
+
+        <h3 style={{ marginTop: 12 }}>Deadlines on this application</h3>
+        <div className="grid cols-2">
+          {DEADLINE_FIELDS.map(([camel, , label]) => (
+            <div key={camel}>
+              <label className="lbl">{label}</label>
+              <input className="inp" placeholder="e.g. Nov 1 or Rolling" value={form[camel]} onChange={(e) => setForm((f) => ({ ...f, [camel]: e.target.value }))} />
+            </div>
+          ))}
+        </div>
+
+        <div className="row wrap" style={{ gap: 10, marginTop: 12, alignItems: "center" }}>
+          <button className="btn amber" disabled={busy || !form.collegeId} onClick={addRequirement}>Add this application</button>
+          <button className="link" onClick={() => setDetailsOpen((v) => !v)}>{detailsOpen ? "Hide extra details" : "+ Add more details (optional)"}</button>
+        </div>
+
+        {detailsOpen && (
+          <div className="stack" style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid var(--line-2)" }}>
+            <div className="grid cols-2">
+              {YNU_FIELDS.map(([camel, , label]) => (
+                <div key={camel}>
+                  <label className="lbl">{label}</label>
+                  <select className="inp" value={form[camel]} onChange={(e) => setForm((f) => ({ ...f, [camel]: e.target.value }))}>
+                    {ynu.map((o) => <option key={o} value={o}>{o}</option>)}
+                  </select>
+                </div>
+              ))}
+              <div><label className="lbl">Test policy</label><input className="inp" value={form.testPolicy} onChange={(e) => setForm((f) => ({ ...f, testPolicy: e.target.value }))} /></div>
+              <div><label className="lbl">Application fee</label><input className="inp" value={form.applicationFee} onChange={(e) => setForm((f) => ({ ...f, applicationFee: e.target.value }))} /></div>
+              <div>
+                <label className="lbl">Fee waiver available?</label>
+                <select className="inp" value={form.feeWaiverAvailable} onChange={(e) => setForm((f) => ({ ...f, feeWaiverAvailable: e.target.value }))}>
+                  {ynu.map((o) => <option key={o} value={o}>{o}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="lbl">Verification status</label>
+                <select className="inp" value={form.verificationStatus} onChange={(e) => setForm((f) => ({ ...f, verificationStatus: e.target.value }))}>
+                  {verificationStatuses.map((o) => <option key={o} value={o}>{o}</option>)}
+                </select>
+              </div>
+              <div><label className="lbl">Source URL</label><input className="inp" value={form.sourceUrl} onChange={(e) => setForm((f) => ({ ...f, sourceUrl: e.target.value }))} /></div>
+            </div>
+            <label className="lbl">Notes</label>
+            <input className="inp" value={form.notes} onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))} />
+          </div>
+        )}
+      </div>
+
+      <div className="card pad" ref={timelineSectionRef}>
+        <div className="row spread wrap" style={{ alignItems: "center" }}>
+          <div>
+            <h3 style={{ margin: 0 }}>Deadlines</h3>
+            <p className="note" style={{ marginTop: 4 }}>
+              Application opens, Early Decision / Early Action / Regular Decision deadlines, scholarship and honors
+              deadlines, financial aid (CSS Profile / FAFSA) deadlines, decision notification, and enrollment deposit.
+            </p>
+          </div>
+          <div>
+            <button className="btn ghost sm" onClick={timelineExportCsv} disabled={timelineCsvBusy}>
+              {timelineCsvBusy ? <><InlineSpinner />Saving CSV…</> : "Export timeline CSV"}
+            </button>
+            {timelineCsvErr && <div className="note" style={{ color: "var(--reach)", marginTop: 4 }}>{timelineCsvErr}</div>}
+          </div>
+        </div>
           <div className="stack" style={{ marginTop: 12 }}>
             <div className="row wrap" style={{ gap: 8, alignItems: "center" }}>
               <button className="btn primary" disabled={timelineAutofilling} onClick={runTimelineAutofill}>
@@ -769,333 +948,10 @@ export function ApplicationPathways({ studentId, saved, collegeNames, onGo, focu
 
             {timelineMsg && <div className="disclaimer" style={!timelineMsg.ok ? { borderLeftColor: "var(--reach)", background: "#f7ece8" } : undefined}>{timelineMsg.text}</div>}
           </div>
-        )}
       </div>
-
-      <div className="card pad">
-        <h3>Application Route Planner</h3>
-        <p className="note">Your saved colleges, grouped by the platform they actually use, so you can see real workload at a glance.</p>
-        {!routePlanner || !routePlanner.totalColleges ? (
-          <div className="empty" style={{ marginTop: 10 }}>Save some colleges first (Matches, Browse, or My List), then add their application platform below.</div>
-        ) : (
-          <div className="stack" style={{ marginTop: 10, gap: 10 }}>
-            {routePlanner.groups.map((g) => (
-              <div key={g.platformId} className="card pad">
-                <div className="row spread wrap" style={{ alignItems: "center" }}>
-                  <h3 style={{ margin: 0 }}>
-                    {g.platformId === "unknown" ? "No platform set yet" : g.platformName}
-                    {" "}<span className="note">({g.count} college{g.count === 1 ? "" : "s"})</span>
-                  </h3>
-                  {g.extraApplicationsNeeded > 0 && <span className="pill">{g.extraApplicationsNeeded} need extra honors/scholarship/program app(s)</span>}
-                </div>
-                {g.platformId === "unknown" && (
-                  <p className="note" style={{ marginTop: 4 }}>
-                    You haven't recorded an application platform for these colleges yet. Where we recognize a well-known
-                    public university system (like UC, Cal State, SUNY, CUNY, or ApplyTexas campuses), a suggestion is
-                    shown below. One click adds it as a starting point, still marked "Needs manual verification" until
-                    you confirm it. For everything else, click <strong>Set platform</strong> to jump to the form below,
-                    already filled in with this college and any dates the Application Timeline already knows.
-                  </p>
-                )}
-                <div className="note" style={{ marginTop: 6 }}>
-                  Earliest deadline in this group: {g.earliestDeadline || "not set yet"}
-                </div>
-                <div className="stack" style={{ gap: 6, marginTop: 8 }}>
-                  {g.colleges.map((c) => {
-                    const tl = timelineDeadlineSummary[c.collegeId];
-                    return (
-                      <div key={c.collegeId} className="row wrap" style={{ gap: 8, alignItems: "center" }}>
-                        <span className={`cat ${c.verified ? "Safety" : "Unknown"}`} title={c.earliestDeadline ? `Earliest: ${c.earliestDeadline}` : "No deadline set"}>
-                          {c.collegeName}
-                        </span>
-                        {!c.earliestDeadline && tl?.earliestUpcomingDeadline && (
-                          <span className="note" style={{ fontSize: 12 }}>
-                            Application Timeline: {tl.applicationRound || ""} {tl.earliestUpcomingDeadline.date} ({tl.timelineStatus})
-                          </span>
-                        )}
-                        {g.platformId === "unknown" && c.suggestedPlatformId && (
-                          <>
-                            <span className="note" style={{ fontSize: 12 }}>Suggested: {c.suggestedPlatformName} ({c.suggestedReason})</span>
-                            <button className="btn sm ghost" disabled={busy} title={`Set ${c.collegeName}'s platform to ${c.suggestedPlatformName} and pull in known application dates`} onClick={() => applySuggestionQuick(c.collegeId, c.collegeName, c.suggestedPlatformId)}>Use suggested platform: {c.suggestedPlatformName}</button>
-                          </>
-                        )}
-                        {g.platformId === "unknown" && (
-                          <button className="btn sm ghost" onClick={() => jumpToAddForm(c.collegeId, c.collegeName)}>Set platform <Arrow /></button>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="note" style={{ marginTop: 8 }}>{g.actionNeeded}</div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className="card pad" style={{ borderColor: "var(--amber)" }} ref={addFormRef}>
-        <h3>Add an application record for a college</h3>
-        <div className="grid cols-2">
-          <div>
-            <label className="lbl">College *</label>
-            <select className="inp" value={form.collegeId} onChange={(e) => setForm((f) => ({ ...f, collegeId: e.target.value }))}>
-              <option value="">Choose a saved college...</option>
-              {(saved || []).map((s) => <option key={s.college_id} value={s.college_id}>{s.college_name || collegeNames?.[s.college_id] || s.college_id}</option>)}
-            </select>
-            {form.collegeId && timelineDeadlineSummary[form.collegeId]?.earliestUpcomingDeadline && (
-              <div className="note" style={{ fontSize: 12, marginTop: 4 }}>
-                Application Timeline has {timelineDeadlineSummary[form.collegeId].applicationRound || ""}{" "}
-                {timelineDeadlineSummary[form.collegeId].earliestUpcomingDeadline.date} on file.{" "}
-                <button className="link" onClick={useTimelineDatesInForm}>Use dates from Application Timeline</button>
-              </div>
-            )}
-          </div>
-          <div>
-            <label className="lbl">Program / honors label (optional. Leave blank for the main application)</label>
-            <input className="inp" placeholder="e.g. Honors College application" value={form.programLabel} onChange={(e) => setForm((f) => ({ ...f, programLabel: e.target.value }))} />
-          </div>
-          <div>
-            <label className="lbl">Application platform</label>
-            <select className="inp" value={form.platformId} onChange={(e) => {
-              const platformId = e.target.value;
-              setForm((f) => ({ ...f, platformId, applicationUrl: f.applicationUrl || platformUrl(platformId) }));
-            }}>
-              <option value="">Unknown, needs verification</option>
-              {platforms.map((p) => <option key={p.platform_id} value={p.platform_id}>{p.platform_name}</option>)}
-            </select>
-            {suggestion && form.platformId === suggestion.platformId && (
-              <div className="note" style={{ fontSize: 12, marginTop: 4 }}>Pre-filled suggestion: {suggestion.reason} Please verify and change if wrong.</div>
-            )}
-          </div>
-          <div>
-            <label className="lbl">Application URL</label>
-            <input className="inp" placeholder="https://..." value={form.applicationUrl} onChange={(e) => setForm((f) => ({ ...f, applicationUrl: e.target.value }))} />
-          </div>
-        </div>
-
-        <h3 style={{ marginTop: 12 }}>Deadlines</h3>
-        <div className="grid cols-2">
-          {DEADLINE_FIELDS.map(([camel, , label]) => (
-            <div key={camel}>
-              <label className="lbl">{label}</label>
-              <input className="inp" placeholder="e.g. Nov 1 or Rolling" value={form[camel]} onChange={(e) => setForm((f) => ({ ...f, [camel]: e.target.value }))} />
-            </div>
-          ))}
-        </div>
-
-        <div className="row wrap" style={{ gap: 10, marginTop: 12, alignItems: "center" }}>
-          <button className="btn amber" disabled={busy || !form.collegeId} onClick={addRequirement}>Add this application record</button>
-          <button className="link" onClick={() => setDetailsOpen((v) => !v)}>{detailsOpen ? "Hide extra details" : "+ Add more details (optional)"}</button>
-        </div>
-
-        {detailsOpen && (
-          <div className="stack" style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid var(--line-2)" }}>
-            <div className="grid cols-2">
-              {YNU_FIELDS.map(([camel, , label]) => (
-                <div key={camel}>
-                  <label className="lbl">{label}</label>
-                  <select className="inp" value={form[camel]} onChange={(e) => setForm((f) => ({ ...f, [camel]: e.target.value }))}>
-                    {ynu.map((o) => <option key={o} value={o}>{o}</option>)}
-                  </select>
-                </div>
-              ))}
-              <div><label className="lbl">Test policy</label><input className="inp" value={form.testPolicy} onChange={(e) => setForm((f) => ({ ...f, testPolicy: e.target.value }))} /></div>
-              <div><label className="lbl">Application fee</label><input className="inp" value={form.applicationFee} onChange={(e) => setForm((f) => ({ ...f, applicationFee: e.target.value }))} /></div>
-              <div>
-                <label className="lbl">Fee waiver available?</label>
-                <select className="inp" value={form.feeWaiverAvailable} onChange={(e) => setForm((f) => ({ ...f, feeWaiverAvailable: e.target.value }))}>
-                  {ynu.map((o) => <option key={o} value={o}>{o}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="lbl">Verification status</label>
-                <select className="inp" value={form.verificationStatus} onChange={(e) => setForm((f) => ({ ...f, verificationStatus: e.target.value }))}>
-                  {verificationStatuses.map((o) => <option key={o} value={o}>{o}</option>)}
-                </select>
-              </div>
-              <div><label className="lbl">Source URL</label><input className="inp" value={form.sourceUrl} onChange={(e) => setForm((f) => ({ ...f, sourceUrl: e.target.value }))} /></div>
-            </div>
-            <label className="lbl">Notes</label>
-            <input className="inp" value={form.notes} onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))} />
-          </div>
-        )}
-      </div>
-
-      {msg && (
-        <div className="disclaimer" style={!msg.ok ? { borderLeftColor: "var(--reach)", background: "#f7ece8" } : undefined}>{msg.text}</div>
+        </>
       )}
 
-      <div className="card pad">
-        <h3>Your application records</h3>
-        {!requirements.length && <div className="empty" style={{ marginTop: 10 }}>No application records yet. Add one above.</div>}
-        <div className="stack" style={{ marginTop: 10 }}>
-          {[...byCollege.entries()].map(([key, rows]) => (
-            <div key={key} className="stack" style={{ gap: 8 }}>
-              <div className="note" style={{ fontWeight: 600 }}>{rows[0].college_name || key}</div>
-              {rows.map((r) => {
-                const isOpen = expanded === r.requirement_id;
-                return (
-                  <div key={r.requirement_id} className="card">
-                    <div className="pad row spread wrap" style={{ gap: 8 }}>
-                      <div style={{ cursor: "pointer", flex: 1, minWidth: 200 }} onClick={() => setExpanded(isOpen ? null : r.requirement_id)}>
-                        <h3>{r.program_label || "Main application"}</h3>
-                        <div className="note">{r.platform_name || "Platform not set"} · Earliest set deadline shown in details</div>
-                        {timelineDeadlineSummary[r.college_id]?.earliestUpcomingDeadline && (
-                          <div className="note" style={{ fontSize: 12 }}>
-                            Application Timeline: {timelineDeadlineSummary[r.college_id].applicationRound || ""}{" "}
-                            {timelineDeadlineSummary[r.college_id].earliestUpcomingDeadline.date} ({timelineDeadlineSummary[r.college_id].timelineStatus})
-                          </div>
-                        )}
-                      </div>
-                      <div className="row wrap" style={{ gap: 6, alignItems: "center" }}>
-                        <SourceBadge level={badgeLevelFor(r.verification_status)}>{r.verification_status}</SourceBadge>
-                        <button className="btn sm ghost" onClick={() => setExpanded(isOpen ? null : r.requirement_id)}>{isOpen ? "Hide" : "Details"}</button>
-                        <button
-                          className="btn sm ghost"
-                          style={{ color: "var(--reach)" }}
-                          onClick={() => { if (window.confirm(`Delete this application record for ${r.college_name || "this college"}?`)) deleteRequirement(r.requirement_id); }}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                    {isOpen && (
-                      <div className="pad" style={{ borderTop: "1px solid var(--line-2)" }}>
-                        <div className="grid cols-2">
-                          <div>
-                            <label className="lbl">Platform</label>
-                            <select className="inp" value={r.platform_id || ""} onChange={(e) => {
-                              const platformId = e.target.value;
-                              // Auto-fill the application URL from the platform's official portal
-                              // when the college doesn't already have its own URL on file, never
-                              // overwrites a URL the family already entered.
-                              const patch = { platformId, platformName: platformName(platformId) };
-                              if (!r.application_url) patch.applicationUrl = platformUrl(platformId);
-                              updateRequirement(r.requirement_id, patch);
-                              if (platformId) triggerTimelineAutofillFor(r.college_id, r.college_name, r.requirement_id); // setting a platform -> also pull real timeline dates + detail fields for this college
-                            }}>
-                              <option value="">Unknown, needs verification</option>
-                              {platforms.map((p) => <option key={p.platform_id} value={p.platform_id}>{p.platform_name}</option>)}
-                            </select>
-                          </div>
-                          <div>
-                            <label className="lbl">Application URL</label>
-                            <input key={`url-${r.requirement_id}-${r.application_url || ""}`} className="inp" defaultValue={r.application_url || ""} onBlur={(e) => { if (e.target.value !== (r.application_url || "")) updateRequirement(r.requirement_id, { applicationUrl: e.target.value }); }} />
-                          </div>
-                          <div style={{ gridColumn: "1 / -1" }}>
-                            <button className="btn sm ghost" onClick={() => fillDeadlinesFromTimeline(r.requirement_id, r.college_id, r)}>Fill deadlines from Application Timeline</button>
-                            {fillFromTimelineMsg && (
-                              <div className="note" style={{ fontSize: 12, marginTop: 4, color: fillFromTimelineMsg.ok ? undefined : "var(--reach)" }}>{fillFromTimelineMsg.text}</div>
-                            )}
-                          </div>
-                          {DEADLINE_FIELDS.map(([camel, snake, label]) => (
-                            <div key={snake}>
-                              <label className="lbl">{label}</label>
-                              <input className="inp" defaultValue={r[snake] || ""} onBlur={(e) => { if (e.target.value !== (r[snake] || "")) updateRequirement(r.requirement_id, { [camel]: e.target.value }); }} />
-                            </div>
-                          ))}
-                          {YNU_FIELDS.map(([camel, snake, label]) => (
-                            <div key={snake}>
-                              <label className="lbl">{label}</label>
-                              <select className="inp" value={r[snake] || "Unknown"} onChange={(e) => updateRequirement(r.requirement_id, { [camel]: e.target.value })}>
-                                {ynu.map((o) => <option key={o} value={o}>{o}</option>)}
-                              </select>
-                            </div>
-                          ))}
-                          <div><label className="lbl">Test policy</label><input className="inp" defaultValue={r.test_policy || ""} onBlur={(e) => { if (e.target.value !== (r.test_policy || "")) updateRequirement(r.requirement_id, { testPolicy: e.target.value }); }} /></div>
-                          <div><label className="lbl">Application fee</label><input className="inp" defaultValue={r.application_fee || ""} onBlur={(e) => { if (e.target.value !== (r.application_fee || "")) updateRequirement(r.requirement_id, { applicationFee: e.target.value }); }} /></div>
-                          <div>
-                            <label className="lbl">Fee waiver available?</label>
-                            <select className="inp" value={r.fee_waiver_available || "Unknown"} onChange={(e) => updateRequirement(r.requirement_id, { feeWaiverAvailable: e.target.value })}>
-                              {ynu.map((o) => <option key={o} value={o}>{o}</option>)}
-                            </select>
-                          </div>
-                        </div>
-                        <div className="note" style={{ marginTop: 8 }}>
-                          Source: {r.source_url ? <a href={r.source_url} target="_blank" rel="noreferrer">{r.source_url}</a> : "not set"} ·
-                          {" "}Last checked: {r.last_checked ? new Date(r.last_checked).toLocaleDateString() : "never"}
-                        </div>
-                        <label className="lbl" style={{ marginTop: 8 }}>Notes</label>
-                        <input className="inp" defaultValue={r.notes || ""} onBlur={(e) => { if (e.target.value !== (r.notes || "")) updateRequirement(r.requirement_id, { notes: e.target.value }); }} />
-                        <div className="row wrap" style={{ gap: 8, marginTop: 12 }}>
-                          <select className="inp" style={{ maxWidth: 260 }} value={r.verification_status} onChange={(e) => updateRequirement(r.requirement_id, { verificationStatus: e.target.value, markLastChecked: true })}>
-                            {verificationStatuses.map((o) => <option key={o} value={o}>{o}</option>)}
-                          </select>
-                          <button className="btn sm ghost" onClick={() => deleteRequirement(r.requirement_id)}>Delete</button>
-                          {onGo && <button className="btn sm ghost" onClick={() => onGo("essays")}>Go to Essay Center <Arrow /></button>}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="card pad">
-        <div className="row spread" style={{ alignItems: "center" }}>
-          <h3 style={{ margin: 0 }}>Region view</h3>
-          <button className="link" onClick={() => setShowRegion((v) => !v)}>{showRegion ? "Hide" : "Show"}</button>
-        </div>
-        {showRegion && (
-          <>
-            <p className="note">
-              {regionSummary?.disclaimer || "General guidance on how application platforms are typically organized by region, not a fact about any specific college. Always verify per college."}
-            </p>
-            {!regionSummary?.regions?.length ? (
-              <div className="empty" style={{ marginTop: 10 }}>No saved colleges with a state on file yet.</div>
-            ) : (
-              <div className="grid cols-2" style={{ marginTop: 10 }}>
-                {regionSummary.regions.map((rg) => (
-                  <div key={rg.regionKey} className="card pad">
-                    <h3>{rg.guidance?.label || rg.regionKey} <span className="note">({rg.count})</span></h3>
-                    <div className="stack" style={{ gap: 4, marginTop: 6 }}>
-                      {rg.colleges.map((c) => (
-                        <div key={c.collegeId} className="note">
-                          <strong>{c.collegeName}</strong>{c.suggestedPlatformName ? `. Likely: ${c.suggestedPlatformName}` : ""}
-                          {c.suggestedReason ? <span style={{ color: "var(--muted)" }}> ({c.suggestedReason})</span> : null}
-                        </div>
-                      ))}
-                    </div>
-                    {rg.guidance && rg.colleges.some((c) => !c.suggestedPlatformId) && (
-                      <details style={{ marginTop: 8 }}>
-                        <summary className="note" style={{ cursor: "pointer" }}>Other routes typical for this region (for colleges without a specific suggestion above)</summary>
-                        <div className="row wrap" style={{ gap: 6, marginTop: 6 }}>
-                          {rg.guidance.likelyRoutes.map((route) => <span key={route} className="pill">{route}</span>)}
-                        </div>
-                        <p className="note" style={{ marginTop: 6 }}>{rg.guidance.note}</p>
-                      </details>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </>
-        )}
-      </div>
-
-      <div className="card pad">
-        <div className="row spread" style={{ alignItems: "center" }}>
-          <h3 style={{ margin: 0 }}>Platform reference</h3>
-          <button className="link" onClick={() => setShowPlatformRef((v) => !v)}>{showPlatformRef ? "Hide" : "Show"}</button>
-        </div>
-        <p className="note">General guidance only. Coverage and rules change; always confirm on the platform's own site or the specific college's admissions page.</p>
-        {showPlatformRef && (
-          <div className="grid cols-2" style={{ marginTop: 10 }}>
-            {platforms.map((p) => (
-              <div key={p.platform_id} className="card pad">
-                <h3>{p.platform_name}</h3>
-                <div className="note">{p.approximate_coverage}</div>
-                <div className="note">{p.region_system}</div>
-                {p.official_url && <div className="note"><a href={p.official_url} target="_blank" rel="noreferrer">{p.official_url}</a></div>}
-                {p.notes && <div className="note" style={{ fontStyle: "italic", marginTop: 4 }}>{p.notes}</div>}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
     </div>
   );
 }

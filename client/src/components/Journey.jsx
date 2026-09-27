@@ -268,9 +268,10 @@ export function Journey({ studentId, profile, saved, onGo }) {
 
   return (
     <div className="stack">
+      {/* No <h1> here: Journey renders inside the Dashboard, which owns the
+          page title. */}
       <div>
-        <div className="eyebrow">Family roadmap</div>
-        <h1>Journey</h1>
+        <h2>Your roadmap</h2>
         <p className="lead">Where things stand right now, computed from your own profile, matches, program research,
           application platforms, essays, and Decision Plan entries, and a default senior-year timeline to help you
           stay ahead of deadlines.</p>

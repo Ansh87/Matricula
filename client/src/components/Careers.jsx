@@ -16,9 +16,10 @@ export function Careers({ profileInterests }) {
 
   return (
     <div className="stack">
+      {/* No <h1> here: this page renders inside CareerCenter.jsx, which
+          owns the page title. */}
       <div>
-        <div className="eyebrow">Careers & outcomes</div>
-        <h1>Where a major can lead</h1>
+        <h2>Where a major can lead</h2>
         <p className="lead">Pay and growth figures come straight from the U.S. Bureau of Labor Statistics
           Occupational Outlook Handbook. Salaries are national medians and estimates, not guarantees.</p>
       </div>

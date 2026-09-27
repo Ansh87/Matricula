@@ -9,7 +9,8 @@
 // comes back empty is shown as "Needs review," never guessed at.
 import React, { useMemo, useState, useEffect } from "react";
 import { api } from "../lib/api.js";
-import { CategoryTag } from "./ui.jsx";
+import { Journey } from "./Journey.jsx";
+import { Strategy } from "./Strategy.jsx";
 import { Arrow, Check, CircleFilled, CircleOpen, Diamond, Triangle } from "./icons.jsx";
 
 function completeness(p) {
@@ -34,17 +35,6 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
     saved.forEach((s) => { if (c[s.category] != null) c[s.category]++; });
     return c;
   }, [saved]);
-
-  // Balance guidance based on the saved list.
-  const balanceNote = useMemo(() => {
-    const total = saved.length;
-    if (!total) return "You haven't saved any colleges yet. Generate matches and add a balanced set.";
-    const tips = [];
-    if (byCat.Safety < 2) tips.push("add 1-2 more safety schools you'd be happy to attend");
-    if (byCat.Target < 3) tips.push("aim for 3-5 targets - they're the core of a strong list");
-    if (byCat.Reach > 6) tips.push("you have a lot of reaches; make sure targets and safeties are solid");
-    return tips.length ? "Suggestion: " + tips.join("; ") + "." : "Nice - your list looks reasonably balanced across reach, target, and safety.";
-  }, [saved, byCat]);
 
   // Cross-page summary data (Verification Center, Decision Plan summary --
   // which already includes Final List Health, tasks due/overdue, and essay
@@ -108,6 +98,8 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
   // and "Start your profile"; once there's a profile, the same banner turns
   // into their own plan header and points at Journey.
   const started = comp.pct > 0 || saved.length > 0;
+  const roadmapRef = React.useRef(null);
+  const scrollToRoadmap = () => roadmapRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   return (
     <div className="stack">
@@ -120,7 +112,7 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
             : "Find colleges that fit your profile, explore majors and career outcomes, and manage your application plan, using trusted U.S. education and labor data."}</p>
           <div className="row wrap" style={{ marginTop: 14, gap: 14 }}>
             {started
-              ? <button className="btn amber" onClick={() => onGo("journey")}>Continue your Journey <Arrow /></button>
+              ? <button className="btn amber" onClick={scrollToRoadmap}>Continue your roadmap <Arrow /></button>
               : <button className="btn amber" onClick={() => onGo("profile")}>Start your profile <Arrow /></button>}
             <button className="btn ghost" onClick={() => onGo("about")} style={{ color: "#dbe6ef", borderColor: "#3a5670" }}>How it works</button>
           </div>
@@ -135,21 +127,6 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
         <div className="kpi"><div className="n" style={{ color: "var(--safety)" }}>{byCat.Safety}</div><div className="l"><CircleFilled /> Safety</div></div>
       </div>
 
-      <div className="card pad stack" style={{ background: "var(--paper-2)" }}>
-        <div className="row spread" style={{ alignItems: "center" }}>
-          <div>
-            <h3 style={{ marginBottom: 2 }}>Your full step-by-step roadmap lives in Journey</h3>
-            <p className="note">
-              {["Profile", "Majors/Tracks", "Matches", "Program research", "Admission risk",
-                "Course plan", "Strategy", "Final list", "Deadlines", "Export"].map((stage, i) => (
-                <React.Fragment key={stage}>{i > 0 && <> <Arrow /> </>}{stage}</React.Fragment>
-              ))}. Journey tracks real status for each stage from your own data.
-            </p>
-          </div>
-          <button className="btn ghost" onClick={() => onGo("journey")}>Open Journey <Arrow /></button>
-        </div>
-      </div>
-
       <div className="card pad stack">
         <h3>Profile completeness</h3>
         {comp.checks.map(([label, ok]) => (
@@ -161,74 +138,22 @@ export function Dashboard({ profile, saved, recs, studentId, onGo }) {
         {comp.pct < 100 && <button className="btn amber sm" style={{ marginTop: 8, alignSelf: "flex-start" }} onClick={() => onGo("profile")}>Finish profile <Arrow /></button>}
       </div>
 
-      <div className="card pad stack">
-        <div className="row spread">
-          <h3>List balance</h3>
-          <button className="btn ghost sm" onClick={() => onGo("saved")}>View my list <Arrow /></button>
-        </div>
-        <p className="note">{balanceNote}</p>
-        {saved.length > 0 && (
-          <div className="row wrap" style={{ gap: 6 }}>
-            {saved.slice(0, 8).map((s) => (
-              <span key={s.college_id} className="pill" style={{ cursor: "default" }}>
-                {s.college_name || s.college_id}{s.category ? ` · ${s.category}` : ""}
-              </span>
-            ))}
-            {saved.length > 8 && <span className="note">+{saved.length - 8} more</span>}
-          </div>
-        )}
+      {/* Journey and Strategy, the two pages that used to live under Plan,
+          render here. This is the home page for a reason: the roadmap and the
+          list-balance read-out are what a family wants on opening the app,
+          not one more click away.
+
+          The cards that used to sit here (a pointer to Journey, a list-balance
+          summary, and four tiles for verification items / upcoming deadlines /
+          essay workload / final list health) are all gone: Journey carries its
+          own deadline and verification block, Strategy carries the real
+          list-balance analysis, and "Next recommended actions" below already
+          raises every one of those four as an action when it matters. */}
+      <div ref={roadmapRef}>
+        <Journey studentId={studentId} profile={profile} saved={saved} onGo={onGo} />
       </div>
 
-      <div className="grid cols-2">
-        <div className="card pad stack">
-          <div className="row spread"><h3>Open verification items</h3><button className="btn ghost sm" onClick={() => onGo("decisionPlan")}>Verification Center <Arrow /></button></div>
-          {verification === undefined && <p className="note">Loading…</p>}
-          {verification === null && <p className="note">Needs review - couldn't load right now.</p>}
-          {verification && (
-            <p className="note">{verification.totalItems > 0
-              ? `${verification.totalItems} open item(s) across ${verification.totalColleges} college(s).`
-              : "Nothing outstanding right now."}</p>
-          )}
-        </div>
-
-        <div className="card pad stack">
-          <div className="row spread"><h3>Upcoming deadlines</h3><button className="btn ghost sm" onClick={() => onGo("decisionPlan")}>Timeline & Tasks <Arrow /></button></div>
-          {planSummary === undefined && <p className="note">Loading…</p>}
-          {planSummary === null && <p className="note">Needs review - couldn't load right now.</p>}
-          {planSummary && (
-            <p className="note">
-              {planSummary.tasks?.overdue > 0 && <strong style={{ color: "var(--reach)" }}>{planSummary.tasks.overdue} overdue. </strong>}
-              {planSummary.tasks?.dueSoon > 0 ? `${planSummary.tasks.dueSoon} due in the next 14 days.` : (!planSummary.tasks?.overdue ? "Nothing due in the next 14 days." : "")}
-              {planSummary.earliestUpcomingDeadline ? ` Earliest on file: ${planSummary.earliestUpcomingDeadline}.` : ""}
-            </p>
-          )}
-        </div>
-
-        <div className="card pad stack">
-          <div className="row spread"><h3>Essay workload</h3><button className="btn ghost sm" onClick={() => onGo("essays")}>Essays <Arrow /></button></div>
-          {planSummary === undefined && <p className="note">Loading…</p>}
-          {planSummary === null && <p className="note">Needs review - couldn't load right now.</p>}
-          {planSummary && (
-            <p className="note">{planSummary.totalEssaysTracked ?? 0} essay(s) tracked.
-              {planSummary.essayCoverageMissing > 0 ? ` ${planSummary.essayCoverageMissing} college(s) have none tracked yet.` : ""}</p>
-          )}
-        </div>
-
-        <div className="card pad stack">
-          <div className="row spread"><h3>Final list health</h3><button className="btn ghost sm" onClick={() => onGo("decisionPlan")}>Final List Health Check <Arrow /></button></div>
-          {planSummary === undefined && <p className="note">Loading…</p>}
-          {planSummary === null && <p className="note">Needs review - couldn't load right now.</p>}
-          {planSummary && (!planSummary.finalListHealth || planSummary.finalListHealth.overallStatus === "Not started") && (
-            <p className="note">Add colleges to your Decision Plan to see a health check.</p>
-          )}
-          {planSummary?.finalListHealth && planSummary.finalListHealth.overallStatus !== "Not started" && (
-            <p className="note">
-              <strong>{planSummary.finalListHealth.overallStatus}.</strong>{" "}
-              {planSummary.finalListHealth.messages?.[0]}
-            </p>
-          )}
-        </div>
-      </div>
+      <Strategy studentId={studentId} profile={profile} onGo={onGo} />
 
       <div className="card pad stack">
         <h3>Next recommended actions</h3>

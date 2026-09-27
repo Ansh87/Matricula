@@ -80,9 +80,10 @@ export function Strategy({ studentId, profile, onGo }) {
 
   return (
     <div className="stack">
+      {/* No <h1> here: Strategy renders inside the Dashboard, which owns the
+          page title. */}
       <div>
-        <div className="eyebrow">Strategy</div>
-        <h1>Your application strategy</h1>
+        <h2>Your application strategy</h2>
         <p className="lead">How balanced your list is, what to adjust, and your best early-application play.</p>
         <div className="row wrap" style={{ gap: 10, marginTop: 8, alignItems: "center" }}>
           <button className="btn ghost sm" onClick={() => downloadReport(s, profile)}>Download strategy report</button>

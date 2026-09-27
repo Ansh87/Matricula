@@ -85,13 +85,30 @@ body {
   margin: 0 0 18px; padding-bottom: 10px; border-bottom: 1px solid var(--line-2, #e5e5e5);
   gap: 6px; flex-wrap: wrap;
 }
-.subnav button {
+/* NOTE the `.nav.subnav` qualifier on every rule here. The subtab row also
+   carries the `nav` class, and the dark-header `.nav button` rules further
+   down have equal specificity but come LATER in the file, so they used to
+   win: subtabs rendered in the header's pale #a9bccc, and hovering turned
+   them white on a beige background (effectively invisible). Qualifying with
+   both classes puts these ahead of `.nav button` regardless of order. */
+.nav.subnav button {
   background: var(--paper-2, #f4f2ee); color: var(--ink-900); font-family: var(--sans);
   font-size: 13px; font-weight: 500; padding: 7px 12px; border-radius: 7px; border: 1px solid transparent;
   cursor: pointer; transition: background .15s, color .15s;
 }
-.subnav button:hover { background: var(--target-b, #eef4fb); }
-.subnav button.active { background: #e9d3a3; color: var(--ink-900); font-weight: 600; }
+.nav.subnav button:hover { background: #e3d9c4; color: #000; }
+.nav.subnav button.active { background: #e9d3a3; color: #000; font-weight: 600; }
+
+/* ---------- settings gear (header, replaces the old Settings nav entry) ---------- */
+.gear-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; padding: 0; border-radius: 8px; cursor: pointer;
+  background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.28);
+  color: #eef2f5; transition: background .15s, border-color .15s, color .15s;
+}
+.gear-btn:hover { background: rgba(255,255,255,.22); border-color: rgba(255,255,255,.55); color: #fff; }
+.gear-btn.on { background: #e9d3a3; border-color: #e9d3a3; color: #101a26; }
+.gear-btn:focus-visible { outline: 2px solid #8fb4d4; outline-offset: 2px; }
 
 /* ---------- topbar user menu (dark header needs light-on-dark) ---------- */
 /* The global .btn.ghost uses a dark ink color meant for light backgrounds, which

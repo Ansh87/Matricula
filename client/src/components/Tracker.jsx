@@ -26,9 +26,14 @@ const FIELDS = [
   ["final_net_cost", "Final net cost", "number"],
 ];
 
-export function Tracker({ studentId, list, collegeNames, onGo }) {
+// `compact` is used by the Apply page, which already owns the page title and
+// has already narrowed `list` to the one college the family picked. In that
+// mode the tracker drops its own header, disclaimer, export button and
+// cross-tab pointer (the Apply page shows those once, at page level) and
+// opens the single college straight away instead of making you click it.
+export function Tracker({ studentId, list, collegeNames, onGo, compact = false }) {
   const [rows, setRows] = useState({});
-  const [open, setOpen] = useState(null);
+  const [open, setOpen] = useState(compact ? (list[0]?.college_id ?? null) : null);
   // Read-only cross-reference to the Decision Plan's Final List, so a family
   // doesn't have to keep two separate application-round/decision statuses in
   // sync by hand. Both views are visible from either tab.
@@ -71,6 +76,9 @@ export function Tracker({ studentId, list, collegeNames, onGo }) {
     }).catch(() => {});
   }, [studentId]);
 
+  const compactCollegeId = compact ? (list[0]?.college_id ?? null) : null;
+  useEffect(() => { if (compact) setOpen(compactCollegeId); }, [compact, compactCollegeId]);
+
   const update = (cid, field, value) => {
     setRows((s) => {
       const next = { ...(s[cid] || {}), [field]: value, college_name: collegeNames[cid] || (s[cid] && s[cid].college_name) || cid };
@@ -97,27 +105,31 @@ export function Tracker({ studentId, list, collegeNames, onGo }) {
   };
 
   if (!list.length) {
-    return <div className="empty">Save colleges to your list first - then track applications here.</div>;
+    return <div className="empty">Save colleges to your list first, then track applications here.</div>;
   }
 
   return (
     <div className="stack">
-      <div className="row spread wrap">
-        <div>
-          <div className="eyebrow">Process tracker</div>
-          <h1>Applications</h1>
-          <p className="lead">Enter your real deadlines from each college’s official site. Everything saves automatically.</p>
+      {!compact && (
+        <>
+        <div className="row spread wrap">
+          <div>
+            <div className="eyebrow">Process tracker</div>
+            <h1>Applications</h1>
+            <p className="lead">Enter your real deadlines from each college’s official site. Everything saves automatically.</p>
+          </div>
+          <button className="btn ghost" onClick={exportCsv}>Export CSV</button>
         </div>
-        <button className="btn ghost" onClick={exportCsv}>Export CSV</button>
-      </div>
 
-      <div className="disclaimer">Deadlines are blank until you enter them. Always confirm exact dates and required forms on each college’s official admissions and financial-aid pages.</div>
+        <div className="disclaimer">Deadlines are blank until you enter them. Always confirm exact dates and required forms on each college’s official admissions and financial-aid pages.</div>
 
-      <div className="note" style={{ padding: "0 2px" }}>
-        This tab is your day-to-day application checklist (essays, recommendations, deadlines, submitted status). For
-        each college's Reach/Target/Safety category, program verification, and major-specific risk, see{" "}
-        <button className="link" onClick={() => onGo && onGo("decisionPlan")}>Decision Plan</button>.
-      </div>
+        <div className="note" style={{ padding: "0 2px" }}>
+          This tab is your day-to-day application checklist (essays, recommendations, deadlines, submitted status). For
+          each college's Reach/Target/Safety category, program verification, and major-specific risk, see{" "}
+          <button className="link" onClick={() => onGo && onGo("decisionPlan")}>Decision Plan</button>.
+        </div>
+        </>
+      )}
 
       <div className="stack">
         {list.map((item) => {

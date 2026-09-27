@@ -11,11 +11,9 @@ import { Documents } from "./components/Documents.jsx";
 import { Courses } from "./components/Courses.jsx";
 import { Dashboard } from "./components/Dashboard.jsx";
 import { Majors } from "./components/Majors.jsx";
-import { Strategy } from "./components/Strategy.jsx";
 import { Matches } from "./components/Matches.jsx";
 import { BrowseColleges } from "./components/BrowseColleges.jsx";
 import { MyList } from "./components/MyList.jsx";
-import { Applications } from "./components/Applications.jsx";
 import { Programs } from "./components/Programs.jsx";
 import { DecisionPlan } from "./components/DecisionPlan.jsx";
 import { ApplicationPathways } from "./components/ApplicationPathways.jsx";
@@ -23,11 +21,8 @@ import { EssayCenter } from "./components/EssayCenter.jsx";
 import { FinancialAid } from "./components/FinancialAid.jsx";
 import { PortalTracker } from "./components/PortalTracker.jsx";
 import { About } from "./components/About.jsx";
-import { Disclaimer } from "./components/Disclaimer.jsx";
 import { Settings } from "./components/Settings.jsx";
-import { CareerPlanner } from "./components/CareerPlanner.jsx";
-import { Careers } from "./components/Careers.jsx";
-import { Journey } from "./components/Journey.jsx";
+import { CareerCenter } from "./components/CareerCenter.jsx";
 import { ErrorBoundary } from "./components/ErrorBoundary.jsx";
 import { mergeParsedIntoProfile } from "./lib/profileMerge.js";
 
@@ -60,21 +55,19 @@ function Logo() {
   return <img src={matriculaIcon} alt="Matricula" height="30" style={{ display: "block", width: "auto" }} />;
 }
 
-// Grouped top navigation (UX/navigation cleanup, the old flat 16-item nav
-// collapsed into 7 families: Dashboard, Profile, Explore, My List, Plan,
-// Apply, More). Every OLD "view" key below still works exactly as it did
-// before this reorg. Nothing was renamed, removed, or rewired; pages were
-// only re-grouped under a top-level family with a subtab bar underneath it.
+// Grouped top navigation. Seven families: Dashboard, Profile, Explore,
+// My List & Plan, Essays, Apply, Help.
+//
 // `view` (below) remains the single source of truth for which page renders;
 // SECTIONS is only used to (a) decide which top-level button + subtab row to
-// highlight, and (b) build the subtab bar. Old buttons/links elsewhere in
-// the app that still call onGo("essays"), onGo("decisionPlan"), etc. keep
-// working unchanged. See VIEW_TO_GROUP/VIEW_TO_DEFAULT_SUBKEY below.
+// highlight, and (b) build the subtab bar. Retired view keys are not broken
+// links: VIEW_ALIASES further down forwards each one to wherever its content
+// now lives, so every existing onGo("strategy") / onGo("applications") call
+// elsewhere in the app keeps working untouched.
 //
 // A few subtabs point at a page that already has its own internal tab/mode
 // switch (Majors.jsx's Single/Double major toggle, DecisionPlan.jsx's Final
-// List / Course Plans / Timeline & Tasks switch, ApplicationPathways.jsx's
-// Timeline section) instead of being separate pages. Those subtabs carry an
+// List / Course Plans / Timeline & Tasks switch). Those subtabs carry an
 // `entry` hint (see lib/entryOverride.js) that lands the family on the right
 // internal tab without rebuilding any of those pages.
 const SECTIONS = [
@@ -82,82 +75,75 @@ const SECTIONS = [
   { key: "profile", label: "Profile", view: "profile" },
   {
     key: "explore", label: "Explore",
+    // "Courses & Prep" is no longer a nav entry. The page itself still
+    // exists and is still reached from Advisor's "See course & prep plan"
+    // and from Decision Plan's course plans; it just isn't a browsing
+    // destination of its own any more.
     subtabs: [
       { key: "matches", label: "Matches", view: "matches" },
       { key: "browse", label: "Browse Colleges", view: "browse" },
       { key: "majors", label: "Majors", view: "majors" },
-      // "Double Major Search" (nav-consolidation, 2026-07): removed as a
-      // separate top-nav entry. It showed the same Majors page as
-      // "Majors" above, just pre-toggled to its internal Double-major mode.
-      // The feature itself is unchanged: Majors.jsx still has its own
-      // Single/Double major toggle right on the page.
       { key: "programs", label: "Programs & Opportunities", view: "programs" },
-      { key: "courses", label: "Courses & Prep", view: "courses" },
       { key: "advisor", label: "Advisor", view: "advisor" },
     ],
   },
-  { key: "saved", label: "My List", view: "saved" },
   {
-    key: "plan", label: "Plan",
-    // Nav-consolidation (2026-07): Verification Center / Final List Health
-    // Check / Cost / Visits & Interest all pointed at this same Decision
-    // Plan page (just a different internal section), so they're removed as
-    // separate top-nav entries here. Nothing was deleted, Decision Plan's
-    // own internal tabs still cover all of it.
+    // "My List" and "Plan" were two separate families that a family had to
+    // bounce between to work on the same set of colleges. They are one
+    // family now: the saved list and everything you do to it.
+    key: "plan", label: "My List & Plan",
     subtabs: [
+      { key: "saved", label: "My List", view: "saved" },
       { key: "decisionPlan", label: "Decision Plan", view: "decisionPlan" },
-      { key: "journey", label: "Journey", view: "journey" },
-      { key: "strategy", label: "Strategy", view: "strategy" },
-      { key: "scholarships", label: "Scholarships & Honors", view: "scholarships" },
-      { key: "careerPlanner", label: "Career Planner", view: "careerPlanner" },
-      { key: "careersBLS", label: "Careers (BLS)", view: "careersBLS" },
+      { key: "scholarships", label: "Financial Aid & Scholarships", view: "scholarships" },
+      // "Career Planner" and "Careers (BLS)" answered two halves of one
+      // question; CareerCenter.jsx now puts both behind one switch.
+      { key: "careers", label: "Careers", view: "careers" },
     ],
   },
-  {
-    key: "apply", label: "Apply",
-    // Nav-consolidation (2026-07): "Timeline" was a duplicate entry point
-    // into this same page (just auto-scrolled to its Timeline section, which
-    // is still right here); "Recommendations" pointed at the same page as
-    // "Applications Tracker"; "Portal Tracker" is unchanged and still
-    // reachable from Settings, none of these pages were removed, just the
-    // duplicate top-nav shortcuts to them.
-    subtabs: [
-      { key: "applicationPathways", label: "Application Timeline & Pathways", view: "applicationPathways" },
-      { key: "essays", label: "Essays", view: "essays" },
-      { key: "applications", label: "Applications Tracker", view: "applications" },
-      { key: "financialAid", label: "Financial Aid", view: "financialAid" },
-    ],
-  },
-  {
-    key: "more", label: "More",
-    subtabs: [
-      { key: "about", label: "About", view: "about" },
-      { key: "disclaimer", label: "Disclaimer", view: "disclaimer" },
-      { key: "settings", label: "Settings", view: "settings" },
-    ],
-  },
+  // Essays is its own destination rather than a subtab of Apply: it is the
+  // longest-running piece of work in the whole process.
+  { key: "essays", label: "Essays", view: "essays" },
+  // Apply is one page (ApplicationPathways.jsx). Timeline, route planning,
+  // application records and the status tracker used to be four separate
+  // views of the same colleges; they are one per-college flow now.
+  { key: "apply", label: "Apply", view: "applicationPathways" },
+  // Help carries the product guide and, at the bottom of the same page, the
+  // full disclaimer. Settings moved out to the gear button in the header.
+  { key: "help", label: "Help", view: "about" },
 ];
 
-// Native iOS app only: a 5-tab bottom bar (Home / Explore / Plan / Apply /
-// More) instead of 7 top-level buttons. Same pages, same view keys, same
-// subtab rows. Profile and My List just live under More, next to the new
-// "Matricula" subscription page. The website keeps SECTIONS exactly as-is.
+// Native iOS app only: a 5-tab bottom bar instead of 7 top-level buttons.
+// Same pages, same view keys, same subtab rows.
 const NATIVE_SECTIONS = [
   { key: "dashboard", label: "Home", view: "dashboard", icon: "home" },
   { ...SECTIONS.find((s) => s.key === "explore"), icon: "explore" },
-  { ...SECTIONS.find((s) => s.key === "plan"), icon: "plan" },
+  { ...SECTIONS.find((s) => s.key === "plan"), label: "Plan", icon: "plan" },
   { ...SECTIONS.find((s) => s.key === "apply"), icon: "apply" },
   {
     key: "more", label: "More", icon: "more",
     subtabs: [
       { key: "subscription", label: "Matricula", view: "subscription" },
       { key: "profile", label: "Profile", view: "profile" },
-      { key: "saved", label: "My List", view: "saved" },
-      ...SECTIONS.find((s) => s.key === "more").subtabs,
+      { key: "essays", label: "Essays", view: "essays" },
+      { key: "help", label: "Help", view: "about" },
+      { key: "settings", label: "Settings", view: "settings" },
     ],
   },
 ];
 const NAV_SECTIONS = isNativeIOS ? NATIVE_SECTIONS : SECTIONS;
+
+// Settings gear for the header. Drawn here rather than in icons.jsx because
+// it is chrome, not page content, and is sized for the dark topbar.
+function GearIcon() {
+  return (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+      <circle cx="12" cy="12" r="3.2" />
+      <path d="M12 2.6v2.6M12 18.8v2.6M21.4 12h-2.6M5.2 12H2.6M18.6 5.4l-1.8 1.8M7.2 16.8l-1.8 1.8M18.6 18.6l-1.8-1.8M7.2 7.2 5.4 5.4" />
+    </svg>
+  );
+}
 
 function HeaderSubscriptionPill({ onOpen }) {
   const { isSubscriber, isLoading } = useSubscription();
@@ -193,12 +179,35 @@ NAV_SECTIONS.forEach((sec) => {
     if (!(st.view in VIEW_TO_DEFAULT_SUBKEY)) VIEW_TO_DEFAULT_SUBKEY[st.view] = st.key;
   });
 });
+// Pages that are still reachable from in-app links but are no longer a nav
+// destination of their own. They keep their family's subtab bar showing so
+// the family doesn't lose its place.
+VIEW_TO_GROUP.courses = "explore";
+VIEW_TO_DEFAULT_SUBKEY.courses = "matches";
+
+// Retired view keys -> where that content lives now. Applied in goTo(), so
+// every existing onGo("strategy") / onGo("applications") / onGo("disclaimer")
+// call throughout the app lands in the right place without being rewritten.
+const VIEW_ALIASES = {
+  applications: "applicationPathways",   // the tracker is part of the Apply page now
+  financialAid: "scholarships",          // same page, one entry point
+  careerPlanner: "careers",              // both career pages are one page now
+  careersBLS: "careers",
+  journey: "dashboard",                  // Journey and Strategy live on the home page
+  strategy: "dashboard",
+  disclaimer: "about",                   // the disclaimer is the foot of the Help page
+  info: "about",
+};
+const resolveView = (v) => VIEW_ALIASES[v] || v;
 
 export default function App() {
   const { user, signOut } = useAuth();
   // Per-user data key: the Firebase UID when signed in, else the dev fallback.
   const STUDENT_ID = user?.uid || FALLBACK_STUDENT_ID;
-  const [view, setView] = useState("dashboard");
+  // Every view change goes through resolveView, so a retired key like
+  // "strategy" or "applications" lands on whatever page absorbed it.
+  const [view, setViewRaw] = useState("dashboard");
+  const setView = useCallback((v) => setViewRaw(resolveView(v)), []);
   // Optional college context carried along with a view switch. E.g. Decision
   // Plan's "View timeline" / "Go to Essay Center" jump straight to that
   // college's section instead of leaving the family to find it again. goTo is
@@ -207,7 +216,7 @@ export default function App() {
   const [focusCollegeId, setFocusCollegeId] = useState(null);
   const goTo = useCallback((nextView, collegeId) => {
     setFocusCollegeId(collegeId || null);
-    setView(nextView);
+    setViewRaw(resolveView(nextView));
   }, []);
 
   // ---- Grouped navigation state (see SECTIONS above) ----
@@ -458,6 +467,14 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
               {/* iOS app only: compact subscription status (Matricula Active /
                   Unlock). Opens More -> Matricula. Never shown on the website. */}
               {isNativeIOS && user && <HeaderSubscriptionPill onOpen={() => goTo("subscription")} />}
+              {/* Settings is no longer a nav entry. It lives here, as a gear,
+                  because it is a place you visit occasionally rather than a
+                  stage of the planning process. */}
+              <button type="button" className={`gear-btn ${view === "settings" ? "on" : ""}`}
+                title="Settings" aria-label="Settings" aria-current={view === "settings" ? "page" : undefined}
+                onClick={() => goTo("settings")}>
+                <GearIcon />
+              </button>
               {user && (
                 <div className="user-menu-mobile">
                   <button className="btn sm ghost" onClick={() => signOut().catch(() => {})}>Sign out</button>
@@ -507,19 +524,13 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
         )}
         <ErrorBoundary resetKey={view}>
           {view === "about" && <About onGo={setView} />}
-          {view === "disclaimer" && <Disclaimer />}
-          {view === "journey" && <Journey studentId={STUDENT_ID} profile={profile} saved={saved} onGo={goTo} />}
           {view === "profile" && <ProfileForm initial={profile} onSubmit={onSubmitProfile} studentId={STUDENT_ID} onApplyParsed={applyParsed} applyMsg={applyMsg} profileVersion={profileVersion} onLoadSample={(sp) => { bumpProfile(sp); api.saveStudent(STUDENT_ID, sp).catch(() => {}); }}
             onSave={(p) => { setProfile(p); api.saveStudent(STUDENT_ID, p).catch(() => {}); }}
             onResetProfile={(blank) => { bumpProfile(blank); api.saveStudent(STUDENT_ID, blank).catch(() => {}); }} />}
           {view === "courses" && <Courses onOpen={setDetailId} studentId={STUDENT_ID} profile={profile} initialTrackId={courseTrackId} />}
-          {/* Old "info" links still work. Info's own subtabs (Career Planner,
-              Careers BLS) now live under Plan; its "About" subtab is this page. */}
-          {view === "info" && <About onGo={setView} />}
           {view === "dashboard" && <Dashboard profile={profile} saved={saved} recs={recs} studentId={STUDENT_ID} onGo={goTo} />}
           {view === "majors" && <Majors profile={profile} studentId={STUDENT_ID} onOpen={setDetailId} onToggleSave={toggleSave} savedIds={savedIds}
             entryMode={majorsEntry.mode} entryNonce={majorsEntry.nonce} />}
-          {view === "strategy" && <Strategy studentId={STUDENT_ID} profile={profile} onGo={setView} />}
 
           {view === "matches" && (
             <Matches
@@ -560,16 +571,9 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
             </PremiumGate>
           )}
 
-          {view === "applications" && (
-            <PremiumGate feature="apply">
-              <Applications studentId={STUDENT_ID} list={saved} collegeNames={collegeNames} profile={profile} onGo={setView} />
-            </PremiumGate>
-          )}
-          {view === "financialAid" && <FinancialAid studentId={STUDENT_ID} profile={profile} initialTab="planner" />}
           {view === "scholarships" && <FinancialAid studentId={STUDENT_ID} profile={profile} initialTab="scholarships" />}
           {view === "portalTracker" && <PortalTracker onGo={goTo} />}
-          {view === "careerPlanner" && <CareerPlanner />}
-          {view === "careersBLS" && <Careers profileInterests={profile.interests} />}
+          {view === "careers" && <CareerCenter profileInterests={profile.interests} />}
           {view === "settings" && <Settings user={user} studentId={STUDENT_ID} onSignOut={() => signOut().catch(() => {})} onGo={goTo} />}
           {view === "subscription" && <Subscription onGo={goTo} />}
           {view === "advisor" && <PremiumGate feature="ai"><Advisor profile={profile} recs={recs} onRunMatches={(trackId) => {

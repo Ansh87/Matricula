@@ -47,10 +47,11 @@ export function CareerPlanner() {
 
   return (
     <div className="stack">
+      {/* No <h1> here: this page renders inside CareerCenter.jsx, which
+          owns the page title. */}
       <div>
-        <div className="eyebrow">Career planning</div>
-        <h1>Future-safe career tracks</h1>
-        <p className="lead">A balanced guide to where computing and engineering careers are heading - and how to
+        <h2>Future-safe career tracks</h2>
+        <p className="lead">A balanced guide to where computing and engineering careers are heading, and how to
           combine a technical core with a hard-to-automate domain. Choose a career track to see roles, majors,
           skills, risks, and projects. For personalized recommendations, use Advisor or Matches.</p>
       </div>

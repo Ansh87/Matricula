@@ -1,7 +1,9 @@
-// About.jsx. More -> About. A short, visual product overview (not a
-// walkthrough document): hero summary, quick actions, feature cards, a
-// step-by-step list, and a compact data/verification note. The AI-essay
-// policy and legal disclaimer live on their own page (Disclaimer.jsx).
+// About.jsx. The Help page. A short, visual product overview (not a
+// walkthrough document): quick actions, feature cards, a step-by-step list,
+// how scoring and rankings work, and the full disclaimer at the foot of the
+// page. The disclaimer used to be a separate page (Disclaimer.jsx); it was
+// folded in here so "how it works" and "what to know before you rely on it"
+// are one read, and Help has no subtabs of its own.
 import React from "react";
 import { Arrow } from "./icons.jsx";
 
@@ -24,36 +26,16 @@ const STEPS = [
   "Track applications in Apply",
 ];
 
-// Simple horizontal flow, no per-step description boxes, just the shape
-// of the app so a family isn't lost, not another thing to read.
-function Flow() {
-  const steps = ["Profile", "Explore", "My List", "Plan", "Apply"];
-  return (
-    <div className="row wrap about-flow" style={{ gap: 8, alignItems: "center", justifyContent: "center" }}>
-      {steps.map((s, i) => (
-        <React.Fragment key={s}>
-          <span className="pill" style={{ fontSize: 13, padding: "6px 12px" }}>{s}</span>
-          {i < steps.length - 1 && <span className="about-flow-arrow" style={{ color: "var(--muted)" }} aria-hidden><Arrow /></span>}
-        </React.Fragment>
-      ))}
-    </div>
-  );
-}
-
 export function About({ onGo }) {
   const go = (view) => (onGo ? () => onGo(view) : undefined);
   return (
     <div className="stack" style={{ maxWidth: 900 }}>
-      {/* 1. Hero summary */}
-      <div className="banner">
-        <div className="eyebrow">More</div>
-        <h1>About Matricula</h1>
-        <p className="lead">Matricula helps families build a smarter college list, compare programs,
-          track applications, manage essays, verify deadlines, review costs, and organize final decisions in one
-          place.</p>
+      <div>
+        <div className="eyebrow">Help</div>
+        <h1>How Matricula works</h1>
       </div>
 
-      {/* 2. Quick action buttons */}
+      {/* Quick action buttons */}
       {onGo && (
         <div className="row wrap about-actions" style={{ gap: 10 }}>
           <button className="btn amber" onClick={go("profile")}>Start with Profile <Arrow /></button>
@@ -62,8 +44,6 @@ export function About({ onGo }) {
           <button className="btn ghost" onClick={go("decisionPlan")}>Open Decision Plan <Arrow /></button>
         </div>
       )}
-
-      <Flow />
 
       {/* 3. Feature cards */}
       <div className="grid cols-3" style={{ gap: 12 }}>
@@ -194,7 +174,7 @@ export function About({ onGo }) {
             highly selective schools, and applicants who score modestly are sometimes admitted. Official data can lag
             or be incomplete, so always confirm current program availability, costs, and deadlines directly on each
             college's own official website or application portal before making decisions.
-            {onGo && <> See the <button className="link" onClick={go("disclaimer")}>full disclaimer <Arrow /></button> for complete terms.</>}
+            {" "}The full disclaimer is at the foot of this page.
           </p>
         </div>
       </div>
@@ -225,12 +205,39 @@ export function About({ onGo }) {
         </p>
       </div>
 
-      {/* 5. Data and verification note */}
-      <div className="disclaimer">
-        Matricula uses official and public data where available, including College Scorecard and
-        college websites. College requirements, deadlines, essay prompts, costs, and program rules can change.
-        Always verify final information using official college sources and application portals.
-        {onGo && <> <button className="link" onClick={go("disclaimer")}>Read the full disclaimer <Arrow /></button></>}
+      {/* Disclaimer. Formerly its own page under More; the whole of it now
+          closes out the Help page so nothing about it is a click away. */}
+      <div className="card pad stack" id="disclaimer">
+        <h3>Disclaimer</h3>
+
+        <div className="disclaimer">
+          Matricula uses official and public data where available, including College Scorecard and
+          college websites. College requirements, deadlines, essay prompts, costs, and program rules can change.
+          Always verify final information using official college sources and application portals.
+        </div>
+
+        <div className="disclaimer">
+          <strong>AI and essay policy.</strong> Matricula helps with brainstorming, outlining, prompt
+          tracking, story mapping, and revision planning. It never generates a finished essay for submission and
+          never presents any AI-written text as ready to submit. The student must write the final essay in their
+          own voice and follow each college's own AI-use policy. These vary by school and change over time, so
+          check the official application portal before submitting.
+        </div>
+
+        <div className="disclaimer">
+          <strong>Planning aid, not advice.</strong> Matricula is an educational planning tool, not a counseling
+          service or admissions office. Admissions are holistic and unpredictable, and Matricula's estimates are
+          not guarantees. College costs, financial aid, deadlines, scholarships, programs, policies, and career
+          outcomes can change over time. Always verify important information with official college sources,
+          admissions and financial-aid offices, net price calculators, FAFSA/CSS Profile resources, and your
+          school counselor before making decisions.
+        </div>
+
+        <div className="disclaimer">
+          Matricula was developed by high school student Ansh Saini as an independent educational technology
+          project to help students explore college, major, career, and application-planning options using
+          data-driven tools.
+        </div>
       </div>
     </div>
   );

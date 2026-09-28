@@ -50,9 +50,15 @@ body {
 }
 
 /* ---------- shell / nav ---------- */
-.shell { min-height: 100vh; display: flex; flex-direction: column; }
+/* Header is pinned with position: fixed on every version (desktop, phone
+   browser, iOS app). `sticky` proved unreliable on phones, where it scrolled
+   away with the page. --topbar-h is the header's measured height (set in
+   App.jsx), so content starts right below it and in-page jumps don't hide
+   under it. */
+.shell { min-height: 100vh; display: flex; flex-direction: column; padding-top: var(--topbar-h, 0px); box-sizing: border-box; }
+html { scroll-padding-top: var(--topbar-h, 0px); }
 .topbar {
-  position: sticky; top: 0; z-index: 30;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 30;
   background: rgba(16,26,38,.92); backdrop-filter: blur(8px);
   border-bottom: 1px solid #0c1620;
   color: #eef2f5;

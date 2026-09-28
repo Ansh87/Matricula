@@ -1,6 +1,6 @@
 // App.jsx. Top-level shell. Routes between views, loads live recommendations,
 // and persists the student's list to the backend DB.
-import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import React, { useState, useEffect, useLayoutEffect, useMemo, useCallback, useRef } from "react";
 import { api } from "./lib/api.js";
 import matriculaIcon from "./assets/matricula-icon.png";
 import { ProfileForm, BLANK_PROFILE } from "./components/ProfileForm.jsx";
@@ -232,6 +232,23 @@ export default function App() {
   // of subtabs that share a view with another subtab (see explicitClickRef).
   const [activeSub, setActiveSub] = useState({});
   const explicitClickRef = useRef(false);
+  // The header is position: fixed (pinned to the top of the screen on every
+  // version). Fixed elements take no space, so we measure the header and
+  // publish its height as --topbar-h; .shell pads its top by that much so
+  // page content starts just below it. Re-measured whenever the header
+  // changes size (rotation, text wrapping, safe-area inset, sign in/out).
+  const topbarRef = useRef(null);
+  useLayoutEffect(() => {
+    const el = topbarRef.current;
+    if (!el) return undefined;
+    const root = document.documentElement;
+    const measure = () => root.style.setProperty("--topbar-h", `${el.offsetHeight}px`);
+    measure();
+    window.addEventListener("resize", measure);
+    let ro = null;
+    if (typeof ResizeObserver !== "undefined") { ro = new ResizeObserver(measure); ro.observe(el); }
+    return () => { window.removeEventListener("resize", measure); if (ro) ro.disconnect(); };
+  }, []);
 
   const currentGroupKey = VIEW_TO_GROUP[view] || null;
 
@@ -448,7 +465,7 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
 
   return (
     <div className="shell">
-      <header className="topbar">
+      <header className="topbar" ref={topbarRef}>
         <div className="topbar-inner topbar-stack">
           <div className="row spread" style={{ width: "100%", alignItems: "center" }}>
             <div className="brand" role="button" onClick={() => goTo("dashboard")} style={{ cursor: "pointer" }}>

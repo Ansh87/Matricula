@@ -378,7 +378,11 @@ table.t tr:hover td { background: #fffaf0; }
      layouts that already fit are visually unchanged. Mobile-only (this
      whole block is inside the max-width:820px query). Desktop is
      untouched. */
-  html, body, #root { overflow-x: hidden; max-width: 100%; }
+  /* `clip` (not `hidden`): `hidden` turns html/body into their own scroll
+     containers, which silently breaks `position: sticky` on the header so
+     it scrolled away on phones. `clip` still stops sideways scrolling but
+     keeps the page as the scroller, so the header stays pinned. */
+  html, body, #root { overflow-x: clip; max-width: 100%; }
   .container, .card, .stack, .grid, .row, .field, .kpis, .kpi {
     min-width: 0; max-width: 100%;
   }
@@ -495,31 +499,42 @@ table.t tr:hover td { background: #fffaf0; }
   padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right));
   padding-top: 8px; padding-bottom: 8px;
 }
-/* The 7-button top nav is replaced by the bottom tab bar in the app. */
-.native-ios .topbar .nav.nav-row { display: none !important; }
-/* Settings already has its own entry under More in the app's tab bar, so the
-   header gear would be a second route to the same page and crowds the
-   iPhone header next to the Unlock pill and Sign out. Website unchanged. */
-.native-ios .topbar .gear-btn { display: none; }
+/* The top nav row is replaced by the bottom tab bar in the app. */
+.native-ios .topbar .topbar-navrow, .native-ios .topbar .nav.nav-row { display: none !important; }
 .native-ios .container {
   padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right));
-  padding-bottom: calc(88px + env(safe-area-inset-bottom));
+  padding-bottom: calc(96px + env(safe-area-inset-bottom));
 }
-.native-tabbar {
+/* ---------- Bottom tab bar ----------
+   Same sections as the desktop top menu. Hidden on desktop; shown on phones
+   (website, max-width 820px) and always in the iOS app. */
+.bottom-tabbar { display: none; }
+.bottom-tabbar {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
-  display: flex; justify-content: space-around;
+  justify-content: space-around;
   background: rgba(16,26,38,.97); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
   border-top: 1px solid #0c1620;
-  padding: 6px max(6px, env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
+  padding: 5px max(4px, env(safe-area-inset-right)) calc(5px + env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-left));
 }
-.native-tabbar button {
-  flex: 1 1 0; min-width: 0; min-height: 50px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+.bottom-tabbar button {
+  flex: 1 1 0; min-width: 0; min-height: 52px; padding: 2px 1px;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3px;
   background: none; border: 0; color: #8fa3b5; cursor: pointer;
-  font-family: var(--sans); font-size: 10.5px; font-weight: 500; letter-spacing: .2px;
+  font-family: var(--sans); font-size: 9.5px; font-weight: 500; line-height: 1.15; letter-spacing: 0;
+  text-align: center; -webkit-tap-highlight-color: transparent;
 }
-.native-tabbar button.active { color: #e9c987; }
-.native-tabbar button:active { opacity: .7; }
+.bottom-tabbar button svg { flex-shrink: 0; margin-top: 3px; }
+.bottom-tabbar button span { display: block; max-width: 100%; overflow-wrap: anywhere; }
+.bottom-tabbar button.active { color: #e9c987; }
+.bottom-tabbar button:active { opacity: .7; }
+@media (max-width: 820px) {
+  .bottom-tabbar { display: flex; }
+  /* Top nav row moves to the bottom tab bar on phones. */
+  .topbar .topbar-navrow, .topbar .nav.nav-row { display: none !important; }
+  .container { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+}
+.native-ios .bottom-tabbar { display: flex; }
+.keyboard-open .bottom-tabbar { display: none !important; }
 /* Subtab row (Plan/Apply/More sections): taller tap targets. */
 .native-ios .subnav button { min-height: 36px; }
 /* Comfortable touch targets without redesigning buttons. */
@@ -546,4 +561,3 @@ table.t tr:hover td { background: #fffaf0; }
   background: #d9b262; color: #2a1e07; border: 1px solid #d9b262;
 }
 .sub-pill.on { background: transparent; color: #e9c987; border-color: rgba(233,201,135,.55); }
-.native-ios.keyboard-open .native-tabbar { display: none; }

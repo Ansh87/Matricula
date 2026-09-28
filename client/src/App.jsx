@@ -111,25 +111,12 @@ const SECTIONS = [
   { key: "help", label: "Help", view: "about" },
 ];
 
-// Native iOS app only: a 5-tab bottom bar instead of 7 top-level buttons.
-// Same pages, same view keys, same subtab rows.
-const NATIVE_SECTIONS = [
-  { key: "dashboard", label: "Home", view: "dashboard", icon: "home" },
-  { ...SECTIONS.find((s) => s.key === "explore"), icon: "explore" },
-  { ...SECTIONS.find((s) => s.key === "plan"), label: "Plan", icon: "plan" },
-  { ...SECTIONS.find((s) => s.key === "apply"), icon: "apply" },
-  {
-    key: "more", label: "More", icon: "more",
-    subtabs: [
-      { key: "subscription", label: "Matricula", view: "subscription" },
-      { key: "profile", label: "Profile", view: "profile" },
-      { key: "essays", label: "Essays", view: "essays" },
-      { key: "help", label: "Help", view: "about" },
-      { key: "settings", label: "Settings", view: "settings" },
-    ],
-  },
-];
-const NAV_SECTIONS = isNativeIOS ? NATIVE_SECTIONS : SECTIONS;
+// One menu for every version of Matricula: the desktop website, the website on
+// a phone, and the iOS app all show exactly these sections in this order.
+// Desktop shows them across the top; phones and the iOS app show the same
+// items in a bottom tab bar (see .bottom-tabbar in styles.css).
+const NAV_SECTIONS = SECTIONS;
+const TAB_ICONS = { dashboard: "home", profile: "profile", explore: "explore", plan: "plan", essays: "essays", apply: "apply", help: "help" };
 
 // Settings gear for the header. Drawn here rather than in icons.jsx because
 // it is chrome, not page content, and is sized for the dark topbar.
@@ -166,13 +153,16 @@ function HeaderSubscriptionPill({ onOpen }) {
   );
 }
 
-// Simple line icons for the native tab bar (original, generic shapes).
+// Simple line icons for the bottom tab bar (original, generic shapes).
 function TabIcon({ name }) {
   const common = { width: 22, height: 22, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": true };
   if (name === "home") return <svg {...common}><path d="M3 11l9-7 9 7" /><path d="M5 10v10h14V10" /></svg>;
+  if (name === "profile") return <svg {...common}><circle cx="12" cy="8" r="4" /><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" /></svg>;
   if (name === "explore") return <svg {...common}><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>;
-  if (name === "plan") return <svg {...common}><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M8 3v4M16 3v4M4 10h16" /></svg>;
+  if (name === "plan") return <svg {...common}><path d="M9 6h11M9 12h11M9 18h11" /><path d="M4 6h.01M4 12h.01M4 18h.01" /></svg>;
+  if (name === "essays") return <svg {...common}><path d="M4 20h4L19 9l-4-4L4 16z" /><path d="M13.5 6.5l4 4" /></svg>;
   if (name === "apply") return <svg {...common}><path d="M6 3h9l4 4v14H6z" /><path d="M14 3v5h5M9 13h7M9 17h5" /></svg>;
+  if (name === "help") return <svg {...common}><circle cx="12" cy="12" r="9" /><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14" /><path d="M12 17h.01" /></svg>;
   return <svg {...common}><circle cx="5" cy="12" r="1.3" /><circle cx="12" cy="12" r="1.3" /><circle cx="19" cy="12" r="1.3" /></svg>;
 }
 
@@ -475,7 +465,7 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
                 is the sole place that toggles which one is visible. */}
             <div className="header-actions">
               {/* iOS app only: compact subscription status (Matricula Active /
-                  Unlock). Opens More -> Matricula. Never shown on the website. */}
+                  Unlock). Opens the Matricula subscription page. Never shown on the website. */}
               {isNativeIOS && user && <HeaderSubscriptionPill onOpen={() => goTo("subscription")} />}
               {/* Settings is no longer a nav entry. It lives here, as a gear,
                   because it is a place you visit occasionally rather than a
@@ -499,7 +489,7 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
               media-query override on .nav.nav-row below still fully controls
               width/scrolling there, and .topbar .user-menu is already
               display:none on mobile regardless of this wrapper. */}
-          <div className="row spread" style={{ width: "100%" }}>
+          <div className="row spread topbar-navrow" style={{ width: "100%" }}>
             <nav className="nav nav-row">
               {NAV_SECTIONS.map((sec) => (
                 <button key={sec.key} className={currentGroupKey === sec.key ? "active" : ""} onClick={() => openTopLevel(sec)}>
@@ -595,21 +585,19 @@ function prettyField(k) { return FIELD_LABELS[k] || k; }
         </ErrorBoundary>
       </main>
 
-      {/* Native iOS app only: bottom tab bar (Home / Explore / Plan / Apply /
-          More). The website keeps its existing top navigation. */}
-      {isNativeIOS && (
-        <nav className="native-tabbar" aria-label="Main">
-          {NAV_SECTIONS.map((sec) => (
-            <button key={sec.key} type="button"
-              className={currentGroupKey === sec.key ? "active" : ""}
-              aria-current={currentGroupKey === sec.key ? "page" : undefined}
-              onClick={() => { openTopLevel(sec); window.scrollTo(0, 0); }}>
-              <TabIcon name={sec.icon} />
-              <span>{sec.label}</span>
-            </button>
-          ))}
-        </nav>
-      )}
+      {/* Bottom tab bar: the same sections as the top menu. Shown on phones
+          (website) and always in the iOS app; hidden on desktop by CSS. */}
+      <nav className="bottom-tabbar" aria-label="Main">
+        {NAV_SECTIONS.map((sec) => (
+          <button key={sec.key} type="button"
+            className={currentGroupKey === sec.key ? "active" : ""}
+            aria-current={currentGroupKey === sec.key ? "page" : undefined}
+            onClick={() => { openTopLevel(sec); window.scrollTo(0, 0); }}>
+            <TabIcon name={TAB_ICONS[sec.key]} />
+            <span>{sec.label}</span>
+          </button>
+        ))}
+      </nav>
 
       {detailId && (
         <ErrorBoundary resetKey={detailId}>
